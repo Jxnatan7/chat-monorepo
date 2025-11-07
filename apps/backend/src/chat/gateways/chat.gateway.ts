@@ -15,6 +15,7 @@ import { ChatService } from "../core/services/chat.service";
 import { User } from "src/user/core/schemas/user.schema";
 import { Model, Types } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
+import { Message } from "src/message/core/schemas/message.schema";
 
 type JwtPayload = { sub: string; role?: string; email?: string };
 
@@ -40,6 +41,7 @@ export class ChatGateway
     private readonly jwtService: JwtService,
     private readonly chatService: ChatService,
     @InjectModel(User.name) private readonly userModel: Model<User>,
+    @InjectModel(User.name) private readonly messageModel: Model<Message>,
   ) {}
 
   afterInit() {
@@ -241,10 +243,11 @@ export class ChatGateway
 
   @SubscribeMessage("message")
   async handleMessage(
-    @MessageBody() payload: { chatId: string; content: string },
+    @MessageBody()
+    payload: { chatId: string; content: string; timestamp: Date },
     @ConnectedSocket() client: Socket,
   ) {
-    const { chatId, content } = payload;
+    const { chatId, content, timestamp } = payload;
     const userId = client.data.userId as string;
 
     if (!content || content.trim().length === 0) {
@@ -256,33 +259,36 @@ export class ChatGateway
       const chat = await this.chatService.getChatById(chatId);
 
       const isParticipant = chat.participants.some(
-        (p) => p.toString() === userId,
+        (p) => p.id?.toString() === userId,
       );
       if (!isParticipant) {
         client.emit("message_error", "User not participant of this chat");
         return;
       }
 
-      const messageToSave = {
-        sender: new Types.ObjectId(userId),
-        content,
-        timestamp: new Date(),
-      };
+      const sender = await this.userModel.findById(userId);
 
-      const updatedChat = await this.chatService.addMessage(
-        String(chat._id),
-        messageToSave,
-      );
+      if (!sender) {
+        client.emit("message_error", "User not found");
+        return;
+      }
+
+      const message = await this.messageModel.create({
+        sender: {
+          id: sender.id,
+          name: sender.name,
+        },
+        content,
+        timestamp,
+      });
+
+      const messageSaved = await message.save();
 
       const room = this.roomName(chatId);
-      const lastMessage = updatedChat.messages[updatedChat.messages.length - 1];
       this.server.to(room).emit("message", {
-        chatId: String(updatedChat._id),
+        chatId: chatId,
         message: {
-          id: (lastMessage as any)._id?.toString?.() ?? undefined,
-          sender: lastMessage.sender.toString?.() ?? lastMessage.sender,
-          content: lastMessage.content,
-          timestamp: lastMessage.timestamp,
+          ...messageSaved,
         },
       });
     } catch (err) {

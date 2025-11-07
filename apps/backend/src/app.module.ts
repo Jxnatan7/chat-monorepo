@@ -7,19 +7,19 @@ import { HouseModule } from "./house/house.module";
 import { CommunicationRequestModule } from "./communication-request/communication-request.module";
 import { ChatModule } from "./chat/chat.module";
 import { ProviderModule } from "./provider/provider.module";
+import { MessageModule } from "./message/message.module";
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(
-      "mongodb://admin:admin@localhost:27017/communication-system?authSource=admin",
-    ),
+    MongooseModule.forRoot(process.env.DB_URL ?? ""),
     AuthModule,
     UserModule,
     ProviderModule,
     HouseModule,
     CommunicationRequestModule,
     ChatModule,
+    MessageModule,
   ],
   controllers: [],
   providers: [],

@@ -1,31 +1,20 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
+import { User } from "src/user/core/schemas/user.schema";
 
 export type ChatDocument = Chat & Document;
 
-export class ChatMessage {
-  @Prop({ required: true })
-  sender: Types.ObjectId;
+export class ChatUser extends User {}
 
-  @Prop({ required: true })
-  content: string;
-
-  @Prop({ default: Date.now })
-  timestamp: Date;
-}
-
-export const ChatMessageSchema = SchemaFactory.createForClass(ChatMessage);
+export const ChatMessageSchema = SchemaFactory.createForClass(ChatUser);
 
 @Schema({ timestamps: true, collection: "chats" })
 export class Chat extends Document {
   @Prop({ type: Types.ObjectId, ref: "CommunicationRequest", required: true })
   communicationRequestId: Types.ObjectId;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: "User" }], required: true })
-  participants: Types.ObjectId[];
-
   @Prop({ default: [] })
-  messages: ChatMessage[];
+  participants: ChatUser[];
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);
