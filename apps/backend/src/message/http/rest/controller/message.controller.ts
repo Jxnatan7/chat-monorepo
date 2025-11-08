@@ -1,14 +1,22 @@
-import { Controller, Get, Param, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import {
+  FilterRequest,
+  PaginatedResult,
+} from "src/@core/services/mongo-query.service";
+import { MessageDocument } from "src/message/core/schemas/message.schema";
 import { MessageService } from "src/message/core/services/message.service";
 
 @Controller("api/messages")
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
-  @Get(":id")
+  @Get(":chatId")
   @UseGuards(AuthGuard("jwt"))
-  async getMessages(@Param("id") id: string) {
-    return;
+  async getMessages(
+    @Param("chatId") chatId: string,
+    @Body() filterRequest: FilterRequest,
+  ): Promise<PaginatedResult<MessageDocument>> {
+    return this.messageService.getMessagesByChatId(chatId, filterRequest);
   }
 }

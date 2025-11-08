@@ -5,6 +5,12 @@ import { House } from "../schemas/house.schema";
 import { UpdateHouseDto } from "src/house/http/rest/dto/update-house.dto";
 import { CreateHouseDto } from "src/house/http/rest/dto/create-house.dto";
 import { Provider } from "src/provider/core/schemas/provider.schema";
+import {
+  createMongoQueryService,
+  FilterRequest,
+  PaginatedResult,
+  toObjectIdOrLeave,
+} from "src/@core/services/mongo-query.service";
 
 @Injectable()
 export class HouseService {
@@ -29,9 +35,22 @@ export class HouseService {
     return this.houseModel.find().exec();
   }
 
-  async findByProviderId(providerId: string): Promise<House[]> {
+  async findByProviderId(
+    providerId: string,
+    filterRequest: FilterRequest,
+  ): Promise<PaginatedResult<House>> {
     await this.ensureProviderExists(providerId);
-    return this.houseModel.find({ providerId: providerId }).exec();
+    const baseQuery = { providerId: toObjectIdOrLeave(providerId) };
+    const query = createMongoQueryService<House>(this.houseModel);
+
+    return query.search({
+      baseQuery,
+      filterRequest,
+      options: {
+        // searchableFields: ["content", "sender.name", "sender.displayName", "sender.email"],
+        dateField: "timestamp",
+      },
+    });
   }
 
   async findById(id: string): Promise<House> {

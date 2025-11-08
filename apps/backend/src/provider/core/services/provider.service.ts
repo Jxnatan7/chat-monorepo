@@ -4,6 +4,11 @@ import { Model } from "mongoose";
 import { Provider } from "../schemas/provider.schema";
 import { CreateProviderDto } from "src/provider/http/rest/dto/create-provider.dto";
 import { UpdateProviderDto } from "src/provider/http/rest/dto/update-provider.dto";
+import {
+  createMongoQueryService,
+  FilterRequest,
+  PaginatedResult,
+} from "src/@core/services/mongo-query.service";
 
 @Injectable()
 export class ProviderService {
@@ -18,6 +23,18 @@ export class ProviderService {
 
   async findAll(): Promise<Provider[]> {
     return this.providerModel.find().exec();
+  }
+
+  async find(filterRequest: FilterRequest): Promise<PaginatedResult<Provider>> {
+    const query = createMongoQueryService<Provider>(this.providerModel);
+
+    return query.search({
+      filterRequest,
+      options: {
+        // searchableFields: ["content", "sender.name", "sender.displayName", "sender.email"],
+        dateField: "timestamp",
+      },
+    });
   }
 
   async findByCode(code: string): Promise<Provider> {

@@ -14,6 +14,7 @@ import { CreateHouseDto } from "../dto/create-house.dto";
 import { UpdateHouseDto } from "../dto/update-house.dto";
 import { SimpleHouse } from "../dto/simple-house.dto";
 import { ManagerOrAdminGuard } from "src/auth/guards/manager-or-admin.guard";
+import { FilterRequest } from "src/@core/services/mongo-query.service";
 
 @Controller("api/houses")
 export class HouseController {
@@ -33,10 +34,12 @@ export class HouseController {
     return new SimpleHouse(house);
   }
 
-  @Get("/provider/:providerId")
-  async findByProviderId(@Param("providerId") providerId: string) {
-    const houses = await this.houseService.findByProviderId(providerId);
-    return houses.map((house) => new SimpleHouse(house));
+  @Post("/provider/:providerId")
+  async findByProviderId(
+    @Param("providerId") providerId: string,
+    @Body() filterRequest: FilterRequest,
+  ) {
+    await this.houseService.findByProviderId(providerId, filterRequest);
   }
 
   @Post()

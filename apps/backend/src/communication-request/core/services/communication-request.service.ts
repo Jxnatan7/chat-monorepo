@@ -16,6 +16,12 @@ import {
   NotFoundException,
   BadRequestException,
 } from "@nestjs/common";
+import {
+  createMongoQueryService,
+  FilterRequest,
+  PaginatedResult,
+  toObjectIdOrLeave,
+} from "src/@core/services/mongo-query.service";
 
 @Injectable()
 export class CommunicationRequestService {
@@ -42,15 +48,34 @@ export class CommunicationRequestService {
     return CommunicationRequestDto.create(updatedRequest);
   }
 
-  async listByHouseId(houseId: string): Promise<CommunicationRequestDto[]> {
-    const communicationRequests = await this.communicationRequestModel
-      .find({ houseId })
-      .exec();
+  // async listByHouseId(houseId: string): Promise<CommunicationRequestDto[]> {
+  //   const communicationRequests = await this.communicationRequestModel
+  //     .find({ houseId })
+  //     .exec();
 
-    return communicationRequests.map((request) =>
-      CommunicationRequestDto.create(request),
+  // return communicationRequests.map((request) =>
+  //   CommunicationRequestDto.create(request),
+  // );
+  // }
+
+  async listByHouseId(
+    houseId: string,
+    filterRequest: FilterRequest,
+  ): Promise<PaginatedResult<CommunicationRequest>> {
+    const baseQuery = { houseId: toObjectIdOrLeave(houseId) };
+    const query = createMongoQueryService<CommunicationRequest>(
+      this.communicationRequestModel,
     );
+    return query.search({
+      baseQuery,
+      filterRequest,
+      options: {
+        // searchableFields: ["content", "sender.name", "sender.displayName", "sender.email"],
+        dateField: "timestamp",
+      },
+    });
   }
+
   async validate(
     id: string,
     validateCommunicationRequestDto: ValidateCommunicationRequestDto,

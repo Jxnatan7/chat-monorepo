@@ -2,6 +2,12 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Message, MessageDocument } from "../schemas/message.schema";
+import {
+  createMongoQueryService,
+  FilterRequest,
+  PaginatedResult,
+  toObjectIdOrLeave,
+} from "src/@core/services/mongo-query.service";
 
 @Injectable()
 export class MessageService {
@@ -9,4 +15,19 @@ export class MessageService {
     @InjectModel(Message.name)
     private readonly messageModel: Model<MessageDocument>,
   ) {}
+
+  async getMessagesByChatId(
+    chatId: string,
+    filterRequest: FilterRequest,
+  ): Promise<PaginatedResult<MessageDocument>> {
+    const baseQuery = { chatId: toObjectIdOrLeave(chatId) };
+    const query = createMongoQueryService<MessageDocument>(this.messageModel);
+    return query.search({
+      baseQuery,
+      filterRequest,
+      options: {
+        dateField: "timestamp",
+      },
+    });
+  }
 }
