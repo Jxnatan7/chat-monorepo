@@ -2,6 +2,8 @@
   "name": "monorepo",
   "private": true,
   "scripts": {
+    "mobile": "turbo run mobile",
+    "start": "turbo run start",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
@@ -12,9 +14,6 @@
     "prettier": "^3.6.2",
     "turbo": "^2.6.0",
     "typescript": "5.9.2",
-        "@nestjs/cli": "^11.0.0",
-    "@nestjs/schematics": "^11.0.0",
-    "@nestjs/testing": "^11.0.1",
     "ts-node": "^10.9.2",
     "ts-jest": "^29.2.5",
     "jest": "^29.7.0",
@@ -22,7 +21,8 @@
     "tsconfig-paths": "^4.2.0",
     "@types/node": "^22.10.7",
     "@types/jest": "^29.5.14",
-    "supertest": "^7.0.0"
+    "supertest": "^7.0.0",
+    "@types/react": "~19.1.0"
   },
   "engines": {
     "node": ">=18"
@@ -31,5 +31,9 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "overrides": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  }
 }
