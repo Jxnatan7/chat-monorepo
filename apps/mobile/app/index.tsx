@@ -3,12 +3,12 @@ import Button from "@/components/theme/Button";
 import Container from "@/components/theme/Container";
 import { Image } from "expo-image";
 
-export default function TabOneScreen() {
+export default function App() {
   return (
     <Container variant="screen">
       <Image
         source={require("@/assets/images/init-image.svg")}
-        style={{ width: 262, height: 271, marginTop: 200 }}
+        style={{ width: 262, height: 271, marginTop: 180 }}
         contentFit="cover"
         cachePolicy="memory"
       />
@@ -17,7 +17,7 @@ export default function TabOneScreen() {
         alignItems="center"
         justifyContent="center"
         flexDirection="row"
-        px="xl"
+        px="l"
         mt="xl"
         mb="xl"
       >
@@ -26,7 +26,13 @@ export default function TabOneScreen() {
         </Text>
       </Box>
 
-      <Box width="100%" flex={1} alignItems="center" justifyContent="flex-end">
+      <Box
+        width="100%"
+        flex={1}
+        alignItems="center"
+        justifyContent="flex-end"
+        mb="m"
+      >
         <Text variant="body" textAlign="center">
           Termos e Política de Privacidade
         </Text>

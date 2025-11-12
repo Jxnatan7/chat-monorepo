@@ -23,7 +23,7 @@ const pallete = {
   keyboardTextLight: "#0F1828",
   keyboardTextDark: "#F7F7FC",
 
-  inputBackgroundLight: "#F7F7FC",
+  inputBackgroundLight: "#F0F0F6",
   inputBackgroundDark: "#152033",
 
   inputTextLight: "#0F1828",

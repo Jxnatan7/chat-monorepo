@@ -1,7 +1,9 @@
-import { Text, TextProps } from "@/components/restyle";
-import RestyleTouchableOpacity, {
+import {
+  RestyleTouchableOpacity,
   RestyleTouchableOpacityProps,
-} from "@/components/restyle/Button";
+  Text,
+  TextProps,
+} from "@/components/restyle";
 import { Theme } from "@/theme";
 import { useTheme } from "@shopify/restyle";
 import React from "react";

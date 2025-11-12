@@ -13,11 +13,11 @@ import {
   VariantProps,
   border,
 } from "@shopify/restyle";
-import { TouchableOpacity, TouchableOpacityProps } from "react-native";
+import { TextInput, TextInputProps } from "react-native";
 import type { Theme } from "@/theme";
 
-const buttonVariant = createVariant<Theme>({
-  themeKey: "buttonVariants",
+const textInputVariant = createVariant<Theme>({
+  themeKey: "textInputVariants",
   property: "variant",
 });
 
@@ -26,23 +26,21 @@ type RestyleProps = SpacingProps<Theme> &
   BackgroundColorProps<Theme> &
   BorderProps<Theme> &
   ColorProps<Theme> &
-  VariantProps<Theme, "buttonVariants"> &
-  TouchableOpacityProps;
+  VariantProps<Theme, "textInputVariants"> &
+  TextInputProps;
 
-const RestyleTouchableOpacity = createRestyleComponent<RestyleProps, Theme>(
+export const RestyleTextInput = createRestyleComponent<RestyleProps, Theme>(
   [
     spacing,
     layout,
     backgroundColor,
     border as unknown as any,
     color,
-    buttonVariant,
+    textInputVariant,
   ],
-  TouchableOpacity
+  TextInput
 );
 
-export type RestyleTouchableOpacityProps = React.ComponentProps<
-  typeof RestyleTouchableOpacity
+export type RestyleTextInputProps = React.ComponentProps<
+  typeof RestyleTextInput
 >;
-
-export default RestyleTouchableOpacity;

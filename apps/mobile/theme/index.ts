@@ -13,6 +13,8 @@ const theme = createTheme({
   containerVariants: {
     screen: {
       flex: 1,
+      p: "m",
+      pt: "xl",
       alignItems: "center",
       backgroundColor: "backgroundLight",
     },
@@ -54,6 +56,35 @@ const theme = createTheme({
       lineHeight: 24,
     },
     defaults: {},
+  },
+  textInputVariants: {
+    default: {
+      backgroundColor: "inputBackgroundLight",
+      color: "inputTextLight",
+      width: "100%",
+      height: 40,
+      borderRadius: 6,
+      p: "s",
+      fontSize: 16,
+    },
+    primary: {
+      backgroundColor: "inputBackgroundLight",
+      color: "inputTextLight",
+    },
+    secondary: {
+      backgroundColor: "inputBackgroundDark",
+      color: "inputTextDark",
+    },
+    code: {
+      backgroundColor: "inputBackgroundLight",
+      color: "inputTextLight",
+      width: 56,
+      height: 56,
+      borderRadius: "50%",
+      textAlign: "center",
+      fontSize: 22,
+      fontWeight: "600",
+    },
   },
 });
 

@@ -7,11 +7,12 @@ import "react-native-reanimated";
 import { ThemeProvider } from "@shopify/restyle";
 import theme from "@/theme";
 import useImages from "@/hooks/useImages";
+import { StatusBar } from "expo-status-bar";
 
 export { ErrorBoundary } from "expo-router";
 
 export const unstable_settings = {
-  initialRouteName: "(tabs)",
+  initialRouteName: "test",
 };
 
 SplashScreen.preventAutoHideAsync();
@@ -44,9 +45,11 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <ThemeProvider theme={theme}>
+      <StatusBar style="inverted" />
       <Stack>
+        <Stack.Screen name="test" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );
