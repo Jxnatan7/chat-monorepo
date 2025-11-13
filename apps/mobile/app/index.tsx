@@ -1,6 +1,6 @@
 import { Box, Text } from "@/components/restyle";
 import Button from "@/components/theme/Button";
-import Container from "@/components/theme/Container";
+import { Container } from "@/components/theme/Container";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 

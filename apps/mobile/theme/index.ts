@@ -26,6 +26,14 @@ const theme = createTheme({
     },
   },
   buttonVariants: {
+    icon: {
+      backgroundColor: "backgroundLight",
+      color: "buttonTextLight",
+    },
+    default: {
+      backgroundColor: "buttonBackgroundLight",
+      color: "buttonTextLight",
+    },
     defaults: {
       backgroundColor: "buttonBackgroundLight",
       color: "buttonTextLight",
@@ -40,6 +48,11 @@ const theme = createTheme({
     },
   },
   textVariants: {
+    containerHeader: {
+      fontFamily: "Mulish",
+      fontWeight: "bold",
+      fontSize: 24,
+    },
     button: {
       fontFamily: "Mulish",
       fontWeight: 600,
@@ -70,12 +83,37 @@ const theme = createTheme({
     },
   },
   textInputVariants: {
-    default: {
+    iconRigth: {
       fontFamily: "Mulish",
-
       backgroundColor: "inputBackgroundLight",
       color: "inputTextLight",
-      width: "100%",
+      flex: 1,
+      height: 40,
+      borderTopLeftRadius: 6,
+      borderBottomLeftRadius: 6,
+      borderBottomRightRadius: 0,
+      borderTopRightRadius: 0,
+      p: "s",
+      fontSize: 16,
+    },
+    iconLeft: {
+      fontFamily: "Mulish",
+      backgroundColor: "inputBackgroundLight",
+      color: "inputTextLight",
+      flex: 1,
+      height: 40,
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 6,
+      borderTopRightRadius: 6,
+      p: "s",
+      fontSize: 16,
+    },
+    default: {
+      fontFamily: "Mulish",
+      backgroundColor: "inputBackgroundLight",
+      color: "inputTextLight",
+      flex: 1,
       height: 40,
       borderRadius: 6,
       p: "s",
