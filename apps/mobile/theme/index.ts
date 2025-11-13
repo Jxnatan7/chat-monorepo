@@ -48,6 +48,15 @@ const theme = createTheme({
     },
   },
   textVariants: {
+    messageTime: {
+      fontFamily: "Mulish",
+      fontSize: 12,
+    },
+    message: {
+      fontFamily: "Mulish",
+      fontSize: 16,
+      lineHeight: 24,
+    },
     containerHeader: {
       fontFamily: "Mulish",
       fontWeight: "bold",
@@ -144,6 +153,11 @@ const theme = createTheme({
     },
   },
   flashListVariants: {
+    messages: {
+      backgroundColor: "backgroundLight",
+      width: "100%",
+      maxHeight: 800,
+    },
     defaults: {
       backgroundColor: "backgroundLight",
       width: "100%",

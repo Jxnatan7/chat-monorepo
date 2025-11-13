@@ -11,15 +11,15 @@ const pallete = {
 
   textLight: "#0F1828",
   textDark: "#F7F7FC",
-  textBlue: "#002DE3",
+  textBlue: "#0053e3ff",
   textGray: "#ADB5BD",
 
-  buttonBackgroundLight: "#002DE3",
-  buttonBackgroundDark: "#002DE3",
+  buttonBackgroundLight: "#0053e3ff",
+  buttonBackgroundDark: "#0053e3ff",
   buttonBackgroundGray: "#F7F7FC",
 
   buttonTextLight: "#FFFFFF",
-  buttonTextDark: "#002DE3",
+  buttonTextDark: "#0053e3ff",
 
   keyboardBackgroundLight: "#F7F7FC",
   keyboardBackgroundDark: "#0F1828",
@@ -40,6 +40,12 @@ const pallete = {
   inputIconDark: "#ADB5BD",
 
   borderGray: "#EDEDED",
+
+  myMessageBackground: "#0053e3ff",
+  otherMessageBackground: "#F7F7FC",
+
+  myMessageColor: "#FFF",
+  otherMessageColor: "#000",
 };
 
 export default pallete;

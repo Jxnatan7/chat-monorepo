@@ -1,10 +1,10 @@
 import { Container } from "@/components/theme/Container";
-import { SearchInput } from "@/components/theme/SearchInput";
+import { MessageList } from "@/components/theme/MessageList";
 
 export default function Test() {
   return (
-    <Container variant="screen">
-      <SearchInput />
+    <Container variant="screen" hideHeader>
+      <MessageList />
     </Container>
   );
 }
