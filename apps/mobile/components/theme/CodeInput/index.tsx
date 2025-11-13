@@ -15,8 +15,6 @@ import {
   TextInputKeyPressEventData,
   TouchableWithoutFeedback,
 } from "react-native";
-import { useTheme } from "@shopify/restyle";
-import type { Theme } from "@/theme";
 import { Box, RestyleTextInput } from "@/components/restyle";
 
 export type CodeInputProps = {
@@ -65,7 +63,7 @@ const Cell = React.memo(
       onFocus,
       autoFocus,
       secure,
-      keyboardType,
+      keyboardType = "name-phone-pad",
       testID,
     } = props;
 
@@ -73,7 +71,7 @@ const Cell = React.memo(
       <RestyleTextInput
         variant="code"
         ref={ref as any}
-        value={value}
+        value={value.toUpperCase()}
         onChangeText={(t: string) => onChange(index, t)}
         onKeyPress={(e: NativeSyntheticEvent<TextInputKeyPressEventData>) =>
           onKeyPress(index, e)
@@ -95,6 +93,7 @@ const Cell = React.memo(
         {...(Platform.OS === "android"
           ? { underlineColorAndroid: "transparent" }
           : {})}
+        backgroundColor={value ? "transparent" : "inputBackgroundLight"}
       />
     );
   }),
@@ -112,11 +111,9 @@ const CodeInput = forwardRef<CodeInputHandle, CodeInputProps>((props, ref) => {
     onFullfill,
     autoFocus = false,
     secure = false,
-    keyboardType = Platform.select({ ios: "number-pad", android: "numeric" }),
+    keyboardType,
     testIDPrefix = "code-input",
   } = props;
-
-  const theme = useTheme<Theme>();
 
   const [internal, setInternal] = useState<string[]>(() =>
     new Array(length).fill("")
@@ -190,14 +187,13 @@ const CodeInput = forwardRef<CodeInputHandle, CodeInputProps>((props, ref) => {
 
   const handleCellChange = useCallback(
     (index: number, text: string) => {
-      // paste / multi-char
       if (text.length > 1) {
         const chars = text.split("");
         const next = [...internalRef.current];
         let i = index;
         for (const ch of chars) {
           if (i >= length) break;
-          next[i] = ch;
+          next[i] = ch.toUpperCase();
           i++;
         }
         if (value === undefined) {
@@ -297,7 +293,14 @@ const CodeInput = forwardRef<CodeInputHandle, CodeInputProps>((props, ref) => {
 
   return (
     <TouchableWithoutFeedback onPress={handleContainerPress}>
-      <Box style={{ flexDirection: "row", justifyContent: "center", gap: 8 }}>
+      <Box
+        style={{
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "center",
+          gap: 30,
+        }}
+      >
         {cells.map((i) => (
           <Cell
             ref={(el: RNTextInput | null) => (refs.current[i] = el) as any}

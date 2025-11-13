@@ -78,12 +78,12 @@ const theme = createTheme({
     code: {
       backgroundColor: "inputBackgroundLight",
       color: "inputTextLight",
-      width: 56,
-      height: 56,
+      width: 30,
+      height: 30,
       borderRadius: "50%",
       textAlign: "center",
-      fontSize: 22,
-      fontWeight: "600",
+      fontSize: 40,
+      fontWeight: "700",
     },
   },
 });

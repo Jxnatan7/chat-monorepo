@@ -8,6 +8,7 @@ import { ThemeProvider } from "@shopify/restyle";
 import theme from "@/theme";
 import useImages from "@/hooks/useImages";
 import { StatusBar } from "expo-status-bar";
+import KeyboardProvider from "@/contexts/KeyboardContext";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -44,13 +45,15 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <ThemeProvider theme={theme}>
-      <StatusBar style="inverted" />
-      <Stack>
-        <Stack.Screen name="test" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-      </Stack>
-    </ThemeProvider>
+    <KeyboardProvider>
+      <ThemeProvider theme={theme}>
+        <StatusBar style="inverted" />
+        <Stack>
+          <Stack.Screen name="test" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+        </Stack>
+      </ThemeProvider>
+    </KeyboardProvider>
   );
 }

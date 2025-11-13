@@ -10,12 +10,7 @@ export default function Test() {
         Test
       </Text>
       <TextInput variant="default" placeholder="Nome" marginBottom="xl" />
-      <CodeInput
-        length={6}
-        autoFocus
-        keyboardType="number-pad"
-        onFullfill={() => {}}
-      />
+      <CodeInput length={6} onFullfill={() => {}} />
     </Container>
   );
 }

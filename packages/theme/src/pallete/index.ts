@@ -1,4 +1,6 @@
 const pallete = {
+  transparent: "transparent",
+
   backgroundLight: "#FFFFFF",
   backgroundDark: "#0F1828",
   backgroundGray: "#ADB5BD",
