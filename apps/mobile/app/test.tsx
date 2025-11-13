@@ -1,16 +1,24 @@
-import { Text } from "@/components/restyle";
-import CodeInput from "@/components/theme/CodeInput";
 import Container from "@/components/theme/Container";
-import { TextInput } from "@/components/theme/TextInput";
+import { FlashList } from "@/components/theme/FlashList";
+import { ListItem } from "@/components/theme/ListItem";
+
+const data = [
+  { title: "Casa de baixo", subtitle: "Condomínio do Lago" },
+  { title: "Casa de baixo", subtitle: "Condomínio do Lago" },
+  { title: "Casa de baixo", subtitle: "Condomínio do Lago" },
+];
+
+const renderItem = ({ item }: any) => {
+  return <ListItem title={item.title} subtitle={item.subtitle} />;
+};
 
 export default function Test() {
   return (
     <Container variant="screen">
-      <Text variant="header" mb="xl">
-        Test
-      </Text>
-      <TextInput variant="default" placeholder="Nome" marginBottom="xl" />
-      <CodeInput length={6} onFullfill={() => {}} />
+      <FlashList
+        data={[...data, ...data, ...data, ...data, ...data, ...data]}
+        renderItem={renderItem}
+      />
     </Container>
   );
 }

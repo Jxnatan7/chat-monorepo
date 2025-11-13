@@ -26,7 +26,7 @@ const theme = createTheme({
     },
   },
   buttonVariants: {
-    default: {
+    defaults: {
       backgroundColor: "buttonBackgroundLight",
       color: "buttonTextLight",
     },
@@ -52,13 +52,27 @@ const theme = createTheme({
       fontSize: 30,
     },
     body: {
+      fontFamily: "Mulish",
+
       fontSize: 16,
       lineHeight: 24,
     },
     defaults: {},
+    infoTitle: {
+      fontFamily: "Mulish",
+      fontWeight: "bold",
+      fontSize: 16,
+    },
+    infoSubtitle: {
+      fontFamily: "Mulish",
+      fontSize: 14,
+      color: "textGray",
+    },
   },
   textInputVariants: {
     default: {
+      fontFamily: "Mulish",
+
       backgroundColor: "inputBackgroundLight",
       color: "inputTextLight",
       width: "100%",
@@ -68,14 +82,19 @@ const theme = createTheme({
       fontSize: 16,
     },
     primary: {
+      fontFamily: "Mulish",
+
       backgroundColor: "inputBackgroundLight",
       color: "inputTextLight",
     },
     secondary: {
+      fontFamily: "Mulish",
+
       backgroundColor: "inputBackgroundDark",
       color: "inputTextDark",
     },
     code: {
+      fontFamily: "Mulish",
       backgroundColor: "inputBackgroundLight",
       color: "inputTextLight",
       width: 30,
@@ -84,6 +103,13 @@ const theme = createTheme({
       textAlign: "center",
       fontSize: 40,
       fontWeight: "700",
+    },
+  },
+  flashListVariants: {
+    defaults: {
+      backgroundColor: "backgroundLight",
+      width: "100%",
+      maxHeight: 400,
     },
   },
 });

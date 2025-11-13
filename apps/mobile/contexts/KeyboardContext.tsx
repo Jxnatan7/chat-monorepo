@@ -155,7 +155,6 @@ const styles = StyleSheet.create({
   },
   rightButtonContainer: {
     alignItems: "flex-end",
-    marginBottom: 8,
   },
   closeButton: {
     backgroundColor: "rgba(0,0,0,0.6)",

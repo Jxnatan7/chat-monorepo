@@ -6,3 +6,4 @@ export {
   RestyleTouchableOpacity,
 } from "./TouchableOpacity";
 export { RestyleTextInput, RestyleTextInputProps } from "./TextInput";
+export { RestyleFlashList, RestyleFlashListProps } from "./FlashList";

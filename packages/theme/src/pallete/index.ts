@@ -4,6 +4,7 @@ const pallete = {
   backgroundLight: "#FFFFFF",
   backgroundDark: "#0F1828",
   backgroundGray: "#ADB5BD",
+  backgroundGrayLight: "#F0F0F6",
 
   titleLight: "#0F1828",
   titleDark: "#F7F7FC",
@@ -11,6 +12,7 @@ const pallete = {
   textLight: "#0F1828",
   textDark: "#F7F7FC",
   textBlue: "#002DE3",
+  textGray: "#ADB5BD",
 
   buttonBackgroundLight: "#002DE3",
   buttonBackgroundDark: "#002DE3",
@@ -36,6 +38,8 @@ const pallete = {
 
   inputIconLight: "#ADB5BD",
   inputIconDark: "#ADB5BD",
+
+  borderGray: "#EDEDED",
 };
 
 export default pallete;

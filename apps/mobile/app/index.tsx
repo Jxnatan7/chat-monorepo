@@ -2,8 +2,10 @@ import { Box, Text } from "@/components/restyle";
 import Button from "@/components/theme/Button";
 import Container from "@/components/theme/Container";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 
 export default function App() {
+  const { push } = useRouter();
   return (
     <Container variant="screen">
       <Image
@@ -36,7 +38,13 @@ export default function App() {
         <Text variant="body" textAlign="center">
           Termos e Política de Privacidade
         </Text>
-        <Button text="Começar a conversar" marginVertical="s" />
+        <Button
+          text="Começar a conversar"
+          marginVertical="s"
+          onPress={() => {
+            push("/test");
+          }}
+        />
         <Button text="Fazer Login" variant="secondary" />
       </Box>
     </Container>
