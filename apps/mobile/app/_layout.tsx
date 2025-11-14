@@ -9,6 +9,7 @@ import theme from "@/theme";
 import useImages from "@/hooks/useImages";
 import { StatusBar } from "expo-status-bar";
 import KeyboardProvider from "@/contexts/KeyboardContext";
+import AuthProvider from "@/contexts/AuthProvider";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -46,20 +47,22 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <KeyboardProvider>
-      <ThemeProvider theme={theme}>
-        <StatusBar style="inverted" />
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="register" options={{ headerShown: false }} />
-          <Stack.Screen name="chat" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="(communication-request)"
-            options={{ headerShown: false }}
-          />
-        </Stack>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider theme={theme}>
+          <StatusBar style="inverted" />
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="register" options={{ headerShown: false }} />
+            <Stack.Screen name="chat" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(communication-request)"
+              options={{ headerShown: false }}
+            />
+          </Stack>
+        </ThemeProvider>
+      </AuthProvider>
     </KeyboardProvider>
   );
 }

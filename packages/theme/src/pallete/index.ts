@@ -46,6 +46,8 @@ const pallete = {
 
   myMessageColor: "#FFF",
   otherMessageColor: "#000",
+
+  error: "#FF0000",
 };
 
 export default pallete;

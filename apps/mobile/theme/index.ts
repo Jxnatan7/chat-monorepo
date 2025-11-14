@@ -90,6 +90,12 @@ const theme = createTheme({
     },
   },
   textVariants: {
+    "label-error": {
+      width: "100%",
+      fontFamily: "Mulish",
+      fontSize: 14,
+      color: "error",
+    },
     label: {
       fontFamily: "Mulish",
       fontSize: 14,

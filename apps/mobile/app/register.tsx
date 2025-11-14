@@ -17,13 +17,7 @@ export default function Register() {
       <Button
         text="Continuar"
         marginTop="xxxl"
-        onPress={() => push("/(tabs)")}
-      />
-      <Button
-        variant="secondary"
-        text="Criar Conta"
-        marginTop="s"
-        onPress={() => push("/register")}
+        onPress={() => push("/(tabs)/user")}
       />
     </Container>
   );

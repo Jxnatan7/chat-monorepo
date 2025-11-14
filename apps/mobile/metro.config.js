@@ -10,6 +10,7 @@ config.watchFolders = [workspaceRoot];
 
 config.resolver = {
   ...config.resolver,
+  blockList: [/.*\/apps\/backend\/.*/],
   extraNodeModules: new Proxy(
     {},
     {
