@@ -32,7 +32,7 @@ export class AuthController {
   public async register(
     @Body() createUserRequest: CreateUserDto,
   ): Promise<SimpleUser> {
-    const user = await this.userService.create(createUserRequest);
+    const user = await this.userService.createResident(createUserRequest);
     return SimpleUser.createFromUser(user);
   }
 }

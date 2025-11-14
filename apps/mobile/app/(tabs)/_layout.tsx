@@ -1,13 +1,7 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
-
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+import Entypo from "@expo/vector-icons/Entypo";
 
 export default function TabLayout() {
   return (
@@ -19,9 +13,27 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
+        name="user"
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="user-circle" size={28} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="index"
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <Entypo name="chat" size={28} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="house"
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="home" size={28} color={color} />
+          ),
         }}
       />
     </Tabs>

@@ -28,6 +28,12 @@ export class UserService {
     return user;
   }
 
+  async createResident(createUserDto: CreateUserDto): Promise<User> {
+    await this.ensureEmailIsUnique(createUserDto.email);
+    const user = await new this.userModel(createUserDto).save();
+    return user;
+  }
+
   async findAll(): Promise<User[]> {
     return this.userModel.find().exec();
   }
@@ -74,6 +80,7 @@ export class UserService {
   }
 
   private async addResidentToHouse(user: User): Promise<void> {
+    if (!user.houseId) return;
     if (user.role !== UserRole.RESIDENT) return;
 
     await this.houseModel.findByIdAndUpdate(

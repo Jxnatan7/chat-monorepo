@@ -43,7 +43,7 @@ export class HouseController {
   }
 
   @Post()
-  @UseGuards(AuthGuard("jwt"), ManagerOrAdminGuard)
+  @UseGuards(AuthGuard("jwt"))
   async create(@Body() createHouseDto: CreateHouseDto) {
     const house = await this.houseService.create(createHouseDto);
     return new SimpleHouse(house);

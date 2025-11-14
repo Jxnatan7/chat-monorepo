@@ -4,14 +4,15 @@ import { Container } from "@/components/theme/Container";
 import { TextInput } from "@/components/theme/TextInput";
 import { useRouter } from "expo-router";
 
-export default function Login() {
+export default function Register() {
   const { push } = useRouter();
   return (
     <Container variant="screen">
       <Text variant="header" mt="xxxl">
-        Faça o seu Login
+        Crie a sua conta
       </Text>
-      <TextInput autoFocus marginTop="xl" placeholder="E-mail" />
+      <TextInput autoFocus marginTop="xl" placeholder="Nome" />
+      <TextInput marginTop="m" placeholder="E-mail" />
       <TextInput marginTop="m" placeholder="Senha" secureTextEntry />
       <Button
         text="Continuar"

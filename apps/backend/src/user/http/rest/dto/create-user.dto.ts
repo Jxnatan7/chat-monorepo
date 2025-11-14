@@ -4,7 +4,7 @@ export class CreateUserDto {
   readonly name: string;
   readonly email: string;
   readonly password: string;
-  readonly role: UserRole;
+  readonly role: UserRole = UserRole.RESIDENT;
   readonly houseId: string;
   readonly providerId: string;
   readonly communicationRequestId: string;

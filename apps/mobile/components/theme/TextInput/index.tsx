@@ -5,6 +5,7 @@ import {
   BoxProps,
   RestyleTextInput,
   RestyleTextInputProps,
+  Text,
 } from "@/components/restyle";
 import theme from "@/theme";
 
@@ -15,6 +16,7 @@ export type TextInputProps = RestyleTextInputProps & {
   iconDirection?: IconDirection;
   iconContainerStyle?: ViewStyle;
   containerProps?: BoxProps;
+  label?: string;
 };
 
 export const TextInput = ({
@@ -22,38 +24,42 @@ export const TextInput = ({
   iconDirection = "left",
   iconContainerStyle,
   containerProps,
+  label,
   ...props
 }: TextInputProps) => {
   const isRight = iconDirection === "right";
 
   return (
-    <Box
-      flexDirection={isRight ? "row-reverse" : "row"}
-      alignItems="center"
-      {...containerProps}
-    >
-      {icon && (
-        <Box
-          backgroundColor="inputBackgroundLight"
-          height={40}
-          padding="s"
-          borderTopLeftRadius={isRight ? 0 : 6}
-          borderBottomLeftRadius={isRight ? 0 : 6}
-          borderBottomRightRadius={isRight ? 6 : 0}
-          borderTopRightRadius={isRight ? 6 : 0}
-          justifyContent="center"
-          alignItems="center"
-          style={iconContainerStyle}
-        >
-          {icon}
-        </Box>
+    <Box width="100%" {...containerProps}>
+      {label && (
+        <Text width="100%" mb="s" variant="label">
+          {label}
+        </Text>
       )}
+      <Box flexDirection={isRight ? "row-reverse" : "row"} alignItems="center">
+        {icon && (
+          <Box
+            backgroundColor="inputBackgroundLight"
+            height={40}
+            padding="s"
+            borderTopLeftRadius={isRight ? 0 : 6}
+            borderBottomLeftRadius={isRight ? 0 : 6}
+            borderBottomRightRadius={isRight ? 6 : 0}
+            borderTopRightRadius={isRight ? 6 : 0}
+            justifyContent="center"
+            alignItems="center"
+            style={iconContainerStyle}
+          >
+            {icon}
+          </Box>
+        )}
 
-      <RestyleTextInput
-        variant={!icon ? "default" : isRight ? "iconRigth" : "iconLeft"}
-        placeholderTextColor={theme.colors.inputPlaceholderLight}
-        {...props}
-      />
+        <RestyleTextInput
+          variant={!icon ? "default" : isRight ? "iconRigth" : "iconLeft"}
+          placeholderTextColor={theme.colors.inputPlaceholderLight}
+          {...props}
+        />
+      </Box>
     </Box>
   );
 };

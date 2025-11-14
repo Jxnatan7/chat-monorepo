@@ -1,4 +1,8 @@
-import { RestyleContainer, RestyleContainerProps } from "@/components/restyle";
+import {
+  Box,
+  RestyleContainer,
+  RestyleContainerProps,
+} from "@/components/restyle";
 import { ContainerHeader, ContainerHeaderProps } from "../ContainerHeader";
 
 export type ContainerProps = RestyleContainerProps & {
@@ -22,6 +26,7 @@ export const Container = ({
           {...containerHeaderProps}
         />
       )}
+      <Box mt="xxxl" />
       {children}
     </RestyleContainer>
   );

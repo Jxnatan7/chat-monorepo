@@ -14,7 +14,7 @@ export default function Name() {
       <Text variant="header2" px="xxxl" mb="xxl">
         O seu nome é essencial para que o residente aceite a sua solicitação
       </Text>
-      <TextInput placeholder="O seu nome..." />
+      <TextInput autoFocus placeholder="O seu nome..." />
       <Button text="Continuar" marginTop="xxxl" />
     </Container>
   );

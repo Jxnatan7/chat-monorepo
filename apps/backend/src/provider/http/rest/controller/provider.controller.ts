@@ -40,7 +40,7 @@ export class ProviderController {
   }
 
   @Post()
-  @UseGuards(AuthGuard("jwt"), AdminGuard)
+  @UseGuards(AuthGuard("jwt"))
   async create(@Body() createProviderDto: CreateProviderDto) {
     const provider = await this.providerService.create(createProviderDto);
     return new SimpleProvider(provider);

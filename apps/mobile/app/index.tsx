@@ -10,7 +10,7 @@ export default function App() {
     <Container variant="screen" hideHeader>
       <Image
         source={require("@/assets/images/init-image.svg")}
-        style={{ width: 262, height: 271, marginTop: 180 }}
+        style={{ width: 262, height: 271, marginTop: 120 }}
         contentFit="cover"
         cachePolicy="memory"
       />
