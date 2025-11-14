@@ -1,38 +1,30 @@
-import { Box, Text } from "@/components/restyle";
-import Button from "@/components/theme/Button";
-import Container from "@/components/theme/Container";
-import { Image } from "expo-image";
+import { Container } from "@/components/theme/Container";
+import { FlashList } from "@/components/theme/FlashList";
+import { ListItem } from "@/components/theme/ListItem";
+import { SearchInput } from "@/components/theme/SearchInput";
+import { useRouter } from "expo-router";
 
-export default function TabOneScreen() {
+export default function Home() {
+  const { push } = useRouter();
+
   return (
-    <Container variant="screen">
-      <Image
-        source={require("@/assets/images/init-image.svg")}
-        style={{ width: 262, height: 271, marginTop: 200 }}
-        contentFit="cover"
-        cachePolicy="memory"
+    <Container
+      variant="screen"
+      containerHeaderProps={{ title: "Conversas", hideBackButton: true }}
+    >
+      <SearchInput containerProps={{ my: "m" }} />
+      <FlashList
+        data={[
+          1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+        ]}
+        renderItem={() => (
+          <ListItem
+            title="Residente 1"
+            subtitle="Residente 1"
+            onPress={() => push("/chat")}
+          />
+        )}
       />
-      <Box
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="row"
-        px="xl"
-        mt="xl"
-        mb="xl"
-      >
-        <Text variant="header" textAlign="center" flex={1}>
-          Conecte-se de forma simples e rápida com qualquer pessoa.
-        </Text>
-      </Box>
-
-      <Box width="100%" flex={1} alignItems="center" justifyContent="flex-end">
-        <Text variant="body" textAlign="center">
-          Termos e Política de Privacidade
-        </Text>
-        <Button text="Começar a conversar" marginVertical="s" />
-        <Button text="Fazer Login" variant="secondary" />
-      </Box>
     </Container>
   );
 }

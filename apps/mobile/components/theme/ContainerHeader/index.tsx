@@ -1,16 +1,17 @@
-import { Box, Text } from "@/components/restyle";
+import { Box, BoxProps, Text } from "@/components/restyle";
 import { BackButton } from "../BackButton";
 
 export type ContainerHeaderProps = {
   title?: string;
   children?: React.ReactNode;
   hideBackButton?: boolean;
-};
+} & BoxProps;
 
 export const ContainerHeader = ({
   title,
   hideBackButton = false,
   children,
+  ...props
 }: ContainerHeaderProps) => {
   return (
     <Box
@@ -21,6 +22,7 @@ export const ContainerHeader = ({
       height={60}
       gap="m"
       justifyContent="space-between"
+      {...props}
     >
       {!hideBackButton && <BackButton />}
       {title && (

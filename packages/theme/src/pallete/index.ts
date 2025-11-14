@@ -1,5 +1,5 @@
 const pallete = {
-  transparent: "transparent",
+  transparent: "#FFFFFF00  ",
 
   backgroundLight: "#FFFFFF",
   backgroundDark: "#0F1828",
@@ -42,7 +42,7 @@ const pallete = {
   borderGray: "#EDEDED",
 
   myMessageBackground: "#0053e3ff",
-  otherMessageBackground: "#F7F7FC",
+  otherMessageBackground: "#FFF",
 
   myMessageColor: "#FFF",
   otherMessageColor: "#000",

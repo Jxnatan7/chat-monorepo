@@ -13,6 +13,13 @@ const theme = createTheme({
     xxxl: 80,
   },
   containerVariants: {
+    chat: {
+      flex: 1,
+      p: "m",
+      pt: "xl",
+      alignItems: "center",
+      backgroundColor: "backgroundGrayLight",
+    },
     screen: {
       flex: 1,
       p: "m",
@@ -29,7 +36,7 @@ const theme = createTheme({
   },
   buttonVariants: {
     icon: {
-      backgroundColor: "backgroundLight",
+      backgroundColor: "transparent",
       color: "buttonTextLight",
     },
     default: {
@@ -162,7 +169,7 @@ const theme = createTheme({
   },
   flashListVariants: {
     messages: {
-      backgroundColor: "backgroundLight",
+      backgroundColor: "backgroundGrayLight",
       width: "100%",
       maxHeight: 800,
     },

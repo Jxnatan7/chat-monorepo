@@ -112,7 +112,7 @@ export function KeyboardProvider({
             pointerEvents="box-none"
             style={[
               styles.accessoryWrapper,
-              { transform: [{ translateY }], bottom: keyboardHeight },
+              { transform: [{ translateY }], bottom: keyboardHeight - 25 },
             ]}
           >
             <SafeAreaView pointerEvents="box-none">

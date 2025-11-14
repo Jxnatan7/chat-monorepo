@@ -14,6 +14,7 @@ export const Message = ({
   return (
     <Box
       minHeight={60}
+      maxWidth="90%"
       backgroundColor={
         isMyMessage ? "myMessageBackground" : "otherMessageBackground"
       }
@@ -22,7 +23,7 @@ export const Message = ({
       borderTopLeftRadius={16}
       borderTopRightRadius={16}
       mb="m"
-      padding="s"
+      padding="m"
       flexDirection="column"
       justifyContent="center"
       alignSelf={isMyMessage ? "flex-end" : "flex-start"}

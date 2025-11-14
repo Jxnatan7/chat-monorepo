@@ -45,7 +45,13 @@ export default function App() {
             push("/(communication-request)/(steps)/code");
           }}
         />
-        <Button text="Fazer Login" variant="secondary" />
+        <Button
+          text="Fazer Login"
+          variant="secondary"
+          onPress={() => {
+            push("/login");
+          }}
+        />
       </Box>
     </Container>
   );
