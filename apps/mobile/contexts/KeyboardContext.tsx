@@ -16,6 +16,7 @@ import {
   StyleSheet,
   View,
   ViewStyle,
+  Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -56,19 +57,26 @@ export function KeyboardProvider({
 
     const onShow = (e: KeyboardEvent) => {
       const h = e.endCoordinates ? e.endCoordinates.height : 0;
+      const duration =
+        e.duration && e.duration > 0
+          ? e.duration
+          : Platform.OS === "ios"
+            ? 250
+            : 200;
       setKeyboardHeight(h);
       setKeyboardShown(true);
       Animated.timing(anim, {
         toValue: 1,
-        duration: 200,
+        duration,
         useNativeDriver: true,
       }).start();
     };
 
-    const onHide = () => {
+    const onHide = (e?: KeyboardEvent) => {
+      const duration = e && e.duration && e.duration > 0 ? e.duration : 150;
       Animated.timing(anim, {
         toValue: 0,
-        duration: 150,
+        duration,
         useNativeDriver: true,
       }).start(() => {
         setKeyboardHeight(0);
@@ -97,14 +105,21 @@ export function KeyboardProvider({
     [keyboardShown, keyboardHeight]
   );
 
-  const translateY = anim.interpolate({
+  const windowHeight = Dimensions.get("window").height;
+  const maxShift = Math.min(keyboardHeight, windowHeight * 0.1);
+
+  const contentTranslateY = anim.interpolate({
     inputRange: [0, 1],
-    outputRange: [20, 0],
+    outputRange: [0, -maxShift],
   });
 
   return (
     <KeyboardContext.Provider value={value}>
-      {children}
+      <Animated.View
+        style={{ flex: 1, transform: [{ translateY: contentTranslateY }] }}
+      >
+        {children}
+      </Animated.View>
 
       <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
         {keyboardShown && (
@@ -112,7 +127,7 @@ export function KeyboardProvider({
             pointerEvents="box-none"
             style={[
               styles.accessoryWrapper,
-              { transform: [{ translateY }], bottom: keyboardHeight - 25 },
+              { transform: [{ translateY: 0 }], bottom: keyboardHeight - 25 },
             ]}
           >
             <SafeAreaView pointerEvents="box-none">

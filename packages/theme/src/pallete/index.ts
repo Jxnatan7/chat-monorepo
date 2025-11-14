@@ -1,5 +1,5 @@
 const pallete = {
-  transparent: "#FFFFFF00  ",
+  transparent: "#FFFFFF00",
 
   backgroundLight: "#FFFFFF",
   backgroundDark: "#0F1828",

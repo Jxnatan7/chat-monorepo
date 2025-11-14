@@ -23,7 +23,7 @@ export default function App() {
         mt="xl"
         mb="xl"
       >
-        <Text variant="header" textAlign="center" flex={1}>
+        <Text variant="header" textAlign="center" flex={1} px="s">
           Conecte-se de forma simples e rápida com qualquer pessoa.
         </Text>
       </Box>
@@ -35,7 +35,7 @@ export default function App() {
         justifyContent="flex-end"
         mb="m"
       >
-        <Text variant="body" textAlign="center">
+        <Text variant="body" textAlign="center" px="s">
           Termos e Política de Privacidade
         </Text>
         <Button

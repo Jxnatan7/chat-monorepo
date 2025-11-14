@@ -14,6 +14,7 @@ export default function Code() {
         Insira aqui o código do Condomínio ou da Residência
       </Text>
       <CodeInput
+        autoFocus
         onFullfill={() => push("/(communication-request)/(steps)/residence")}
       />
     </Container>

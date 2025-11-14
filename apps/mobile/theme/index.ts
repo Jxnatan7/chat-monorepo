@@ -13,6 +13,20 @@ const theme = createTheme({
     xxxl: 80,
   },
   containerVariants: {
+    chip: {
+      maxWidth: 300,
+      height: 40,
+      p: "s",
+      borderRadius: 4,
+      backgroundColor: "textBlue",
+    },
+    defaults: {
+      flex: 1,
+      p: "m",
+      pt: "xl",
+      alignItems: "center",
+      backgroundColor: "backgroundLight",
+    },
     chat: {
       flex: 1,
       p: "m",
@@ -35,6 +49,25 @@ const theme = createTheme({
     },
   },
   buttonVariants: {
+    chipDisabled: {
+      maxWidth: 400,
+      alignItems: "center",
+      justifyContent: "center",
+      p: "s",
+      borderRadius: 4,
+      backgroundColor: "backgroundGrayLight",
+      mr: "s",
+      opacity: 0.5,
+    },
+    chip: {
+      maxWidth: 400,
+      alignItems: "center",
+      justifyContent: "center",
+      p: "s",
+      borderRadius: 4,
+      backgroundColor: "backgroundGrayLight",
+      mr: "s",
+    },
     icon: {
       backgroundColor: "transparent",
       color: "buttonTextLight",
@@ -57,6 +90,10 @@ const theme = createTheme({
     },
   },
   textVariants: {
+    label: {
+      fontFamily: "Mulish",
+      fontSize: 14,
+    },
     header2: {
       fontFamily: "Mulish",
       fontSize: 16,
@@ -177,6 +214,9 @@ const theme = createTheme({
       backgroundColor: "backgroundLight",
       width: "100%",
       maxHeight: 800,
+    },
+    messageOptions: {
+      backgroundColor: "backgroundLight",
     },
   },
 });
