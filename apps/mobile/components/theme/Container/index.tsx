@@ -18,7 +18,6 @@ export const Container = ({
     <RestyleContainer {...props}>
       {!hideHeader && (
         <ContainerHeader
-          title="Seus dados"
           children={containerHeaderChildren}
           {...containerHeaderProps}
         />

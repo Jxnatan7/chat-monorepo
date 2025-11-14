@@ -15,13 +15,6 @@ export const SearchInput = ({
   ...props
 }: SearchInputProps) => {
   return (
-    <TextInput
-      placeholder="Pesquisar"
-      icon={!hideIcon && icon}
-      containerProps={{
-        marginTop: "xl",
-      }}
-      {...props}
-    />
+    <TextInput placeholder="Pesquisar" icon={!hideIcon && icon} {...props} />
   );
 };

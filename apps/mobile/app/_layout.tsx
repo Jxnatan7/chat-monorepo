@@ -13,7 +13,7 @@ import KeyboardProvider from "@/contexts/KeyboardContext";
 export { ErrorBoundary } from "expo-router";
 
 export const unstable_settings = {
-  initialRouteName: "test",
+  initialRouteName: "index",
 };
 
 SplashScreen.preventAutoHideAsync();
@@ -49,9 +49,13 @@ function RootLayoutNav() {
       <ThemeProvider theme={theme}>
         <StatusBar style="inverted" />
         <Stack>
-          <Stack.Screen name="test" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="index" options={{ headerShown: false }} />
+
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(communication-request)"
+            options={{ headerShown: false }}
+          />
         </Stack>
       </ThemeProvider>
     </KeyboardProvider>

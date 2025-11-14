@@ -4,7 +4,7 @@ import { Container } from "@/components/theme/Container";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 
-export default function App() {
+export default function Phone() {
   const { push } = useRouter();
   return (
     <Container variant="screen" hideHeader>
@@ -42,7 +42,7 @@ export default function App() {
           text="Começar a conversar"
           marginVertical="s"
           onPress={() => {
-            push("/(communication-request)/(steps)/code");
+            push("/test");
           }}
         />
         <Button text="Fazer Login" variant="secondary" />

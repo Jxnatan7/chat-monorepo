@@ -9,6 +9,8 @@ const theme = createTheme({
     m: 16,
     l: 24,
     xl: 40,
+    xxl: 64,
+    xxxl: 80,
   },
   containerVariants: {
     screen: {
@@ -48,6 +50,12 @@ const theme = createTheme({
     },
   },
   textVariants: {
+    header2: {
+      fontFamily: "Mulish",
+      fontSize: 16,
+      lineHeight: 24,
+      textAlign: "center",
+    },
     messageTime: {
       fontFamily: "Mulish",
       fontSize: 12,
@@ -72,10 +80,10 @@ const theme = createTheme({
       fontFamily: "Mulish",
       fontWeight: "bold",
       fontSize: 30,
+      textAlign: "center",
     },
     body: {
       fontFamily: "Mulish",
-
       fontSize: 16,
       lineHeight: 24,
     },
@@ -161,7 +169,7 @@ const theme = createTheme({
     defaults: {
       backgroundColor: "backgroundLight",
       width: "100%",
-      maxHeight: 400,
+      maxHeight: 800,
     },
   },
 });

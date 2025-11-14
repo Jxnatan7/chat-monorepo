@@ -30,7 +30,6 @@ export const TextInput = ({
     <Box
       flexDirection={isRight ? "row-reverse" : "row"}
       alignItems="center"
-      height="auto"
       {...containerProps}
     >
       {icon && (
@@ -51,7 +50,7 @@ export const TextInput = ({
       )}
 
       <RestyleTextInput
-        variant={isRight ? "iconRigth" : "iconLeft"}
+        variant={!icon ? "default" : isRight ? "iconRigth" : "iconLeft"}
         placeholderTextColor={theme.colors.inputPlaceholderLight}
         {...props}
       />
