@@ -4,6 +4,7 @@
   "scripts": {
     "mobile": "turbo run mobile",
     "start": "turbo run start",
+    "backend": "turbo run backend",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",

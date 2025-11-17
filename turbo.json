@@ -24,6 +24,10 @@
     "mobile": {
       "cache": false,
       "persistent": true
+    },
+    "backend": {
+      "cache": false,
+      "persistent": true
     }
   }
 }

@@ -8,7 +8,7 @@ import { useRouter } from "expo-router";
 import { Formik } from "formik";
 
 export default function Login() {
-  const { push } = useRouter();
+  const { replace, push } = useRouter();
   const { login, token } = useAuth();
 
   useEffect(() => {
@@ -39,15 +39,16 @@ export default function Login() {
           }
           return errors;
         }}
-        onSubmit={async (values, { setSubmitting, setFieldError }) => {
+        onSubmit={(values, { setSubmitting, setFieldError }) => {
           try {
-            await login(values.email, values.password);
+            login(values.email, values.password).then(() => {
+              replace("/(tabs)/user");
+            });
           } catch (err: any) {
             const message =
               err?.message ||
               "Erro ao realizar login. Verifique suas credenciais.";
             setFieldError("password", message);
-            console.error("Login error:", err);
           } finally {
             setSubmitting(false);
           }

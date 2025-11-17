@@ -6,6 +6,7 @@ export type User = {
   id: string;
   name: string;
   email: string;
+  phone: string;
 };
 
 type AuthState = {
@@ -19,6 +20,11 @@ type AuthState = {
 
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  register: (payload: {
+    name: string;
+    email: string;
+    password: string;
+  }) => Promise<void>;
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -50,27 +56,23 @@ export const useAuthStore = create<AuthState>()(
       setHouseId: (houseId) => set({ houseId }),
 
       login: async (email: string, password: string) => {
-        try {
-          const response = await axiosClient.post("/auth/login", {
-            email,
-            password,
-          });
-          const { token: authToken, user: authUser, houseId } = response.data;
+        const response = await axiosClient.post("/auth/login", {
+          email,
+          password,
+        });
+        console.log("🚀 ~ response:", response.data);
+        const { token: authToken, user: authUser, houseId } = response.data;
 
-          set({
-            token: authToken,
-            user: authUser,
-            houseId: houseId ?? null,
-          });
+        set({
+          token: authToken,
+          user: authUser,
+          houseId: houseId ?? null,
+        });
 
-          axiosClient.defaults.headers.common = {
-            ...(axiosClient.defaults.headers.common || {}),
-            Authorization: `Bearer ${authToken}`,
-          };
-        } catch (error) {
-          console.error("Auth login error:", error);
-          throw error;
-        }
+        axiosClient.defaults.headers.common = {
+          ...(axiosClient.defaults.headers.common || {}),
+          Authorization: `Bearer ${authToken}`,
+        };
       },
 
       logout: () => {
@@ -81,6 +83,27 @@ export const useAuthStore = create<AuthState>()(
         ) {
           delete axiosClient.defaults.headers.common.Authorization;
         }
+      },
+      register: async ({
+        name,
+        email,
+        password,
+      }: {
+        name: string;
+        email: string;
+        password: string;
+      }) => {
+        const response = await axiosClient.post("/auth/register", {
+          name,
+          email,
+          password,
+        });
+        const { token: authToken, user: authUser } = response.data;
+        set({ token: authToken, user: authUser });
+        axiosClient.defaults.headers.common = {
+          ...(axiosClient.defaults.headers.common || {}),
+          Authorization: `Bearer ${authToken}`,
+        };
       },
     }),
     {

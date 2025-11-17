@@ -11,6 +11,7 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
 import { UserSchema } from "src/user/core/schemas/user.schema";
 import { UserService } from "src/user/core/services/user.service";
 import { HouseModule } from "src/house/house.module";
+import { convertTime } from "src/helpers/convertTime";
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { HouseModule } from "src/house/house.module";
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,
-      signOptions: { expiresIn: "7d" },
+      signOptions: { expiresIn: convertTime("7d") },
     }),
     HouseModule,
   ],

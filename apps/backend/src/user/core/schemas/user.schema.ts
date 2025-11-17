@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 import { hashSync } from "bcrypt";
 import * as jwt from "jsonwebtoken";
+import { convertTime } from "src/helpers/convertTime";
 
 export enum UserRole {
   ADMIN = "ADMIN",
@@ -56,7 +57,7 @@ function generateJwtToken(payload: object, expiresIn: string) {
   const secretKey: jwt.Secret | undefined = process.env.JWT_SECRET_KEY;
 
   if (secretKey) {
-    return jwt.sign(payload, secretKey, { expiresIn: Number(expiresIn) });
+    return jwt.sign(payload, secretKey, { expiresIn: convertTime(expiresIn) });
   }
 }
 

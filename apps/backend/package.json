@@ -4,8 +4,11 @@
   "private": true,
   "scripts": {
     "build": "nest build",
-    "dev": "(docker compose ps | grep -q 'Up' || docker compose up -d) && nest start --watch",
-    "start": "nest start",
+    "ngrok:start": "ngrok http 3001 --log=stdout > ngrok.log &",
+    "ngrok:stop": "pkill -f 'ngrok http 3001'",
+    "dev": "npm run ngrok:start && (docker compose ps | grep -q 'Up' || docker compose up -d) && nest start --watch",
+    "backend": "npm run dev",
+    "start": "npm run ngrok:start && nest start && npm run ngrok:stop",
     "start:prod": "node dist/main",
     "start:debug": "nest start --debug --watch",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -37,7 +40,8 @@
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
-    "@nestjs/testing": "^11.0.1"
+    "@nestjs/testing": "^11.0.1",
+    "ngrok": "^5.0.0-beta.2"
   },
   "jest": {
     "moduleFileExtensions": [

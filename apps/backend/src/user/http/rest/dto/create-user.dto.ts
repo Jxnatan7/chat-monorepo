@@ -8,4 +8,11 @@ export class CreateUserDto {
   readonly houseId: string;
   readonly providerId: string;
   readonly communicationRequestId: string;
+
+  constructor(createUserDto: CreateUserDto) {
+    this.name = createUserDto.name;
+    this.email = createUserDto.email;
+    this.password = createUserDto.password;
+    this.role = UserRole.RESIDENT;
+  }
 }

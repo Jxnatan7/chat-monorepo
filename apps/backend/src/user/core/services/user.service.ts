@@ -29,8 +29,9 @@ export class UserService {
   }
 
   async createResident(createUserDto: CreateUserDto): Promise<User> {
-    await this.ensureEmailIsUnique(createUserDto.email);
-    const user = await new this.userModel(createUserDto).save();
+    const createUser = new CreateUserDto(createUserDto);
+    await this.ensureEmailIsUnique(createUser.email);
+    const user = await new this.userModel(createUser).save();
     return user;
   }
 
@@ -40,6 +41,14 @@ export class UserService {
 
   async findByEmail(email: string): Promise<User | null> {
     return this.userModel.findOne({ email }).exec();
+  }
+
+  async findById(id: string): Promise<User> {
+    const user = await this.userModel.findById(id).exec();
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+    return user;
   }
 
   private async ensureEmailIsUnique(email: string): Promise<void> {

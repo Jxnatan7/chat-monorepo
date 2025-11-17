@@ -7,6 +7,11 @@ type AuthContextData = {
   token: string | null;
   setToken: (token: string | null) => void;
   login: (email: string, password: string) => Promise<void>;
+  register: (payload: {
+    name: string;
+    email: string;
+    password: string;
+  }) => Promise<void>;
   logout: () => void;
   houseId: string | null;
 };
@@ -20,6 +25,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const setToken = useAuthStore((s) => s.setToken);
   const login = useAuthStore((s) => s.login);
   const logout = useAuthStore((s) => s.logout);
+  const register = useAuthStore((s) => s.register);
 
   useEffect(() => {
     if (token) {
@@ -41,6 +47,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken,
     login,
     logout,
+    register,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

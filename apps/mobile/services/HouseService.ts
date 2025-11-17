@@ -1,4 +1,4 @@
-import axiosClient from '../lib/axiosClient';
+import axiosClient from "@/api/axiosClient";
 
 export default class HouseService {
   api = axiosClient;

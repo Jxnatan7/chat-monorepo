@@ -2,10 +2,10 @@ import { Text } from "@/components/restyle";
 import Button from "@/components/theme/Button";
 import { Container } from "@/components/theme/Container";
 import { TextInput } from "@/components/theme/TextInput";
-import { useRouter } from "expo-router";
+import { useAuth } from "@/contexts/AuthProvider";
 
 export default function User() {
-  const { push } = useRouter();
+  const { user } = useAuth();
 
   return (
     <Container
@@ -15,13 +15,15 @@ export default function User() {
       <Text width="100%" textAlign="left" variant="infoTitle" my="l">
         Usuário
       </Text>
-      <TextInput label="Nome" placeholder="Seu Nome" />
+      <TextInput value={user?.name} label="Nome" placeholder="Seu Nome" />
       <TextInput
+        value={user?.email}
         containerProps={{ marginTop: "s" }}
         label="Email"
         placeholder="Seu Email"
       />
       <TextInput
+        // value={user?.phone}
         containerProps={{ marginTop: "s" }}
         label="Telefone"
         placeholder="Seu Telefone"
