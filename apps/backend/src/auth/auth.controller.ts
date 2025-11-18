@@ -11,7 +11,6 @@ import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { UserService } from "src/user/core/services/user.service";
 import { CreateUserDto } from "src/user/http/rest/dto/create-user.dto";
-import { SimpleUser } from "src/user/http/rest/dto/simple-user.dto";
 import { User } from "src/user/core/schemas/user.schema";
 
 @Controller("api/auth")
@@ -29,10 +28,8 @@ export class AuthController {
   }
 
   @Post("register")
-  public async register(
-    @Body() createUserRequest: CreateUserDto,
-  ): Promise<SimpleUser> {
+  public async register(@Body() createUserRequest: CreateUserDto) {
     const user = await this.userService.createResident(createUserRequest);
-    return SimpleUser.createFromUser(user);
+    return { user };
   }
 }

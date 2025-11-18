@@ -1,6 +1,7 @@
-import axiosClient from "@/api/axiosClient";
+import { AuthService } from "@/services/AuthService";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
+import { storage } from "./store";
 
 export type User = {
   id: string;
@@ -9,115 +10,91 @@ export type User = {
   phone: string;
 };
 
-type AuthState = {
+export type AuthState = {
   user: User | null;
   token: string | null;
   houseId: string | null;
+  isAuthenticated: boolean;
 
-  setToken: (token: string | null) => void;
-  setUser: (user: User | null) => void;
-  setHouseId: (houseId: string | null) => void;
+  isLoading: boolean;
+  error: string | null;
 
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
   register: (payload: {
     name: string;
     email: string;
     password: string;
   }) => Promise<void>;
+  logout: () => void;
+  setHouseId: (houseId: string | null) => void;
+  clearError: () => void;
 };
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       user: null,
       token: null,
       houseId: null,
+      isAuthenticated: false,
+      isLoading: false,
+      error: null,
 
-      setToken: (token) => {
-        set({ token });
-        if (token) {
-          axiosClient.defaults.headers.common = {
-            ...(axiosClient.defaults.headers.common || {}),
-            Authorization: `Bearer ${token}`,
-          };
-        } else {
-          if (
-            axiosClient.defaults.headers &&
-            axiosClient.defaults.headers.common
-          ) {
-            delete axiosClient.defaults.headers.common.Authorization;
-          }
+      login: async (email, password) => {
+        set({ isLoading: true, error: null });
+        try {
+          const data = await AuthService.login(email, password);
+          set({
+            token: data.token,
+            user: data.user,
+            houseId: data.houseId ?? null,
+            isAuthenticated: true,
+            isLoading: false,
+          });
+        } catch (error: any) {
+          set({
+            error: error.response?.data?.message || "Falha no login",
+            isLoading: false,
+          });
+          throw error;
         }
       },
 
-      setUser: (user) => set({ user }),
-
-      setHouseId: (houseId) => set({ houseId }),
-
-      login: async (email: string, password: string) => {
-        const response = await axiosClient.post("/auth/login", {
-          email,
-          password,
-        });
-        console.log("🚀 ~ response:", response.data);
-        const { token: authToken, user: authUser, houseId } = response.data;
-
-        set({
-          token: authToken,
-          user: authUser,
-          houseId: houseId ?? null,
-        });
-
-        axiosClient.defaults.headers.common = {
-          ...(axiosClient.defaults.headers.common || {}),
-          Authorization: `Bearer ${authToken}`,
-        };
+      register: async ({ name, email, password }) => {
+        set({ isLoading: true, error: null });
+        try {
+          const data = await AuthService.register(name, email, password);
+          set({
+            token: data.token,
+            user: data.user,
+            isAuthenticated: true,
+            isLoading: false,
+          });
+        } catch (error: any) {
+          set({
+            error: error.response?.data?.message || "Falha no cadastro",
+            isLoading: false,
+          });
+          throw error;
+        }
       },
 
       logout: () => {
-        set({ token: null, user: null, houseId: null });
-        if (
-          axiosClient.defaults.headers &&
-          axiosClient.defaults.headers.common
-        ) {
-          delete axiosClient.defaults.headers.common.Authorization;
-        }
-      },
-      register: async ({
-        name,
-        email,
-        password,
-      }: {
-        name: string;
-        email: string;
-        password: string;
-      }) => {
-        const response = await axiosClient.post("/auth/register", {
-          name,
-          email,
-          password,
+        set({
+          user: null,
+          token: null,
+          houseId: null,
+          isAuthenticated: false,
+          error: null,
         });
-        const { token: authToken, user: authUser } = response.data;
-        set({ token: authToken, user: authUser });
-        axiosClient.defaults.headers.common = {
-          ...(axiosClient.defaults.headers.common || {}),
-          Authorization: `Bearer ${authToken}`,
-        };
       },
+
+      setHouseId: (houseId) => set({ houseId }),
+      clearError: () => set({ error: null }),
     }),
     {
       name: "auth-storage",
-      onRehydrateStorage: () => (state) => {
-        try {
-          if (state && state.token) {
-            axiosClient.defaults.headers.common = {
-              ...(axiosClient.defaults.headers.common || {}),
-              Authorization: `Bearer ${state.token}`,
-            };
-          }
-        } catch {}
-      },
+      storage: createJSONStorage(() => storage),
     }
   )
 );

@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
+  Put,
   UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
@@ -49,8 +49,8 @@ export class HouseController {
     return new SimpleHouse(house);
   }
 
-  @Patch(":id")
-  @UseGuards(AuthGuard("jwt"), ManagerOrAdminGuard)
+  @Put(":id")
+  @UseGuards(AuthGuard("jwt"))
   async update(
     @Param("id") id: string,
     @Body() updateHouseDto: UpdateHouseDto,

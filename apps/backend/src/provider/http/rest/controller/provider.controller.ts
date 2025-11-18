@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
+  Put,
   UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
@@ -46,8 +46,8 @@ export class ProviderController {
     return new SimpleProvider(provider);
   }
 
-  @Patch(":id")
-  @UseGuards(AuthGuard("jwt"), AdminGuard)
+  @Put(":id")
+  @UseGuards(AuthGuard("jwt"))
   async update(
     @Param("id") id: string,
     @Body() updateProviderDto: UpdateProviderDto,

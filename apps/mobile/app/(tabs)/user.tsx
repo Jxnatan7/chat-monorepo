@@ -1,11 +1,21 @@
 import { Text } from "@/components/restyle";
-import Button from "@/components/theme/Button";
 import { Container } from "@/components/theme/Container";
-import { TextInput } from "@/components/theme/TextInput";
-import { useAuth } from "@/contexts/AuthProvider";
+import { Form, FormButton, FormTextInput } from "@/components/theme/Form";
+import { useUserForm } from "@/hooks/useUserForm";
+import { userFormValidation } from "@/utils/schemaValidation";
+import { Alert } from "react-native";
 
 export default function User() {
-  const { user } = useAuth();
+  const { initialValues, handleSubmit, isEditing, isLoading } = useUserForm();
+
+  const onSubmit = async (values: any) => {
+    try {
+      await handleSubmit(values);
+      Alert.alert("Sucesso", "Informações salvas com sucesso!");
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível salvar as alterações.");
+    }
+  };
 
   return (
     <Container
@@ -15,26 +25,34 @@ export default function User() {
       <Text width="100%" textAlign="left" variant="infoTitle" my="l">
         Usuário
       </Text>
-      <TextInput value={user?.name} label="Nome" placeholder="Seu Nome" />
-      <TextInput
-        value={user?.email}
-        containerProps={{ marginTop: "s" }}
-        label="Email"
-        placeholder="Seu Email"
-      />
-      <TextInput
-        // value={user?.phone}
-        containerProps={{ marginTop: "s" }}
-        label="Telefone"
-        placeholder="Seu Telefone"
-      />
+      <Form
+        initialValues={initialValues}
+        validate={userFormValidation}
+        onSubmit={onSubmit}
+        enableReinitialize
+      >
+        <FormTextInput name="name" label="Nome" placeholder="Seu Nome" />
 
-      <Button
-        text="Salvar"
-        variant="primary"
-        alignSelf="center"
-        marginTop="xxl"
-      />
+        <FormTextInput
+          containerProps={{ marginTop: "s" }}
+          name="email"
+          label="Email"
+          placeholder="Seu Email"
+          keyboardType="email-address"
+        />
+
+        <FormTextInput
+          containerProps={{ marginTop: "s" }}
+          name="phone"
+          label="Telefone"
+          placeholder="Seu Telefone"
+        />
+
+        <FormButton
+          text={isEditing ? "Atualizar Dados" : "Salvar Tudo"}
+          marginTop="xxxl"
+        />
+      </Form>
     </Container>
   );
 }

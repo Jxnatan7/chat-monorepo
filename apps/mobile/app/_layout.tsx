@@ -9,7 +9,7 @@ import theme from "@/theme";
 import useImages from "@/hooks/useImages";
 import { StatusBar } from "expo-status-bar";
 import KeyboardProvider from "@/contexts/KeyboardContext";
-import AuthProvider from "@/contexts/AuthProvider";
+import { AuthProvider } from "@/contexts/AuthProvider";
 
 export { ErrorBoundary } from "expo-router";
 

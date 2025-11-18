@@ -98,4 +98,8 @@ export class UserService {
       { new: true },
     );
   }
+
+  async update(id: string, payload: CreateUserDto): Promise<User | null> {
+    return this.userModel.findByIdAndUpdate(id, payload, { new: true });
+  }
 }

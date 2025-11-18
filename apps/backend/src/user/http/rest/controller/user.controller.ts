@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { UserService } from "src/user/core/services/user.service";
 import { CreateUserDto } from "../dto/create-user.dto";
@@ -18,5 +26,10 @@ export class UserController {
   @Get("/:id")
   async findById(@Param("id") id: string) {
     return this.userService.findById(id);
+  }
+
+  @Put("/:id")
+  async update(@Param("id") id: string, @Body() payload: CreateUserDto) {
+    return this.userService.update(id, payload);
   }
 }

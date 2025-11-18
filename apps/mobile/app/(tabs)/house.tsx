@@ -1,47 +1,92 @@
+import React from "react";
+import { Alert } from "react-native";
 import { Text } from "@/components/restyle";
-import Button from "@/components/theme/Button";
 import { Container } from "@/components/theme/Container";
-import { TextInput } from "@/components/theme/TextInput";
+import { Form, FormButton, FormTextInput } from "@/components/theme/Form";
+import { providerResidenceFormValidation } from "@/utils/schemaValidation";
+import {
+  useResidenceForm,
+  ResidenceFormValues,
+} from "@/hooks/useResidenceForm";
+
+const SectionTitle = ({
+  children,
+  mt = "l",
+}: {
+  children: string;
+  mt?: "l" | "xl";
+}) => (
+  <Text width="100%" textAlign="left" variant="infoTitle" mt={mt} mb="l">
+    {children}
+  </Text>
+);
 
 export default function House() {
+  const { initialValues, handleSubmit, isEditing, isLoading } =
+    useResidenceForm();
+
+  const onSubmit = async (values: ResidenceFormValues) => {
+    try {
+      await handleSubmit(values);
+      Alert.alert("Sucesso", "Informações salvas com sucesso!");
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível salvar as alterações.");
+    }
+  };
+
   return (
     <Container
       variant="screen"
-      containerHeaderProps={{ title: "Residência", hideBackButton: true }}
+      containerHeaderProps={{ title: "Configuração", hideBackButton: true }}
     >
-      <Text width="100%" textAlign="left" variant="infoTitle" my="l">
-        Gerenciador
-      </Text>
-      <TextInput label="Nome" placeholder="Nome do Gerenciador" />
-      <TextInput
-        containerProps={{ marginTop: "s" }}
-        label="Descrição"
-        placeholder="Descrição do Gerenciador"
-      />
-      <Text width="100%" textAlign="left" variant="infoTitle" mt="xl" mb="l">
-        Informações da Residência
-      </Text>
-      <TextInput
-        containerProps={{ marginTop: "s" }}
-        label="Nome da Residência"
-        placeholder="Nome que será exibido para o entregador"
-      />
-      <TextInput
-        containerProps={{ marginTop: "s" }}
-        label="Endereço"
-        placeholder="Endereço da Residência"
-      />
-      <TextInput
-        containerProps={{ marginTop: "s" }}
-        label="Descrição"
-        placeholder="Descrição da Residência"
-      />
-      <Button
-        text="Salvar"
-        variant="primary"
-        alignSelf="center"
-        marginTop="xxl"
-      />
+      <Form
+        initialValues={initialValues}
+        validate={providerResidenceFormValidation}
+        onSubmit={onSubmit}
+        enableReinitialize
+      >
+        <SectionTitle>Gerenciador</SectionTitle>
+
+        <FormTextInput
+          name="providerName"
+          label="Nome"
+          placeholder="Nome do Gerenciador"
+        />
+
+        <FormTextInput
+          containerProps={{ marginTop: "s" }}
+          name="providerDescription"
+          label="Descrição"
+          placeholder="Descrição do Gerenciador"
+        />
+
+        <SectionTitle mt="xl">Informações da Residência</SectionTitle>
+
+        <FormTextInput
+          name="residenceName"
+          label="Nome da Residência"
+          placeholder="Ex: Casa de Praia"
+        />
+
+        <FormTextInput
+          containerProps={{ marginTop: "s" }}
+          name="residenceAddress"
+          label="Endereço"
+          placeholder="Endereço completo"
+        />
+
+        <FormTextInput
+          containerProps={{ marginTop: "s" }}
+          name="residenceDescription"
+          label="Descrição"
+          placeholder="Detalhes adicionais para entregadores"
+        />
+
+        <FormButton
+          text={isEditing ? "Atualizar Dados" : "Salvar Tudo"}
+          marginTop="xxxl"
+        />
+      </Form>
     </Container>
   );
 }
