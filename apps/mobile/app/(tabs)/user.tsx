@@ -1,9 +1,20 @@
-import { Text } from "@/components/restyle";
+import { RestyleTouchableOpacity, Text } from "@/components/restyle";
 import { Container } from "@/components/theme/Container";
 import { Form, FormButton, FormTextInput } from "@/components/theme/Form";
+import { useAuthActions } from "@/contexts/AuthProvider";
 import { useUserForm } from "@/hooks/useUserForm";
 import { userFormValidation } from "@/utils/schemaValidation";
 import { Alert } from "react-native";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+
+const LogoutButton = () => {
+  const { logout } = useAuthActions();
+  return (
+    <RestyleTouchableOpacity onPress={logout} variant="icon">
+      <MaterialIcons name="logout" size={24} color="black" />
+    </RestyleTouchableOpacity>
+  );
+};
 
 export default function User() {
   const { initialValues, handleSubmit, isEditing, isLoading } = useUserForm();
@@ -20,7 +31,11 @@ export default function User() {
   return (
     <Container
       variant="screen"
-      containerHeaderProps={{ title: "Seu Perfil", hideBackButton: true }}
+      containerHeaderProps={{
+        title: "Seu Perfil",
+        hideBackButton: true,
+        children: <LogoutButton />,
+      }}
     >
       <Text width="100%" textAlign="left" variant="infoTitle" my="l">
         Usuário

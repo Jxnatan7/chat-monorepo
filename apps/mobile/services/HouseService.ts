@@ -17,4 +17,10 @@ export default class HouseService {
     const response = await axiosClient.put(`/houses/${id}`, payload);
     return response.data;
   }
+
+  static async findByUser() {
+    const response = await axiosClient.get(`/houses/me`);
+    console.error(response);
+    return response.data;
+  }
 }

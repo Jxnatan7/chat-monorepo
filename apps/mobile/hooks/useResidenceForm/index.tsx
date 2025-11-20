@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { useAppStore } from "@/stores/appStore";
+import { useFocusEffect } from "expo-router";
 
 export type ResidenceFormValues = {
   providerName: string;
@@ -13,7 +14,14 @@ export function useResidenceForm() {
   const provider = useAppStore((state) => state.provider);
   const house = useAppStore((state) => state.house);
   const setupResidence = useAppStore((state) => state.setupResidence);
+  const fetchUserResidence = useAppStore((state) => state.fetchUserResidence);
   const isLoading = useAppStore((state) => state.isLoading);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchUserResidence();
+    }, [fetchUserResidence])
+  );
 
   const initialValues: ResidenceFormValues = useMemo(
     () => ({

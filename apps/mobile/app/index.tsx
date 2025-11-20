@@ -1,11 +1,18 @@
 import { Box, Text } from "@/components/restyle";
 import Button from "@/components/theme/Button";
 import { Container } from "@/components/theme/Container";
+import { useAuthStore } from "@/stores/authStore";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 
 export default function App() {
   const { push } = useRouter();
+  const token = useAuthStore((s) => s.token);
+
+  if (token) {
+    return <Redirect href="/(tabs)/user" />;
+  }
+
   return (
     <Container variant="screen" hideHeader>
       <Image

@@ -15,6 +15,7 @@ import { UpdateHouseDto } from "../dto/update-house.dto";
 import { SimpleHouse } from "../dto/simple-house.dto";
 import { ManagerOrAdminGuard } from "src/auth/guards/manager-or-admin.guard";
 import { FilterRequest } from "src/@core/services/mongo-query.service";
+import { User, UserJwt } from "src/helpers/user.decorator";
 
 @Controller("api/houses")
 export class HouseController {
@@ -34,6 +35,13 @@ export class HouseController {
     return new SimpleHouse(house);
   }
 
+  @Get("/me")
+  @UseGuards(AuthGuard("jwt"))
+  async findByUser(@User() user: UserJwt) {
+    const id = user.id;
+    return this.houseService.findByUser(id);
+  }
+
   @Post("/provider/:providerId")
   async findByProviderId(
     @Param("providerId") providerId: string,
@@ -44,8 +52,8 @@ export class HouseController {
 
   @Post()
   @UseGuards(AuthGuard("jwt"))
-  async create(@Body() createHouseDto: CreateHouseDto) {
-    const house = await this.houseService.create(createHouseDto);
+  async create(@Body() createHouseDto: CreateHouseDto, @User() user) {
+    const house = await this.houseService.create(createHouseDto, user);
     return new SimpleHouse(house);
   }
 

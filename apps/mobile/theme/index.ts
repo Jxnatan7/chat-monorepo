@@ -49,6 +49,10 @@ const theme = createTheme({
     },
   },
   buttonVariants: {
+    transparent: {
+      backgroundColor: "transparent",
+      color: "buttonTextLight",
+    },
     chipDisabled: {
       maxWidth: 400,
       alignItems: "center",

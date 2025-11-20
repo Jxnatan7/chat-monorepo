@@ -11,6 +11,7 @@ import {
   PaginatedResult,
   toObjectIdOrLeave,
 } from "src/@core/services/mongo-query.service";
+import { User } from "src/user/core/schemas/user.schema";
 
 @Injectable()
 export class HouseService {
@@ -19,10 +20,14 @@ export class HouseService {
     @InjectModel(Provider.name) private readonly providerModel: Model<Provider>,
   ) {}
 
-  async create(createHouseDto: CreateHouseDto): Promise<House> {
+  async create(createHouseDto: CreateHouseDto, user: User): Promise<House> {
     await this.ensureProviderExists(createHouseDto.providerId);
 
-    const house = await new this.houseModel(createHouseDto).save();
+    const house = await new this.houseModel({
+      ...createHouseDto,
+      residents: [user.id],
+    }).save();
+
     await this.addHouseToProvider(
       createHouseDto.providerId,
       house.id as string,
@@ -55,6 +60,25 @@ export class HouseService {
 
   async findById(id: string): Promise<House> {
     return this.findHouseOrFail(id);
+  }
+
+  async findByUser(id: any): Promise<Record<string, House | Provider>> {
+    const house = await this.houseModel.findOne({ residents: [id] }).exec();
+
+    if (!house) {
+      throw new NotFoundException("House not found");
+    }
+
+    const provider = await this.providerModel.findById(house.providerId).exec();
+
+    if (!provider) {
+      throw new NotFoundException("Provider not found");
+    }
+
+    return {
+      house,
+      provider,
+    };
   }
 
   async update(id: string, updateHouseDto: UpdateHouseDto): Promise<House> {

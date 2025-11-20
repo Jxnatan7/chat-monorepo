@@ -29,6 +29,7 @@ type AppState = {
   setupResidence: (payload: SaveResidencePayload) => Promise<void>;
   setupUser: (payload: any) => Promise<void>;
   clearAppData: () => void;
+  fetchUserResidence: () => Promise<void>;
 };
 
 const upsertProvider = async (
@@ -124,7 +125,36 @@ export const useAppStore = create<AppState>()(
           throw error;
         }
       },
+      fetchUserResidence: async () => {
+        const { house, provider } = get();
 
+        if (house?.id && provider?.id) {
+          return;
+        }
+
+        set({ isLoading: true });
+
+        try {
+          const data = await HouseService.findByUser();
+
+          if (data) {
+            set({
+              house: data.house,
+              provider: data.provider,
+              isLoading: false,
+            });
+
+            if (data.house?.id) {
+              useAuthStore.getState().setHouseId(data.house.id);
+            }
+          } else {
+            set({ isLoading: false });
+          }
+        } catch (error) {
+          console.error(error);
+          set({ isLoading: false });
+        }
+      },
       clearAppData: () => set({ provider: null, house: null, error: null }),
     }),
     {

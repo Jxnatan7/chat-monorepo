@@ -2,6 +2,7 @@ import { AuthService } from "@/services/AuthService";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { storage } from "./store";
+import { useAppStore } from "./appStore";
 
 export type User = {
   id: string;
@@ -87,6 +88,7 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: false,
           error: null,
         });
+        useAppStore.getState().clearAppData();
       },
 
       setHouseId: (houseId) => set({ houseId }),
