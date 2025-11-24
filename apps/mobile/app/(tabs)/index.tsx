@@ -56,7 +56,13 @@ export default function Home() {
             onPress={() =>
               item.status === "PENDING"
                 ? setSelectedRequestId(item._id)
-                : item.status === "ACCEPTED" && push("/chat")
+                : item.status === "ACCEPTED" &&
+                  push({
+                    pathname: "/chat",
+                    params: {
+                      chatId: item.chatId,
+                    },
+                  })
             }
           />
         )}

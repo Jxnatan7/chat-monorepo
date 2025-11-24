@@ -15,8 +15,8 @@ export class Message extends Document {
   @Prop({ required: true })
   content: string;
 
-  @Prop({ default: Date.now, required: true })
-  timestamp: Date;
+  @Prop({ required: true })
+  timestamp: string;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);

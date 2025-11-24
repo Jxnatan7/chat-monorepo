@@ -9,12 +9,17 @@ import { CommunicationRequestService } from "./core/services/communication-reque
 import { UserModule } from "src/user/user.module";
 import { HouseModule } from "src/house/house.module";
 import { ChatModule } from "src/chat/chat.module";
+import {
+  Message,
+  MessageSchema,
+} from "src/message/core/schemas/message.schema";
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: CommunicationRequest.name, schema: CommunicationRequestSchema },
     ]),
+    MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema }]),
     UserModule,
     HouseModule,
     forwardRef(() => ChatModule),

@@ -6,8 +6,8 @@ import {
   createMongoQueryService,
   FilterRequest,
   PaginatedResult,
-  toObjectIdOrLeave,
 } from "src/@core/services/mongo-query.service";
+import { UserJwt } from "src/helpers/user.decorator";
 
 @Injectable()
 export class MessageService {
@@ -19,15 +19,32 @@ export class MessageService {
   async getMessagesByChatId(
     chatId: string,
     filterRequest: FilterRequest,
+    user: UserJwt,
   ): Promise<PaginatedResult<MessageDocument>> {
-    const baseQuery = { chatId: toObjectIdOrLeave(chatId) };
+    const baseQuery = { chatId: chatId };
     const query = createMongoQueryService<MessageDocument>(this.messageModel);
-    return query.search({
+    const result = await query.search({
       baseQuery,
       filterRequest,
       options: {
         dateField: "timestamp",
       },
     });
+
+    const messages: any = result.items.map((message: any) => {
+      return {
+        ...message._doc,
+        isMyMessage: message.sender.userId === user.id,
+      };
+    });
+
+    messages.sort((a, b) => {
+      const dateA = new Date(a.timestamp).getTime();
+      const dateB = new Date(b.timestamp).getTime();
+      return dateA - dateB;
+    });
+
+    result.items = messages;
+    return result;
   }
 }

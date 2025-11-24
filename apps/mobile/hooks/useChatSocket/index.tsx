@@ -35,7 +35,7 @@ type UseChatSocketArgs = {
 export default function useChatSocket({
   chatId,
   token,
-  url = "http://localhost:3001",
+  url = process.env.EXPO_PUBLIC_API_URL,
   path = "/ws/chat",
 }: UseChatSocketArgs) {
   const socketRef = useRef<Socket | null>(null);
@@ -163,6 +163,7 @@ export default function useChatSocket({
           chatIdRef.current ??
           null,
         content: payload.content,
+        timestamp: new Date(),
       };
 
       try {

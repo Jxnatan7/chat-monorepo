@@ -14,7 +14,7 @@ export class Chat extends Document {
   communicationRequestId: Types.ObjectId;
 
   @Prop({ default: [] })
-  participants: ChatUser[];
+  participants: string[];
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);

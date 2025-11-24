@@ -1,49 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
-  RestylePressable,
   RestyleTextInputProps,
+  RestyleTouchableOpacity,
 } from "@/components/restyle";
 import { TextInput } from "../TextInput";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import theme from "@/theme";
 
-export type MessageInputProps = RestyleTextInputProps;
+export type MessageInputProps = RestyleTextInputProps & {
+  onSend: (content: string) => void;
+};
 
-export const MessageInput = ({ ...props }: MessageInputProps) => {
+export const MessageInput = ({ onSend, ...props }: MessageInputProps) => {
+  const [value, setValue] = useState("");
+
+  const handleSend = async () => {
+    const text = value.trim();
+    if (!text) return;
+    try {
+      await Promise.resolve(onSend(text));
+      setValue("");
+    } catch (err) {
+      console.error("send failed", err);
+    }
+  };
+
   return (
     <Box
       width="100%"
-      height={100}
+      height={80}
       flexDirection="row"
       alignItems="center"
       justifyContent="center"
-      p="l"
-      pr="none"
       backgroundColor="backgroundLight"
       borderTopColor="borderGray"
       borderTopWidth={1}
+      px="xl"
     >
-      <Box
-        width="100%"
-        flexDirection="row"
-        alignItems="center"
+      <TextInput
+        value={value}
+        onChange={(e) => setValue(e.nativeEvent.text)}
+        height={30}
+        {...props}
+      />
+      <RestyleTouchableOpacity
+        width={30}
+        height={30}
+        variant="transparent"
         justifyContent="center"
-        gap="l"
-        px="l"
-        pr="xl"
+        alignItems="center"
+        marginLeft="m"
+        activeOpacity={0.7}
+        disabled={!props.editable}
+        onPress={handleSend}
       >
-        <TextInput {...props} />
-        <RestylePressable
-          width={50}
-          height={50}
-          variant="transparent"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <FontAwesome name="send" size={24} color={theme.colors.textBlue} />
-        </RestylePressable>
-      </Box>
+        <FontAwesome name="send" size={20} color={theme.colors.textBlue} />
+      </RestyleTouchableOpacity>
     </Box>
   );
 };

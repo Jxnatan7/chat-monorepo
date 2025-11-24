@@ -13,11 +13,16 @@ import {
   CommunicationRequestSchema,
 } from "src/communication-request/core/schemas/communication-request.schema";
 import { ChatController } from "./http/rest/controller/chat.controller";
+import {
+  Message,
+  MessageSchema,
+} from "src/message/core/schemas/message.schema";
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forFeature([{ name: Chat.name, schema: ChatSchema }]),
+    MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema }]),
     MongooseModule.forFeature([
       { name: CommunicationRequest.name, schema: CommunicationRequestSchema },
     ]),

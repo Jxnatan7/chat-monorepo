@@ -41,7 +41,7 @@ export class ChatGateway
     private readonly jwtService: JwtService,
     private readonly chatService: ChatService,
     @InjectModel(User.name) private readonly userModel: Model<User>,
-    @InjectModel(User.name) private readonly messageModel: Model<Message>,
+    @InjectModel(Message.name) private readonly messageModel: Model<Message>,
   ) {}
 
   afterInit() {
@@ -258,9 +258,15 @@ export class ChatGateway
     try {
       const chat = await this.chatService.getChatById(chatId);
 
+      if (!chat) {
+        client.emit("message_error", "Chat not found");
+        return;
+      }
+
       const isParticipant = chat.participants.some(
-        (p) => p.id?.toString() === userId,
+        (p) => p.toString() === userId,
       );
+
       if (!isParticipant) {
         client.emit("message_error", "User not participant of this chat");
         return;
@@ -273,25 +279,28 @@ export class ChatGateway
         return;
       }
 
-      const message = await this.messageModel.create({
+      const message = new this.messageModel({
         sender: {
-          id: sender.id,
+          userId: sender.id,
           name: sender.name,
+          role: sender.role,
         },
+        chatId: chatId,
         content,
-        timestamp,
+        timestamp: timestamp,
       });
 
       const messageSaved = await message.save();
 
       const room = this.roomName(chatId);
+
       this.server.to(room).emit("message", {
+        ...messageSaved.toObject(),
+        isMyMessage: client.data.userId === sender.id,
         chatId: chatId,
-        message: {
-          ...messageSaved,
-        },
       });
     } catch (err) {
+      console.error("Erro ao salvar mensagem:", err);
       client.emit("message_error", err.message || "Failed to send message");
     }
   }

@@ -21,6 +21,7 @@ import {
   FilterRequest,
   PaginatedResult,
 } from "src/@core/services/mongo-query.service";
+import { Message } from "src/message/core/schemas/message.schema";
 
 @Injectable()
 export class CommunicationRequestService {
@@ -29,6 +30,8 @@ export class CommunicationRequestService {
     private readonly communicationRequestModel: Model<CommunicationRequest>,
     @InjectModel(User.name) private readonly userModel: Model<User>,
     @InjectModel(House.name) private readonly houseModel: Model<House>,
+    @InjectModel(Message.name) private readonly messageModel: Model<Message>,
+
     readonly chatService: ChatService,
     // @Inject(forwardRef(() => ChatGateway))
     private readonly chatGateway: ChatGateway, // injeta gateway para emitir
@@ -46,16 +49,6 @@ export class CommunicationRequestService {
 
     return CommunicationRequestDto.create(updatedRequest);
   }
-
-  // async listByHouseId(houseId: string): Promise<CommunicationRequestDto[]> {
-  //   const communicationRequests = await this.communicationRequestModel
-  //     .find({ houseId })
-  //     .exec();
-
-  // return communicationRequests.map((request) =>
-  //   CommunicationRequestDto.create(request),
-  // );
-  // }
 
   async listByHouseId(
     houseId: string,
@@ -130,6 +123,21 @@ export class CommunicationRequestService {
       String(communicationRequest.id),
       distinctParticipants,
     );
+
+    const initialMessage = {
+      content: communicationRequest.initialMessage,
+      sender: {
+        name: communicationRequest.visitorName,
+        role: UserRole.VISITOR,
+        id: visitorId,
+        userId: visitorId,
+      },
+      chatId: String(createdChat._id),
+      timestamp: new Date(),
+    };
+
+    const message = new this.messageModel(initialMessage);
+    await message.save();
 
     try {
       this.chatGateway.emitToUser(visitorId, "communication_accepted", {

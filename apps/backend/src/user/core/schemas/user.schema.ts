@@ -31,6 +31,9 @@ export class User extends Document {
   @Prop({ type: Types.ObjectId, ref: "House" })
   houseId: Types.ObjectId;
 
+  @Prop({ type: Types.ObjectId })
+  userId: Types.ObjectId;
+
   @Prop({ type: Types.ObjectId, ref: "Provider" })
   providerId: Types.ObjectId;
 

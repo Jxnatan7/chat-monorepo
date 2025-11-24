@@ -17,6 +17,6 @@ import { AuthModule } from "src/auth/auth.module";
   ],
   providers: [MessageService, WsJwtGuard],
   controllers: [MessageController],
-  exports: [MessageService],
+  exports: [MessageService, MongooseModule],
 })
 export class MessageModule {}

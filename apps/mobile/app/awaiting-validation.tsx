@@ -5,6 +5,7 @@ import LottieView from "lottie-react-native";
 import useCommunicationAccepted from "@/hooks/useCommunicationAccepted";
 import { useCommunicationRequestStore } from "@/stores/communicationRequestStore";
 import { useRouter } from "expo-router";
+import { useAppStore } from "@/stores/appStore";
 
 const loadingAnimation = require("@/assets/animations/loading.json");
 const approveAnimation = require("@/assets/animations/approve.json");
@@ -23,7 +24,12 @@ export default function AwaitingValidation() {
         animationRef.current.reset();
         animationRef.current.play();
         wait(5000).then(() => {
-          push("/chat");
+          push({
+            pathname: "/chat",
+            params: {
+              chatId: useAppStore.getState().chatId,
+            },
+          });
         });
       } else {
         animationRef.current.play();
@@ -34,7 +40,6 @@ export default function AwaitingValidation() {
   useCommunicationAccepted({
     token: token,
     onAccepted: ({ communicationRequestId, chatId }) => {
-      console.log("communication accepted:", communicationRequestId, chatId);
       setAccepted(true);
     },
   });
