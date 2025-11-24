@@ -48,6 +48,10 @@ const pallete = {
   otherMessageColor: "#000",
 
   error: "#FF0000",
+
+  pending: "#ff872bff",
+  accepted: "#0053e3ff",
+  rejected: "#FF0000",
 };
 
 export default pallete;

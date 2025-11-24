@@ -3,12 +3,19 @@ import Button from "@/components/theme/Button";
 import { Container } from "@/components/theme/Container";
 import { MessageOptions } from "@/components/theme/MessageOptions";
 import { TextInput } from "@/components/theme/TextInput";
+import { useCommunicationRequestStore } from "@/stores/communicationRequestStore";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 
 export default function InitialMessage() {
   const { push } = useRouter();
   const [messageSelected, setMessageSelected] = useState<string>();
+
+  const handleSubmit = () => {
+    if (!messageSelected) return;
+    useCommunicationRequestStore.getState().setInitialMessage(messageSelected);
+    push("/(communication-request)/(steps)/name");
+  };
 
   return (
     <Container variant="screen">
@@ -27,12 +34,19 @@ export default function InitialMessage() {
         autoFocus
         placeholder="Ex.: Entrega de comida"
         minHeight={120}
+        onEndEditing={({ nativeEvent }) => setMessageSelected(nativeEvent.text)}
         multiline
       />
       <Button
         text="Continuar"
         marginTop="xl"
-        onPress={() => push("/(communication-request)/(steps)/name")}
+        onPress={() => handleSubmit()}
+        disabled={!messageSelected}
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          opacity: messageSelected ? 1 : 0.5,
+        }}
       />
     </Container>
   );

@@ -29,7 +29,7 @@ export class CommunicationRequestController {
   @Post(":houseId")
   async listByHouseId(
     @Param("houseId") houseId: string,
-    filterRequest: FilterRequest,
+    @Body() filterRequest: FilterRequest,
   ): Promise<PaginatedResult<CommunicationRequest>> {
     return this.communicationRequestService.listByHouseId(
       houseId,

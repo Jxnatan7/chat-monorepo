@@ -2,6 +2,7 @@ import { Container } from "@/components/theme/Container";
 import { Message } from "@/components/theme/Message";
 import { MessageInput } from "@/components/theme/MessageInput";
 import { MessageList } from "@/components/theme/MessageList";
+import theme from "@/theme";
 import { Dimensions, KeyboardAvoidingView, Platform } from "react-native";
 
 const messages = [
@@ -143,6 +144,11 @@ export default function Chat() {
       >
         <MessageList
           data={messages}
+          keyExtractor={(item: any) => item.id}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingHorizontal: theme.spacing.m,
+          }}
           renderItem={({ item }: any) => (
             <Message
               content={item.content}

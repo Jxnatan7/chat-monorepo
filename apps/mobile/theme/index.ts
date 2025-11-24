@@ -30,7 +30,7 @@ const theme = createTheme({
     },
     chat: {
       flex: 1,
-      px: "m",
+      px: "l",
       pt: "xl",
       pb: "none",
       alignItems: "center",

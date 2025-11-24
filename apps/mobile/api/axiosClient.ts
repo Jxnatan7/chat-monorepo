@@ -2,7 +2,8 @@ import axios from "axios";
 import { useAuthStore } from "@/stores/authStore";
 
 const baseURL =
-  process.env.EXPO_PUBLIC_API_URL || "https://f3d7a2d04af5.ngrok-free.app/api";
+  `${process.env.EXPO_PUBLIC_API_URL}/api` ||
+  "https://f3d7a2d04af5.ngrok-free.app/api";
 
 const axiosClient = axios.create({
   baseURL,

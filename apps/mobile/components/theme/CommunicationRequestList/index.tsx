@@ -1,30 +1,55 @@
+import React, { useCallback } from "react";
 import { RestyleFlashListProps } from "@/components/restyle";
-import { FlashList } from "../FlashList";
 import useCommunicationRequests from "@/hooks/useCommunicationRequests";
 import { useAppStore } from "@/stores/appStore";
 import { CommunicationRequestListEmpty } from "../CommunicationRequestListEmpty";
+import { PaginatedFlashList, PaginatedResult } from "../PaginatedFlashList";
 
-export type CommunicationRequestList = Omit<RestyleFlashListProps, "data">;
+type RequestItem = any;
+
+export type CommunicationRequestListProps = Omit<RestyleFlashListProps, "data">;
 
 export const CommunicationRequestList = ({
   ...props
-}: CommunicationRequestList) => {
+}: CommunicationRequestListProps) => {
   const house = useAppStore((state) => state.house);
+  const { mutateAsync } = useCommunicationRequests();
+
+  const fetchRequests = useCallback(
+    async (
+      page: number,
+      pageSize: number
+    ): Promise<PaginatedResult<RequestItem> | undefined> => {
+      if (!house?.id) return undefined;
+
+      const response = await mutateAsync({
+        houseId: house.id,
+        payload: {
+          page,
+          pageSize,
+        },
+      });
+
+      return response;
+    },
+    [house?.id, mutateAsync]
+  );
 
   if (!house?.id) {
     return <CommunicationRequestListEmpty />;
   }
 
-  const communicationRequests = useCommunicationRequests(house?.id);
-
-  if (!communicationRequests.data || communicationRequests.data?.length === 0) {
-    return (
-      <CommunicationRequestListEmpty
-        showRedirect={false}
-        text="Você não possui solicitações de comunicação no momento."
-      />
-    );
-  }
-
-  return <FlashList {...props} data={communicationRequests.data || []} />;
+  return (
+    <PaginatedFlashList<RequestItem>
+      {...props}
+      fetchData={fetchRequests}
+      pageSize={10}
+      ListEmptyComponent={
+        <CommunicationRequestListEmpty
+          showRedirect={false}
+          text="Você não possui solicitações de comunicação no momento."
+        />
+      }
+    />
+  );
 };

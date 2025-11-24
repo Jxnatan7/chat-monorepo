@@ -3,9 +3,10 @@ import axiosClient from "@/api/axiosClient";
 export default class CommunicationRequestService {
   api = axiosClient;
 
-  static async listByHouseId(houseId: string) {
-    const response = await axiosClient.get(
-      `/communication-requests/${houseId}`
+  static async listByHouseId(houseId: string, filterRequest: any) {
+    const response = await axiosClient.post(
+      `/communication-requests/${houseId}`,
+      filterRequest
     );
     return response.data;
   }

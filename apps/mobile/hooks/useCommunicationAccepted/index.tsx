@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useAppStore } from "@/stores/appStore";
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 
@@ -14,12 +14,11 @@ type UseCommunicationAcceptedArgs = {
 
 export default function useCommunicationAccepted({
   token,
-  url = "http://localhost:3001",
+  url = process.env.EXPO_PUBLIC_API_URL,
   path = "/ws/chat",
   onAccepted,
 }: UseCommunicationAcceptedArgs) {
   const socketRef = useRef<Socket | null>(null);
-  const navigate = useRouter();
 
   useEffect(() => {
     if (!token) return;
@@ -45,7 +44,7 @@ export default function useCommunicationAccepted({
         if (!payload) return;
         if (onAccepted) onAccepted(payload);
         if (payload.chatId) {
-          // navigate.replace(`/chat/${payload.chatId}`);
+          useAppStore.getState().setChatId(payload.chatId);
         }
       } catch (err) {
         console.error("handleAccepted error", err);
@@ -70,5 +69,5 @@ export default function useCommunicationAccepted({
       socket.disconnect();
       socketRef.current = null;
     };
-  }, [token, url, path, navigate, onAccepted]);
+  }, [token, url, path, onAccepted]);
 }

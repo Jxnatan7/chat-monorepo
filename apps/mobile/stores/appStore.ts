@@ -12,6 +12,7 @@ export type Provider = {
   code: string;
   description: string;
 };
+
 export type House = {
   id: string;
   providerId: string;
@@ -28,9 +29,11 @@ export type SaveResidencePayload = {
 type AppState = {
   provider: Provider | null;
   house: House | null;
+  chatId: string | null;
   isLoading: boolean;
   error: string | null;
 
+  setChatId: (id: string) => void;
   fetchUserResidence: () => Promise<void>;
   setupResidence: (payload: SaveResidencePayload) => Promise<void>;
   setupUser: (payload: any) => Promise<void>;
@@ -62,6 +65,7 @@ export const useAppStore = create<AppState>()(
     (set, get) => ({
       provider: null,
       house: null,
+      chatId: null,
       isLoading: false,
       error: null,
 
@@ -165,6 +169,7 @@ export const useAppStore = create<AppState>()(
           set({ isLoading: false });
         }
       },
+      setChatId: (id) => set({ chatId: id }),
       clearAppData: () => set({ provider: null, house: null, error: null }),
     }),
     {

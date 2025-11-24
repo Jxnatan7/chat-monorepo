@@ -64,6 +64,7 @@ function RootLayoutNav() {
               <Stack.Screen name="login" />
               <Stack.Screen name="register" />
               <Stack.Screen name="chat" />
+              <Stack.Screen name="awaiting-validation" />
               <Stack.Screen name="(tabs)" />
               <Stack.Screen name="(communication-request)" />
             </Stack>

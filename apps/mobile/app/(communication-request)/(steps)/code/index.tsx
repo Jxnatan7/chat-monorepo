@@ -14,6 +14,7 @@ export default function Code() {
 
     const stateUpdated = useCommunicationRequestStore.setState({
       provider: provider as any,
+      code,
     });
 
     if (!stateUpdated) return;

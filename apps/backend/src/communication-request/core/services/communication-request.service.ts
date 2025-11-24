@@ -20,7 +20,6 @@ import {
   createMongoQueryService,
   FilterRequest,
   PaginatedResult,
-  toObjectIdOrLeave,
 } from "src/@core/services/mongo-query.service";
 
 @Injectable()
@@ -62,7 +61,7 @@ export class CommunicationRequestService {
     houseId: string,
     filterRequest: FilterRequest,
   ): Promise<PaginatedResult<CommunicationRequest>> {
-    const baseQuery = { houseId: toObjectIdOrLeave(houseId) };
+    const baseQuery = { houseId: houseId };
     const query = createMongoQueryService<CommunicationRequest>(
       this.communicationRequestModel,
     );
@@ -71,7 +70,7 @@ export class CommunicationRequestService {
       filterRequest,
       options: {
         // searchableFields: ["content", "sender.name", "sender.displayName", "sender.email"],
-        dateField: "timestamp",
+        dateField: "createdAt",
       },
     });
   }
