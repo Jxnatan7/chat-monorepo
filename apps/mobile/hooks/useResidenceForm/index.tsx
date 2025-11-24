@@ -4,6 +4,7 @@ import { useFocusEffect } from "expo-router";
 
 export type ResidenceFormValues = {
   providerName: string;
+  providerCode: string;
   providerDescription: string;
   residenceName: string;
   residenceAddress: string;
@@ -27,6 +28,7 @@ export function useResidenceForm() {
     () => ({
       providerName: provider?.name ?? "",
       providerDescription: provider?.description ?? "",
+      providerCode: provider?.code ?? "",
       residenceName: house?.name ?? "",
       residenceAddress: house?.address ?? "",
       residenceDescription: house?.description ?? "",
@@ -39,6 +41,7 @@ export function useResidenceForm() {
       provider: {
         name: values.providerName,
         description: values.providerDescription,
+        code: values.providerCode,
       },
       house: {
         name: values.residenceName,

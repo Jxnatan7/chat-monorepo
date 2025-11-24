@@ -48,14 +48,14 @@ type FormSubmitProps = React.ComponentProps<typeof Button> & {
   text: string;
 };
 
-export function FormButton({ text, ...rest }: FormSubmitProps) {
+export function FormButton({ text, disabled, ...rest }: FormSubmitProps) {
   const { handleSubmit, isSubmitting } = useFormikContext();
 
   return (
     <Button
       text={text}
       onPress={() => handleSubmit()}
-      disabled={isSubmitting}
+      disabled={isSubmitting || disabled}
       {...rest}
     />
   );

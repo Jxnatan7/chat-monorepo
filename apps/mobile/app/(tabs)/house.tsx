@@ -8,6 +8,7 @@ import {
   useResidenceForm,
   ResidenceFormValues,
 } from "@/hooks/useResidenceForm";
+import { PressableCopyPaste } from "@/components/theme/PressableCopyPaste";
 
 const SectionTitle = ({
   children,
@@ -58,6 +59,12 @@ export default function House() {
           name="providerDescription"
           label="Descrição"
           placeholder="Descrição do Gerenciador"
+        />
+
+        <PressableCopyPaste
+          label="Código"
+          value="123456"
+          containerProps={{ marginTop: "s" }}
         />
 
         <SectionTitle mt="xl">Informações da Residência</SectionTitle>

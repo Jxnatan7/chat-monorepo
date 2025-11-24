@@ -6,7 +6,12 @@ import { storage } from "./store";
 import UserService from "@/services/UserService";
 import { useAuthStore } from "./authStore";
 
-export type Provider = { id: string; name: string; description: string };
+export type Provider = {
+  id: string;
+  name: string;
+  code: string;
+  description: string;
+};
 export type House = {
   id: string;
   providerId: string;
@@ -26,10 +31,10 @@ type AppState = {
   isLoading: boolean;
   error: string | null;
 
+  fetchUserResidence: () => Promise<void>;
   setupResidence: (payload: SaveResidencePayload) => Promise<void>;
   setupUser: (payload: any) => Promise<void>;
   clearAppData: () => void;
-  fetchUserResidence: () => Promise<void>;
 };
 
 const upsertProvider = async (

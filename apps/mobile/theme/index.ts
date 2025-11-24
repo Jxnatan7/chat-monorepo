@@ -48,6 +48,41 @@ const theme = createTheme({
       backgroundColor: "backgroundLight",
     },
   },
+  pressableVariants: {
+    input: {
+      fontFamily: "Mulish",
+      backgroundColor: "inputBackgroundLight",
+      color: "inputTextLight",
+      flex: 1,
+      width: "100%",
+      minHeight: 40,
+      borderRadius: 6,
+      p: "s",
+      fontSize: 16,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      gap: "s",
+    },
+    transparent: {
+      backgroundColor: "transparent",
+    },
+    chip: {
+      maxWidth: 400,
+      alignItems: "center",
+      justifyContent: "center",
+      p: "s",
+      borderRadius: 4,
+      backgroundColor: "backgroundGrayLight",
+      mr: "s",
+    },
+    default: {
+      backgroundColor: "buttonBackgroundLight",
+    },
+    defaults: {
+      backgroundColor: "buttonBackgroundLight",
+    },
+  },
   buttonVariants: {
     transparent: {
       backgroundColor: "transparent",

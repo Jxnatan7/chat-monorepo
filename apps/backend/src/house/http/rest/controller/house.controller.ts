@@ -35,7 +35,7 @@ export class HouseController {
     return new SimpleHouse(house);
   }
 
-  @Get("/me")
+  @Post("/me")
   @UseGuards(AuthGuard("jwt"))
   async findByUser(@User() user: UserJwt) {
     const id = user.id;
