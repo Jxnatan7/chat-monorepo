@@ -2,6 +2,7 @@ import { Container } from "@/components/theme/Container";
 import { Message } from "@/components/theme/Message";
 import { MessageInput } from "@/components/theme/MessageInput";
 import { MessageList } from "@/components/theme/MessageList";
+import { Dimensions, KeyboardAvoidingView, Platform } from "react-native";
 
 const messages = [
   {
@@ -128,17 +129,30 @@ export default function Chat() {
         backgroundColor: "backgroundGrayLight",
       }}
     >
-      <MessageList
-        data={messages}
-        renderItem={({ item }: any) => (
-          <Message
-            content={item.content}
-            isMyMessage={item.isMyMessage}
-            timestamp={item.timestamp}
-          />
-        )}
-      />
-      <MessageInput />
+      <KeyboardAvoidingView
+        style={{
+          flex: 1,
+          width: Dimensions.get("window").width,
+          height: Dimensions.get("window").height,
+        }}
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={Platform.OS === "ios" ? -60 : 0}
+      >
+        <MessageList
+          data={messages}
+          renderItem={({ item }: any) => (
+            <Message
+              content={item.content}
+              isMyMessage={item.isMyMessage}
+              timestamp={item.timestamp}
+            />
+          )}
+        />
+        <MessageInput />
+      </KeyboardAvoidingView>
     </Container>
   );
 }

@@ -1,6 +1,6 @@
 import { Container } from "@/components/theme/Container";
-import { FlashList } from "@/components/theme/FlashList";
 import { ListItem } from "@/components/theme/ListItem";
+import { ResidenceList } from "@/components/theme/ResidenceList";
 import { SearchInput } from "@/components/theme/SearchInput";
 import { useRouter } from "expo-router";
 
@@ -9,17 +9,12 @@ export default function Residence() {
   return (
     <Container variant="screen" containerHeaderProps={{ title: "Residentes" }}>
       <SearchInput containerProps={{ my: "m" }} />
-      <FlashList
-        data={[
-          1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-        ]}
+      <ResidenceList
         renderItem={() => (
           <ListItem
             title="Residente 1"
             subtitle="Residente 1"
-            onPress={() =>
-              push("/(communication-request)/(steps)/initial-message")
-            }
+            onPress={() => push("/chat")}
           />
         )}
       />

@@ -14,6 +14,8 @@ import {
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
   TouchableWithoutFeedback,
+  TouchableOpacity,
+  Text,
 } from "react-native";
 import { Box, RestyleTextInput } from "@/components/restyle";
 
@@ -71,7 +73,7 @@ const Cell = React.memo(
       <RestyleTextInput
         variant="code"
         ref={ref as any}
-        value={value.toUpperCase()}
+        value={value?.toUpperCase()}
         onChangeText={(t: string) => onChange(index, t)}
         onKeyPress={(e: NativeSyntheticEvent<TextInputKeyPressEventData>) =>
           onKeyPress(index, e)
@@ -80,7 +82,6 @@ const Cell = React.memo(
         keyboardType={keyboardType}
         secureTextEntry={secure}
         returnKeyType="done"
-        maxLength={1}
         textContentType="oneTimeCode"
         importantForAutofill="yes"
         autoComplete="sms-otp"
@@ -159,16 +160,19 @@ const CodeInput = forwardRef<CodeInputHandle, CodeInputProps>((props, ref) => {
     [length]
   );
 
+  const handleClear = useCallback(() => {
+    const empty = new Array(length).fill("");
+    setInternal(empty);
+    internalRef.current = empty;
+    onChange?.("");
+    focus(0);
+  }, [length, onChange, focus]);
+
   useImperativeHandle(
     ref,
     () => ({
       focus,
-      clear: () => {
-        const empty = new Array(length).fill("");
-        setInternal(empty);
-        internalRef.current = empty;
-        onChange?.("");
-      },
+      clear: handleClear,
       setValue: (code: string) => {
         const arr = new Array(length).fill("");
         code
@@ -182,36 +186,45 @@ const CodeInput = forwardRef<CodeInputHandle, CodeInputProps>((props, ref) => {
       },
       getValue: () => internalRef.current.join(""),
     }),
-    [focus, length, onChange, onFullfill]
+    [focus, length, onChange, onFullfill, handleClear]
   );
 
   const handleCellChange = useCallback(
     (index: number, text: string) => {
-      if (text.length > 1) {
-        const chars = text.split("");
-        const next = [...internalRef.current];
-        let i = index;
-        for (const ch of chars) {
-          if (i >= length) break;
-          next[i] = ch.toUpperCase();
-          i++;
-        }
+      const cleanText = text.replace(/\s/g, "");
+
+      if (cleanText.length > 1) {
+        const chars = cleanText.split("");
+
+        const next = new Array(length).fill("");
+
+        chars.forEach((char, i) => {
+          if (i < length) {
+            next[i] = char?.toUpperCase();
+          }
+        });
+
         if (value === undefined) {
           setInternal(next);
           internalRef.current = next;
         }
+
         const joined = next.join("");
         onChange?.(joined);
-        if (next.every((c) => c !== "")) onFullfill?.(joined);
-        const nextEmpty = next.findIndex((c) => c === "");
-        if (nextEmpty !== -1) focus(nextEmpty);
-        else
-          refs.current[Math.min(length - 1, index + chars.length - 1)]?.blur();
+
+        if (next.every((c) => c !== "")) {
+          onFullfill?.(joined);
+          refs.current[length - 1]?.blur();
+        } else {
+          const nextEmpty = next.findIndex((c) => c === "");
+          if (nextEmpty !== -1) focus(nextEmpty);
+        }
         return;
       }
 
       const next = [...internalRef.current];
-      next[index] = text === "" ? "" : text;
+      next[index] = text === "" ? "" : text.slice(-1);
+
       if (value === undefined) {
         setInternal(next);
         internalRef.current = next;
@@ -286,36 +299,75 @@ const CodeInput = forwardRef<CodeInputHandle, CodeInputProps>((props, ref) => {
     else focus(firstEmpty);
   }, [focus, length]);
 
-  const cells = useMemo(
-    () => new Array(length).fill(0).map((_, i) => i),
-    [length]
-  );
+  const rows = useMemo(() => {
+    const ITEMS_PER_ROW = 5;
+    const result = [];
+    for (let i = 0; i < length; i += ITEMS_PER_ROW) {
+      const chunk = Array.from(
+        { length: Math.min(ITEMS_PER_ROW, length - i) },
+        (_, k) => i + k
+      );
+      result.push(chunk);
+    }
+    return result;
+  }, [length]);
+
+  const hasValue = internal.some((char) => char !== "");
 
   return (
     <TouchableWithoutFeedback onPress={handleContainerPress}>
       <Box
         style={{
           width: "100%",
-          flexDirection: "row",
-          justifyContent: "center",
-          gap: 30,
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 20,
         }}
       >
-        {cells.map((i) => (
-          <Cell
-            ref={(el: RNTextInput | null) => (refs.current[i] = el) as any}
-            key={i}
-            index={i}
-            value={internal[i]}
-            onChange={handleCellChange}
-            onKeyPress={handleKeyPress}
-            onFocus={handleFocus}
-            autoFocus={i === 0 ? autoFocus : false}
-            secure={secure}
-            keyboardType={keyboardType}
-            testID={`${testIDPrefix}-${i}`}
-          />
+        {rows.map((rowIndices, rowIndex) => (
+          <Box
+            key={rowIndex}
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              gap: 30,
+            }}
+          >
+            {rowIndices.map((i) => (
+              <Cell
+                ref={(el: RNTextInput | null) => (refs.current[i] = el) as any}
+                key={i}
+                index={i}
+                value={internal[i]}
+                onChange={handleCellChange}
+                onKeyPress={handleKeyPress}
+                onFocus={handleFocus}
+                autoFocus={i === 0 ? autoFocus : false}
+                secure={secure}
+                keyboardType={keyboardType}
+                testID={`${testIDPrefix}-${i}`}
+              />
+            ))}
+          </Box>
         ))}
+
+        {hasValue && (
+          <TouchableOpacity
+            onPress={handleClear}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            style={{ marginTop: 10 }}
+          >
+            <Text
+              style={{
+                color: "#666",
+                textDecorationLine: "underline",
+                fontSize: 14,
+              }}
+            >
+              Limpar código
+            </Text>
+          </TouchableOpacity>
+        )}
       </Box>
     </TouchableWithoutFeedback>
   );

@@ -4,7 +4,7 @@ export default class HouseService {
   api = axiosClient;
 
   static async findByProviderId(providerId: string) {
-    return (await axiosClient.get(`/houses/provider/${providerId}`)).data;
+    return (await axiosClient.post(`/houses/provider/${providerId}`)).data;
   }
 
   static async create(payload: any) {

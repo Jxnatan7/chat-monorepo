@@ -1,9 +1,12 @@
+import { CommunicationRequestProvider } from "@/contexts/CommunicationRequestContext";
 import { Stack } from "expo-router";
 
 export default function CommunicationRequestLayout() {
   return (
-    <Stack>
-      <Stack.Screen name="(steps)" options={{ headerShown: false }} />
-    </Stack>
+    <CommunicationRequestProvider>
+      <Stack>
+        <Stack.Screen name="(steps)" options={{ headerShown: false }} />
+      </Stack>
+    </CommunicationRequestProvider>
   );
 }

@@ -4,6 +4,7 @@ import pallete from "@repo/theme/pallete/index";
 const theme = createTheme({
   colors: pallete,
   spacing: {
+    none: 0,
     xs: 4,
     s: 6,
     m: 16,
@@ -29,8 +30,9 @@ const theme = createTheme({
     },
     chat: {
       flex: 1,
-      p: "m",
+      px: "m",
       pt: "xl",
+      pb: "none",
       alignItems: "center",
       backgroundColor: "backgroundGrayLight",
     },

@@ -1,5 +1,6 @@
-import { Box, RestylePressable, Text } from "@/components/restyle";
+import { RestylePressable, Text } from "@/components/restyle";
 import { useRouter } from "expo-router";
+import { EmptyList } from "../EmptyList";
 
 export type CommunicationRequestListEmptyProps = {
   text?: string;
@@ -13,19 +14,12 @@ export const CommunicationRequestListEmpty = ({
   const { push } = useRouter();
 
   return (
-    <Box>
-      <Text textAlign="center">{text}</Text>
+    <EmptyList text={text}>
       {showRedirect && (
-        <RestylePressable
-          variant="transparent"
-          marginTop="l"
-          onPress={() => push("/(tabs)/house")}
-        >
-          <Text variant="containerHeader" textAlign="center" color="textBlue">
-            Clique aqui
-          </Text>
+        <RestylePressable onPress={() => push("/(tabs)/user")}>
+          <Text textAlign="center">Criar uma residência</Text>
         </RestylePressable>
       )}
-    </Box>
+    </EmptyList>
   );
 };

@@ -100,13 +100,13 @@ export function KeyboardProvider({
 
   const hideKeyboard = () => Keyboard.dismiss();
 
+  const windowHeight = Dimensions.get("window").height;
+  const maxShift = Math.min(keyboardHeight, windowHeight * 0.1);
+
   const value = useMemo(
     () => ({ keyboardShown, keyboardHeight, hideKeyboard }),
     [keyboardShown, keyboardHeight]
   );
-
-  const windowHeight = Dimensions.get("window").height;
-  const maxShift = Math.min(keyboardHeight, windowHeight * 0.1);
 
   const contentTranslateY = anim.interpolate({
     inputRange: [0, 1],

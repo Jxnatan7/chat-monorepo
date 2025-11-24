@@ -47,7 +47,7 @@ export class HouseController {
     @Param("providerId") providerId: string,
     @Body() filterRequest: FilterRequest,
   ) {
-    await this.houseService.findByProviderId(providerId, filterRequest);
+    return await this.houseService.findByProviderId(providerId, filterRequest);
   }
 
   @Post()

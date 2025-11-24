@@ -1,26 +1,25 @@
 import React from "react";
 import {
   Box,
+  RestylePressable,
   RestyleTextInputProps,
-  RestyleTouchableOpacity,
 } from "@/components/restyle";
 import { TextInput } from "../TextInput";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import theme from "@/theme";
-import { Dimensions } from "react-native";
 
 export type MessageInputProps = RestyleTextInputProps;
 
 export const MessageInput = ({ ...props }: MessageInputProps) => {
   return (
     <Box
-      width={Dimensions.get("window").width}
-      minHeight={120}
+      width="100%"
+      height={100}
       flexDirection="row"
-      alignItems="flex-start"
+      alignItems="center"
       justifyContent="center"
       p="l"
-      gap="s"
+      pr="none"
       backgroundColor="backgroundLight"
       borderTopColor="borderGray"
       borderTopWidth={1}
@@ -30,17 +29,20 @@ export const MessageInput = ({ ...props }: MessageInputProps) => {
         flexDirection="row"
         alignItems="center"
         justifyContent="center"
-        gap="s"
+        gap="l"
+        px="l"
+        pr="xl"
       >
-        <TextInput maxWidth="90%" {...props} />
-        <RestyleTouchableOpacity
-          variant="icon"
+        <TextInput {...props} />
+        <RestylePressable
+          width={50}
+          height={50}
+          variant="transparent"
           justifyContent="center"
           alignItems="center"
-          flex={1}
         >
           <FontAwesome name="send" size={24} color={theme.colors.textBlue} />
-        </RestyleTouchableOpacity>
+        </RestylePressable>
       </Box>
     </Box>
   );
