@@ -8,7 +8,7 @@ export default function TabLayout() {
   const token = useAuthStore((s) => s.token);
 
   if (!token) {
-    return <Redirect href="/" />;
+    return <Redirect href="/init" />;
   }
 
   return (
@@ -17,6 +17,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: "light",
         headerShown: false,
         tabBarShowLabel: false,
+        animation: "fade",
       }}
     >
       <Tabs.Screen

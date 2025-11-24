@@ -10,7 +10,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 const LogoutButton = () => {
   const { logout } = useAuthActions();
   return (
-    <RestyleTouchableOpacity onPress={logout} variant="icon">
+    <RestyleTouchableOpacity onPress={() => logout()} variant="icon">
       <MaterialIcons name="logout" size={24} color="black" />
     </RestyleTouchableOpacity>
   );

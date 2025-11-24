@@ -4,7 +4,7 @@ import useCommunicationRequests from "@/hooks/useCommunicationRequests";
 import { useAppStore } from "@/stores/appStore";
 import { CommunicationRequestListEmpty } from "../CommunicationRequestListEmpty";
 
-export type CommunicationRequestList = RestyleFlashListProps;
+export type CommunicationRequestList = Omit<RestyleFlashListProps, "data">;
 
 export const CommunicationRequestList = ({
   ...props
@@ -17,5 +17,14 @@ export const CommunicationRequestList = ({
 
   const communicationRequests = useCommunicationRequests(house?.id);
 
-  return <FlashList {...props} data={communicationRequests.data} />;
+  if (!communicationRequests.data || communicationRequests.data?.length === 0) {
+    return (
+      <CommunicationRequestListEmpty
+        showRedirect={false}
+        text="Você não possui solicitações de comunicação no momento."
+      />
+    );
+  }
+
+  return <FlashList {...props} data={communicationRequests.data || []} />;
 };

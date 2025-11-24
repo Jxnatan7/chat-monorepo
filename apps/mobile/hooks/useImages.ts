@@ -18,9 +18,7 @@ export default function useImages() {
 
         await Promise.all([...localPromises]);
         setAppIsReady(true);
-      } catch (e) {
-        console.warn(e);
-      }
+      } catch (e) {}
     }
 
     prepare();

@@ -144,8 +144,14 @@ export const useAppStore = create<AppState>()(
 
           if (data) {
             set({
-              house: data.house,
-              provider: data.provider,
+              house: {
+                ...data.house,
+                id: data.house._id,
+              },
+              provider: {
+                ...data.provider,
+                id: data.provider._id,
+              },
               isLoading: false,
             });
 
@@ -156,7 +162,6 @@ export const useAppStore = create<AppState>()(
             set({ isLoading: false });
           }
         } catch (error) {
-          console.error(error);
           set({ isLoading: false });
         }
       },

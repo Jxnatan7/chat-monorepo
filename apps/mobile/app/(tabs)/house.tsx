@@ -61,11 +61,13 @@ export default function House() {
           placeholder="Descrição do Gerenciador"
         />
 
-        <PressableCopyPaste
-          label="Código"
-          value="123456"
-          containerProps={{ marginTop: "s" }}
-        />
+        {initialValues.providerCode && (
+          <PressableCopyPaste
+            label="Código"
+            value={initialValues.providerCode}
+            containerProps={{ marginTop: "s" }}
+          />
+        )}
 
         <SectionTitle mt="xl">Informações da Residência</SectionTitle>
 

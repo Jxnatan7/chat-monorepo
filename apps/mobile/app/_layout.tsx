@@ -10,8 +10,10 @@ import useImages from "@/hooks/useImages";
 import { StatusBar } from "expo-status-bar";
 import KeyboardProvider from "@/contexts/KeyboardContext";
 import { AuthProvider } from "@/contexts/AuthProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export { ErrorBoundary } from "expo-router";
+const queryClient = new QueryClient();
 
 export const unstable_settings = {
   initialRouteName: "index",
@@ -46,23 +48,28 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <KeyboardProvider>
-      <AuthProvider>
-        <ThemeProvider theme={theme}>
-          <StatusBar style="inverted" />
-          <Stack>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen name="register" options={{ headerShown: false }} />
-            <Stack.Screen name="chat" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="(communication-request)"
-              options={{ headerShown: false }}
-            />
-          </Stack>
-        </ThemeProvider>
-      </AuthProvider>
-    </KeyboardProvider>
+    <QueryClientProvider client={queryClient}>
+      <KeyboardProvider>
+        <AuthProvider>
+          <ThemeProvider theme={theme}>
+            <StatusBar style="inverted" />
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                animation: "flip",
+                animationDuration: 300,
+              }}
+            >
+              <Stack.Screen name="init" />
+              <Stack.Screen name="login" />
+              <Stack.Screen name="register" />
+              <Stack.Screen name="chat" />
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="(communication-request)" />
+            </Stack>
+          </ThemeProvider>
+        </AuthProvider>
+      </KeyboardProvider>
+    </QueryClientProvider>
   );
 }

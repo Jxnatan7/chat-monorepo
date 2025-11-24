@@ -38,7 +38,6 @@ export default function Login() {
           marginTop="xl"
           placeholder="E-mail"
           keyboardType="email-address"
-          autoCapitalize="none"
           autoFocus
         />
         <FormTextInput
