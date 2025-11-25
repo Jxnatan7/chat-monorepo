@@ -17,6 +17,9 @@ export default function Chat() {
 
   const token = useAuthStore((s) => s.token);
   const visitorToken = useCommunicationRequestStore((s) => s.visitorToken);
+  const userId = useAuthStore((s) => s.user?.id);
+  const visitorId = useCommunicationRequestStore((s) => s.visitorId);
+  const id = userId || visitorId;
 
   const { messages, sendMessage, status, participants } = useChatSocket({
     chatId: chatId,
@@ -62,7 +65,7 @@ export default function Chat() {
           renderItem={({ item }: any) => (
             <Message
               content={item.content}
-              isMyMessage={item.isMyMessage}
+              isMyMessage={item.sender.userId === id}
               timestamp={item.timestamp}
             />
           )}

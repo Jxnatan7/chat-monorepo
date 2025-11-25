@@ -296,7 +296,6 @@ export class ChatGateway
 
       this.server.to(room).emit("message", {
         ...messageSaved.toObject(),
-        isMyMessage: client.data.userId === sender.id,
         chatId: chatId,
       });
     } catch (err) {
