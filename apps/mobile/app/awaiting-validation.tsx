@@ -14,7 +14,7 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default function AwaitingValidation() {
   const token = useCommunicationRequestStore((s) => s.visitorToken);
-  const { push } = useRouter();
+  const { replace } = useRouter();
   const [accepted, setAccepted] = useState(false);
   const animationRef = useRef<LottieView>(null);
 
@@ -24,10 +24,11 @@ export default function AwaitingValidation() {
         animationRef.current.reset();
         animationRef.current.play();
         wait(5000).then(() => {
-          push({
+          replace({
             pathname: "/chat",
             params: {
               chatId: useAppStore.getState().chatId,
+              blockBack: "true",
             },
           });
         });

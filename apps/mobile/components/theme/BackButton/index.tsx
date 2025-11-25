@@ -1,15 +1,15 @@
-import { RestyleTouchableOpacity } from "@/components/restyle";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
+import { IconButton } from "../IconButton";
 
 export const BackButton = () => {
   const { canGoBack, back } = useRouter();
   return (
-    <RestyleTouchableOpacity
-      variant="icon"
+    <IconButton
       onPress={() => canGoBack() && back()}
-    >
-      <MaterialIcons name="keyboard-arrow-left" size={30} color="black" />
-    </RestyleTouchableOpacity>
+      icon={
+        <MaterialIcons name="keyboard-arrow-left" size={30} color="black" />
+      }
+    />
   );
 };
