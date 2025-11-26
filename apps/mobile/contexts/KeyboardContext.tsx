@@ -7,10 +7,8 @@ import React, {
 } from "react";
 import {
   Animated,
-  EmitterSubscription,
   Keyboard,
   KeyboardEvent,
-  KeyboardEventName,
   Platform,
   Pressable,
   StyleSheet,
@@ -25,6 +23,7 @@ type KeyboardContextValue = {
   keyboardShown: boolean;
   keyboardHeight: number;
   hideKeyboard: () => void;
+  setChatMode: (enabled: boolean) => void;
 };
 
 const KeyboardContext = createContext<KeyboardContextValue | null>(null);
@@ -37,7 +36,6 @@ export const useKeyboard = (): KeyboardContextValue => {
 
 type KeyboardProviderProps = {
   children: React.ReactNode;
-
   closeButtonSize?: number;
   closeButtonContainerStyle?: ViewStyle;
 };
@@ -49,22 +47,18 @@ export function KeyboardProvider({
 }: KeyboardProviderProps) {
   const [keyboardShown, setKeyboardShown] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [isChatMode, setIsChatMode] = useState(false);
+
   const anim = useMemo(() => new Animated.Value(0), []);
 
   useEffect(() => {
-    let showSub: EmitterSubscription | null = null;
-    let hideSub: EmitterSubscription | null = null;
-
     const onShow = (e: KeyboardEvent) => {
       const h = e.endCoordinates ? e.endCoordinates.height : 0;
-      const duration =
-        e.duration && e.duration > 0
-          ? e.duration
-          : Platform.OS === "ios"
-            ? 250
-            : 200;
+      const duration = e.duration && e.duration > 0 ? e.duration : 250;
+
       setKeyboardHeight(h);
       setKeyboardShown(true);
+
       Animated.timing(anim, {
         toValue: 1,
         duration,
@@ -73,7 +67,7 @@ export function KeyboardProvider({
     };
 
     const onHide = (e?: KeyboardEvent) => {
-      const duration = e && e.duration && e.duration > 0 ? e.duration : 150;
+      const duration = e && e.duration && e.duration > 0 ? e.duration : 250;
       Animated.timing(anim, {
         toValue: 0,
         duration,
@@ -84,17 +78,17 @@ export function KeyboardProvider({
       });
     };
 
-    const showEvent: KeyboardEventName =
+    const showEvent =
       Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
-    const hideEvent: KeyboardEventName =
+    const hideEvent =
       Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
 
-    showSub = Keyboard.addListener(showEvent, onShow as any);
-    hideSub = Keyboard.addListener(hideEvent, onHide as any);
+    const showSub = Keyboard.addListener(showEvent, onShow);
+    const hideSub = Keyboard.addListener(hideEvent, onHide);
 
     return () => {
-      showSub && showSub.remove();
-      hideSub && hideSub.remove();
+      showSub.remove();
+      hideSub.remove();
     };
   }, [anim]);
 
@@ -103,15 +97,22 @@ export function KeyboardProvider({
   const windowHeight = Dimensions.get("window").height;
   const maxShift = Math.min(keyboardHeight, windowHeight * 0.1);
 
+  const contentTranslateY = isChatMode
+    ? 0
+    : anim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, -maxShift],
+      });
+
   const value = useMemo(
-    () => ({ keyboardShown, keyboardHeight, hideKeyboard }),
+    () => ({
+      keyboardShown,
+      keyboardHeight,
+      hideKeyboard,
+      setChatMode: setIsChatMode,
+    }),
     [keyboardShown, keyboardHeight]
   );
-
-  const contentTranslateY = anim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, -maxShift],
-  });
 
   return (
     <KeyboardContext.Provider value={value}>
@@ -122,13 +123,10 @@ export function KeyboardProvider({
       </Animated.View>
 
       <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
-        {keyboardShown && (
+        {keyboardShown && !isChatMode && (
           <Animated.View
             pointerEvents="box-none"
-            style={[
-              styles.accessoryWrapper,
-              { transform: [{ translateY: 0 }], bottom: keyboardHeight - 25 },
-            ]}
+            style={[styles.accessoryWrapper, { bottom: keyboardHeight - 25 }]}
           >
             <SafeAreaView pointerEvents="box-none">
               <View
@@ -137,7 +135,6 @@ export function KeyboardProvider({
                 <Pressable
                   accessibilityLabel="Fechar teclado"
                   onPress={hideKeyboard}
-                  android_ripple={{ radius: 24 }}
                   style={({ pressed }) => [
                     styles.closeButton,
                     {
@@ -178,11 +175,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 6,
-  },
-  closeButtonText: {
-    color: "white",
-    fontSize: 13,
-    fontWeight: "600",
   },
 });
 

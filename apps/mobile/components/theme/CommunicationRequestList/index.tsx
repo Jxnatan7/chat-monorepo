@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { RestyleFlashListProps } from "@/components/restyle";
 import useCommunicationRequests from "@/hooks/useCommunicationRequests";
 import { useAppStore } from "@/stores/appStore";
@@ -34,6 +34,16 @@ export const CommunicationRequestList = ({
     },
     [house?.id, mutateAsync]
   );
+
+  const tryFetchHouse = useCallback(() => {
+    useAppStore.getState().fetchUserResidence();
+  }, []);
+
+  useEffect(() => {
+    if (!house?.id) {
+      tryFetchHouse();
+    }
+  }, [house]);
 
   if (!house?.id) {
     return <CommunicationRequestListEmpty />;

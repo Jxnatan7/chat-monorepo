@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from "react";
-import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 
@@ -8,13 +8,12 @@ import { Message } from "@/components/theme/Message";
 import { MessageInput } from "@/components/theme/MessageInput";
 import { MessageList } from "@/components/theme/MessageList";
 import { IconButton } from "@/components/theme/IconButton";
-import theme from "@/theme";
 
 import { useChatController } from "@/hooks/useChatController";
 import { usePreventGoBack } from "@/hooks/usePreventGoBack";
 import { BottomSheet } from "@/components/theme/BottomSheet";
-import { Box, Text } from "@/components/restyle";
-import Button from "@/components/theme/Button";
+import { Text } from "@/components/restyle";
+import { FlashListRef } from "@shopify/flash-list";
 
 export default function ChatScreen() {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,9 +39,27 @@ export default function ChatScreen() {
     [currentUserId]
   );
 
-  const handleSend = (content: string) => {
-    sendMessage({ chatId, content });
+  const listRef = useRef<FlashListRef<any>>(null);
+
+  const scrollToBottom = () => {
+    const id = setTimeout(() => {
+      listRef.current?.scrollToEnd({ animated: true });
+    }, 50);
+
+    return () => clearTimeout(id);
   };
+
+  const handleSend = (content: string) => {
+    sendMessage({ chatId, content }).then(() => {
+      scrollToBottom();
+    });
+  };
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      scrollToBottom();
+    }
+  }, [messages]);
 
   return (
     <Container
@@ -50,7 +67,7 @@ export default function ChatScreen() {
       containerHeaderProps={{
         title: "Chat",
         backgroundColor: "backgroundGrayLight",
-        hideBackButton: true,
+        hideBackButton: isBackBlocked,
         children: (
           <IconButton
             icon={<FontAwesome5 name="ellipsis-v" size={24} color="black" />}
@@ -59,35 +76,28 @@ export default function ChatScreen() {
         ),
       }}
     >
-      <KeyboardAvoidingView
-        style={styles.keyboardView}
-        contentContainerStyle={styles.contentContainer}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        keyboardVerticalOffset={Platform.OS === "ios" ? -60 : 0}
-      >
-        <MessageList
-          data={messages}
-          keyExtractor={(item: any) => item.id || Math.random().toString()}
-          contentContainerStyle={styles.listContent}
-          renderItem={renderMessageItem}
-        />
+      <MessageList
+        ref={listRef}
+        data={messages}
+        keyExtractor={(item: any) => item.id}
+        contentContainerStyle={styles.listContent}
+        renderItem={renderMessageItem}
+        keyboardDismissMode="interactive"
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      />
 
-        <MessageInput
-          onSend={handleSend}
-          editable={connectionStatus === "connected"}
-        />
-        <BottomSheet
-          isVisible={isOpen}
-          onClose={() => setIsOpen(false)}
-          height="80%"
-        >
-          <Box style={styles.sheetContent}>
-            <Text style={styles.title}>Configurações</Text>
-            <Text>Aqui você coloca qualquer conteúdo.</Text>
-            <Button text="Confirmar" onPress={() => setIsOpen(false)} />
-          </Box>
-        </BottomSheet>
-      </KeyboardAvoidingView>
+      <MessageInput
+        onSend={handleSend}
+        editable={connectionStatus === "connected"}
+      />
+      <BottomSheet
+        isVisible={isOpen}
+        onClose={() => setIsOpen(false)}
+        height="80%"
+      >
+        <Text>Aqui você coloca qualquer conteúdo.</Text>
+      </BottomSheet>
     </Container>
   );
 }
@@ -102,14 +112,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   keyboardView: {
-    flex: 1,
+    // flex: 1,
   },
   contentContainer: {
     flexGrow: 1,
   },
   listContent: {
     flexGrow: 1,
-    paddingHorizontal: theme.spacing.m,
-    paddingBottom: theme.spacing.m,
   },
 });
