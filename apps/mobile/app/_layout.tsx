@@ -40,7 +40,7 @@ export default function RootLayout() {
     }
   }, [fontsIsLoaded && imagesIsLoaded]);
 
-  if (!fontsIsLoaded && imagesIsLoaded) {
+  if (!fontsIsLoaded || !imagesIsLoaded) {
     return null;
   }
 

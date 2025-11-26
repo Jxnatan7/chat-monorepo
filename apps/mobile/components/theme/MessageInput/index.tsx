@@ -15,16 +15,26 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import theme from "@/theme";
 import { useKeyboard } from "@/contexts/KeyboardContext";
 
-import { runOnJS } from "react-native-reanimated";
+import Animated, {
+  runOnJS,
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 export type MessageInputProps = RestyleTextInputProps & {
   onSend: (content: string) => void;
 };
 
+const AnimatedBox = Animated.createAnimatedComponent(Box);
+
 export const MessageInput = ({ onSend, ...props }: MessageInputProps) => {
   const [value, setValue] = useState("");
   const { setChatMode } = useKeyboard();
+
+  const translateY = useSharedValue(0);
 
   useEffect(() => {
     setChatMode(true);
@@ -49,12 +59,26 @@ export const MessageInput = ({ onSend, ...props }: MessageInputProps) => {
   };
 
   const panGesture = Gesture.Pan()
-    .activeOffsetY(10)
+    .activeOffsetY(5)
+    .onUpdate((event) => {
+      if (event.translationY > 0) {
+        translateY.value = event.translationY;
+      }
+    })
     .onEnd((event) => {
-      if (event.translationY > 20) {
+      if (event.translationY > 40 || event.velocityY > 500) {
         runOnJS(dismissKeyboard)();
+        translateY.value = withTiming(0, { duration: 200 });
+      } else {
+        translateY.value = withSpring(0);
       }
     });
+
+  const rStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: translateY.value }],
+    };
+  });
 
   return (
     <KeyboardAvoidingView
@@ -63,40 +87,46 @@ export const MessageInput = ({ onSend, ...props }: MessageInputProps) => {
       style={{ width: Dimensions.get("window").width }}
     >
       <GestureDetector gesture={panGesture}>
-        <Box
-          width="100%"
-          minHeight={80}
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="center"
-          backgroundColor="backgroundLight"
-          borderTopColor="borderGray"
-          borderTopWidth={1}
-          px="xl"
-          py="s"
-        >
-          <TextInput
-            value={value}
-            onChange={(e) => setValue(e.nativeEvent.text)}
-            placeholder="Digite uma mensagem..."
-            height={40}
-            style={{ flex: 1 }}
-            {...props}
-          />
-          <RestyleTouchableOpacity
-            width={40}
-            height={40}
-            variant="transparent"
-            justifyContent="center"
+        <Animated.View style={rStyle}>
+          <Box
+            width="100%"
+            minHeight={80}
+            flexDirection="row"
             alignItems="center"
-            marginLeft="s"
-            activeOpacity={0.7}
-            disabled={!props.editable}
-            onPress={handleSend}
+            justifyContent="center"
+            backgroundColor="backgroundLight"
+            borderTopColor="borderGray"
+            borderTopWidth={1}
+            px="xl"
+            py="s"
           >
-            <FontAwesome name="send" size={20} color={theme.colors.textBlue} />
-          </RestyleTouchableOpacity>
-        </Box>
+            <TextInput
+              value={value}
+              onChange={(e) => setValue(e.nativeEvent.text)}
+              placeholder="Digite uma mensagem..."
+              height={40}
+              style={{ flex: 1 }}
+              {...props}
+            />
+            <RestyleTouchableOpacity
+              width={40}
+              height={40}
+              variant="transparent"
+              justifyContent="center"
+              alignItems="center"
+              marginLeft="s"
+              activeOpacity={0.7}
+              disabled={!props.editable}
+              onPress={handleSend}
+            >
+              <FontAwesome
+                name="send"
+                size={20}
+                color={theme.colors.textBlue}
+              />
+            </RestyleTouchableOpacity>
+          </Box>
+        </Animated.View>
       </GestureDetector>
     </KeyboardAvoidingView>
   );
