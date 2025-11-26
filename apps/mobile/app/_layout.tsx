@@ -11,6 +11,7 @@ import { StatusBar } from "expo-status-bar";
 import KeyboardProvider from "@/contexts/KeyboardContext";
 import { AuthProvider } from "@/contexts/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export { ErrorBoundary } from "expo-router";
 const queryClient = new QueryClient();
@@ -48,29 +49,31 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <KeyboardProvider>
-        <AuthProvider>
-          <ThemeProvider theme={theme}>
-            <StatusBar style="inverted" />
-            <Stack
-              screenOptions={{
-                headerShown: false,
-                animation: "flip",
-                animationDuration: 300,
-              }}
-            >
-              <Stack.Screen name="init" />
-              <Stack.Screen name="login" />
-              <Stack.Screen name="register" />
-              <Stack.Screen name="chat" />
-              <Stack.Screen name="awaiting-validation" />
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="(communication-request)" />
-            </Stack>
-          </ThemeProvider>
-        </AuthProvider>
-      </KeyboardProvider>
-    </QueryClientProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryClientProvider client={queryClient}>
+        <KeyboardProvider>
+          <AuthProvider>
+            <ThemeProvider theme={theme}>
+              <StatusBar style="inverted" />
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                  animation: "flip",
+                  animationDuration: 300,
+                }}
+              >
+                <Stack.Screen name="init" />
+                <Stack.Screen name="login" />
+                <Stack.Screen name="register" />
+                <Stack.Screen name="chat" />
+                <Stack.Screen name="awaiting-validation" />
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="(communication-request)" />
+              </Stack>
+            </ThemeProvider>
+          </AuthProvider>
+        </KeyboardProvider>
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }

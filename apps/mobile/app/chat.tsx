@@ -1,63 +1,48 @@
+import React, { useCallback, useState } from "react";
+import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import { FontAwesome5 } from "@expo/vector-icons";
+
 import { Container } from "@/components/theme/Container";
 import { Message } from "@/components/theme/Message";
 import { MessageInput } from "@/components/theme/MessageInput";
 import { MessageList } from "@/components/theme/MessageList";
-import useChatMessages from "@/hooks/useChatMessages";
-import useChatSocket from "@/hooks/useChatSocket";
-import { useAuthStore } from "@/stores/authStore";
-import { useCommunicationRequestStore } from "@/stores/communicationRequestStore";
-import theme from "@/theme";
-import { Stack, useLocalSearchParams } from "expo-router";
-import {
-  BackHandler,
-  Dimensions,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
-import { useEffect, useMemo } from "react";
 import { IconButton } from "@/components/theme/IconButton";
-import { FontAwesome5 } from "@expo/vector-icons";
+import theme from "@/theme";
 
-export default function Chat() {
-  const {
-    chatId,
-    blockBack: isBackBlocked,
-  }: { chatId: string; blockBack: string } = useLocalSearchParams();
-  const oldMessages = useChatMessages(chatId);
+import { useChatController } from "@/hooks/useChatController";
+import { usePreventGoBack } from "@/hooks/usePreventGoBack";
+import { BottomSheet } from "@/components/theme/BottomSheet";
+import { Box, Text } from "@/components/restyle";
+import Button from "@/components/theme/Button";
 
-  const token = useAuthStore((s) => s.token);
-  const visitorToken = useCommunicationRequestStore((s) => s.visitorToken);
-  const userId = useAuthStore((s) => s.user?.id);
-  const visitorId = useCommunicationRequestStore((s) => s.visitorId);
-  const id = userId || visitorId;
+export default function ChatScreen() {
+  const [isOpen, setIsOpen] = useState(false);
+  const { chatId, blockBack } = useLocalSearchParams<{
+    chatId: string;
+    blockBack: string;
+  }>();
+  const isBackBlocked = blockBack === "true";
 
-  const { messages, sendMessage, status, participants } = useChatSocket({
-    chatId: chatId,
-    token: token || visitorToken || "",
-  });
+  usePreventGoBack(isBackBlocked);
 
-  const messagesToRender = useMemo(() => {
-    const rawList = oldMessages.data
-      ? [...oldMessages.data.items, ...messages]
-      : [...messages];
+  const { messages, sendMessage, connectionStatus, currentUserId } =
+    useChatController(chatId);
 
-    return rawList;
-  }, [oldMessages.data, messages]);
+  const renderMessageItem = useCallback(
+    ({ item }: { item: any }) => (
+      <Message
+        content={item.content}
+        isMyMessage={item.sender.userId === currentUserId}
+        timestamp={item.timestamp}
+      />
+    ),
+    [currentUserId]
+  );
 
-  useEffect(() => {
-    if (!isBackBlocked) return;
-
-    const onBackPress = () => {
-      return true;
-    };
-
-    const subscription = BackHandler.addEventListener(
-      "hardwareBackPress",
-      onBackPress
-    );
-
-    return () => subscription.remove();
-  }, [isBackBlocked]);
+  const handleSend = (content: string) => {
+    sendMessage({ chatId, content });
+  };
 
   return (
     <Container
@@ -69,51 +54,62 @@ export default function Chat() {
         children: (
           <IconButton
             icon={<FontAwesome5 name="ellipsis-v" size={24} color="black" />}
+            onPress={() => setIsOpen(true)}
           />
         ),
       }}
     >
       <KeyboardAvoidingView
-        style={{
-          flex: 1,
-          width: Dimensions.get("window").width,
-          height: Dimensions.get("window").height,
-        }}
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
+        style={styles.keyboardView}
+        contentContainerStyle={styles.contentContainer}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         keyboardVerticalOffset={Platform.OS === "ios" ? -60 : 0}
       >
-        <Stack.Screen
-          options={{
-            gestureEnabled: !isBackBlocked,
-            headerLeft: isBackBlocked ? () => null : undefined,
-            headerBackVisible: !isBackBlocked,
-            title: "Tela Bloqueada",
-          }}
-        />
         <MessageList
-          data={messagesToRender}
-          keyExtractor={(item: any) => item.id}
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingHorizontal: theme.spacing.m,
-            paddingBottom: theme.spacing.m,
-          }}
-          renderItem={({ item }: any) => (
-            <Message
-              content={item.content}
-              isMyMessage={item.sender.userId === id}
-              timestamp={item.timestamp}
-            />
-          )}
+          data={messages}
+          keyExtractor={(item: any) => item.id || Math.random().toString()}
+          contentContainerStyle={styles.listContent}
+          renderItem={renderMessageItem}
         />
+
         <MessageInput
-          onSend={(content: string) => sendMessage({ chatId: chatId, content })}
-          editable={status === "connected"}
+          onSend={handleSend}
+          editable={connectionStatus === "connected"}
         />
+        <BottomSheet
+          isVisible={isOpen}
+          onClose={() => setIsOpen(false)}
+          height="80%"
+        >
+          <Box style={styles.sheetContent}>
+            <Text style={styles.title}>Configurações</Text>
+            <Text>Aqui você coloca qualquer conteúdo.</Text>
+            <Button text="Confirmar" onPress={() => setIsOpen(false)} />
+          </Box>
+        </BottomSheet>
       </KeyboardAvoidingView>
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  sheetContent: {
+    padding: 16,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  keyboardView: {
+    flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
+  },
+  listContent: {
+    flexGrow: 1,
+    paddingHorizontal: theme.spacing.m,
+    paddingBottom: theme.spacing.m,
+  },
+});

@@ -99,6 +99,7 @@ const theme = createTheme({
       backgroundColor: "backgroundGrayLight",
       mr: "s",
       opacity: 0.5,
+      color: "buttonTextLight",
     },
     chip: {
       maxWidth: 400,
@@ -108,6 +109,7 @@ const theme = createTheme({
       borderRadius: 4,
       backgroundColor: "backgroundGrayLight",
       mr: "s",
+      color: "buttonTextLight",
     },
     icon: {
       backgroundColor: "transparent",
