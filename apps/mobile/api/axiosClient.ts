@@ -1,14 +1,20 @@
 import axios from "axios";
 import { useAuthStore } from "@/stores/authStore";
 import { useCommunicationRequestStore } from "@/stores/communicationRequestStore";
+import { Platform } from "react-native";
 
-const baseURL =
+const mobileBaseURL =
   `${process.env.EXPO_PUBLIC_API_URL}/api` ||
   "https://f3d7a2d04af5.ngrok-free.app/api";
+
+const webBaseUrl = "http://localhost:3001/api";
+
+const baseURL = Platform.OS === "web" ? webBaseUrl : mobileBaseURL;
 
 const axiosClient = axios.create({
   baseURL,
   headers: {
+    "ngrok-skip-browser-warning": "true",
     "Content-Type": "application/json",
   },
 });

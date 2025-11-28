@@ -12,12 +12,10 @@ export default function Code() {
     const provider = await ProviderService.findByCode(code.toUpperCase());
     if (!provider) return;
 
-    const stateUpdated = useCommunicationRequestStore.setState({
+    useCommunicationRequestStore.setState({
       provider: provider as any,
       code,
     });
-
-    if (!stateUpdated) return;
 
     push("/(communication-request)/(steps)/residence");
   };

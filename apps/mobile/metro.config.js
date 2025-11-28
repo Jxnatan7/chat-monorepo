@@ -19,11 +19,20 @@ config.resolver = {
   ),
 };
 
+const originalResolveRequest = config.resolver.resolveRequest;
+
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (moduleName === "zustand" || moduleName.startsWith("zustand/")) {
     return {
       type: "sourceFile",
       filePath: require.resolve(moduleName),
+    };
+  }
+
+  if (platform === "web" && moduleName === "expo-secure-store") {
+    return {
+      type: "sourceFile",
+      filePath: path.resolve(projectRoot, "mocks/expo-secure-store.js"),
     };
   }
 

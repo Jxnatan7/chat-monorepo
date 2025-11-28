@@ -20,6 +20,9 @@ export type AuthState = {
   isLoading: boolean;
   error: string | null;
 
+  _hasHydrated: boolean;
+  setHasHydrated: (state: boolean) => void;
+
   login: (email: string, password: string) => Promise<void>;
   register: (payload: {
     name: string;
@@ -40,6 +43,8 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: false,
       error: null,
+      _hasHydrated: false,
+      setHasHydrated: (state: boolean) => set({ _hasHydrated: state }),
 
       login: async (email, password) => {
         set({ isLoading: true, error: null });
@@ -97,6 +102,9 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "auth-storage",
       storage: createJSONStorage(() => storage),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

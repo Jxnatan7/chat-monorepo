@@ -265,7 +265,9 @@ const theme = createTheme({
       maxHeight: 800,
     },
     messageOptions: {
+      width: "100%",
       backgroundColor: "backgroundLight",
+      maxHeight: 80,
     },
   },
 });

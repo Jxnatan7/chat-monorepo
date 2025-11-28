@@ -1,14 +1,42 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "react-native";
+import * as SecureStore from "expo-secure-store";
+import Cookies from "js-cookie";
 import { StateStorage } from "zustand/middleware";
 
-export const storage: StateStorage = {
-  getItem: async (name: string): Promise<string | null> => {
-    return (await AsyncStorage.getItem(name)) || null;
+const webStorage: StateStorage = {
+  getItem: (name: string): string | null => {
+    if (typeof window !== "undefined") {
+      return Cookies.get(name) || null;
+    }
+    return null;
   },
-  setItem: async (name: string, value: string): Promise<void> => {
-    await AsyncStorage.setItem(name, value);
+  setItem: (name: string, value: string): void => {
+    if (typeof window !== "undefined") {
+      Cookies.set(name, value, {
+        expires: 7,
+        secure: false, // DEV, in PROD use: true
+        sameSite: "strict",
+      });
+    }
   },
-  removeItem: async (name: string): Promise<void> => {
-    await AsyncStorage.removeItem(name);
+  removeItem: (name: string): void => {
+    if (typeof window !== "undefined") {
+      Cookies.remove(name);
+    }
   },
 };
+
+const mobileStorage: StateStorage = {
+  getItem: async (name: string): Promise<string | null> => {
+    return (await SecureStore.getItemAsync(name)) || null;
+  },
+  setItem: async (name: string, value: string): Promise<void> => {
+    await SecureStore.setItemAsync(name, value);
+  },
+  removeItem: async (name: string): Promise<void> => {
+    await SecureStore.deleteItemAsync(name);
+  },
+};
+
+export const storage: StateStorage =
+  Platform.OS === "web" ? webStorage : mobileStorage;

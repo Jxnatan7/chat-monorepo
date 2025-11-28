@@ -14,10 +14,10 @@ import {
   border,
 } from "@shopify/restyle";
 import type { Theme } from "@/theme";
-import { AnimatedFlashList, FlashList } from "@shopify/flash-list";
+import { FlatList } from "react-native";
 import React from "react";
 
-const flashListVariant = createVariant<Theme>({
+const flatListVariant = createVariant<Theme>({
   themeKey: "flashListVariants",
   property: "variant",
 });
@@ -28,20 +28,18 @@ type RestyleProps = SpacingProps<Theme> &
   BorderProps<Theme> &
   ColorProps<Theme> &
   VariantProps<Theme, "flashListVariants"> &
-  React.ComponentProps<typeof FlashList>;
+  React.ComponentProps<typeof FlatList>;
 
-export const RestyleFlashList = createRestyleComponent<RestyleProps, Theme>(
+export const RestyleFlatList = createRestyleComponent<RestyleProps, Theme>(
   [
     spacing,
     layout,
     backgroundColor,
     border as unknown as any,
     color,
-    flashListVariant,
+    flatListVariant,
   ],
-  AnimatedFlashList
+  FlatList
 );
 
-export type RestyleFlashListProps = React.ComponentProps<
-  typeof RestyleFlashList
->;
+export type RestyleFlatListProps = React.ComponentProps<typeof RestyleFlatList>;

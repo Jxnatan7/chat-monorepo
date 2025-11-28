@@ -34,9 +34,12 @@
       [
         "expo-asset",
         {
-          "assets": ["./assets/images/init-image.png"]
+          "assets": [
+            "./assets/images/init-image.png"
+          ]
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
