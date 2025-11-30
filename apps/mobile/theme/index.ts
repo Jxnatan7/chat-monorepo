@@ -117,7 +117,7 @@ const theme = createTheme({
     },
     transparent: {
       backgroundColor: "transparent",
-      color: "buttonTextLight",
+      color: "buttonTextGray",
     },
     chipDisabled: {
       maxWidth: 400,
@@ -143,14 +143,34 @@ const theme = createTheme({
     icon: {
       backgroundColor: "transparent",
       color: "buttonTextLight",
+      alignItems: "center",
+      justifyContent: "center",
+      width: 50,
+      height: 50,
     },
     default: {
       backgroundColor: "buttonBackgroundLight",
       color: "buttonTextLight",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 30,
+      width: "85%",
+      height: {
+        smallPhone: 50,
+        phone: 60,
+      },
     },
     defaults: {
       backgroundColor: "buttonBackgroundLight",
       color: "buttonTextLight",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 30,
+      width: "85%",
+      height: {
+        smallPhone: 50,
+        phone: 60,
+      },
     },
     primary: {
       backgroundColor: "buttonBackgroundLight",
@@ -159,6 +179,15 @@ const theme = createTheme({
     secondary: {
       backgroundColor: "buttonBackgroundGray",
       color: "buttonTextDark",
+    },
+    cameraOption: {
+      width: 50,
+      height: 50,
+      borderRadius: 10,
+      backgroundColor: "transparent",
+      color: "buttonTextGray",
+      borderWidth: 2,
+      borderColor: "buttonBackgroundGray",
     },
   },
   textVariants: {
@@ -306,6 +335,22 @@ const theme = createTheme({
       width: "100%",
       backgroundColor: "backgroundLight",
       maxHeight: 80,
+    },
+  },
+  cameraVariants: {
+    default: {
+      width: 40,
+      height: 40,
+    },
+    defaults: {
+      width: 40,
+      height: 40,
+    },
+    code: {
+      width: 262,
+      height: 262,
+      borderRadius: 10,
+      overflow: "hidden",
     },
   },
 });

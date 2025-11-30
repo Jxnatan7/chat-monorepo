@@ -20,6 +20,7 @@ const pallete = {
 
   buttonTextLight: "#FFFFFF",
   buttonTextDark: "#0053e3ff",
+  buttonTextGray: "#313437ff",
 
   keyboardBackgroundLight: "#F7F7FC",
   keyboardBackgroundDark: "#0F1828",

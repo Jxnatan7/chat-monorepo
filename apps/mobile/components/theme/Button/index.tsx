@@ -9,7 +9,7 @@ import { useTheme } from "@shopify/restyle";
 import React from "react";
 
 export type ButtonProps = RestyleTouchableOpacityProps & {
-  text: string;
+  text?: string;
   textProps?: TextProps;
 };
 
@@ -17,6 +17,7 @@ export default function Button({
   text,
   textProps,
   variant = "default",
+  children,
   ...props
 }: ButtonProps) {
   const theme = useTheme<Theme>();
@@ -28,29 +29,17 @@ export default function Button({
   const textColorToken = btnVariant?.color ?? "buttonTextLight";
 
   return (
-    <RestyleTouchableOpacity
-      activeOpacity={0.7}
-      borderRadius={30}
-      width="85%"
-      height={{
-        smallPhone: 50,
-        phone: 60,
-      }}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-      variant={variant}
-      {...props}
-    >
-      <Text
-        variant="button"
-        {...textProps}
-        color={(textProps?.color ?? textColorToken) as any}
-      >
-        {text}
-      </Text>
+    <RestyleTouchableOpacity activeOpacity={0.7} variant={variant} {...props}>
+      {text && (
+        <Text
+          variant="button"
+          {...textProps}
+          color={(textProps?.color ?? textColorToken) as any}
+        >
+          {text}
+        </Text>
+      )}
+      {children}
     </RestyleTouchableOpacity>
   );
 }
