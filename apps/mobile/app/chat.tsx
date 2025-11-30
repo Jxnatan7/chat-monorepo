@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -14,19 +20,43 @@ import { usePreventGoBack } from "@/hooks/usePreventGoBack";
 import { BottomSheet } from "@/components/theme/BottomSheet";
 import { Text } from "@/components/restyle";
 import { FlashListRef } from "@shopify/flash-list";
+import Button from "@/components/theme/Button";
+import { ActionModal } from "@/components/theme/ActionModal";
+import useValidateCommunication from "@/hooks/useValidateCommunication";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ChatScreen() {
   const [isOpen, setIsOpen] = useState(false);
-  const { chatId, blockBack } = useLocalSearchParams<{
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const {
+    chatId,
+    blockBack,
+    visitorName,
+    communicationRequestId: selectedRequestId,
+  } = useLocalSearchParams<{
     chatId: string;
     blockBack: string;
+    visitorName: string;
+    communicationRequestId: string;
   }>();
   const isBackBlocked = blockBack === "true";
+  const queryClient = useQueryClient();
 
   usePreventGoBack(isBackBlocked);
 
-  const { messages, sendMessage, connectionStatus, currentUserId } =
-    useChatController(chatId);
+  const {
+    messages,
+    sendMessage,
+    connectionStatus,
+    currentUserId,
+    house,
+    communicationRequestId,
+  } = useChatController(chatId);
+
+  const communicationId = useMemo(
+    () => selectedRequestId ?? communicationRequestId,
+    [selectedRequestId, communicationRequestId]
+  );
 
   const renderMessageItem = useCallback(
     ({ item }: { item: any }) => (
@@ -55,50 +85,92 @@ export default function ChatScreen() {
     });
   };
 
+  const { mutateAsync, isPending } = useValidateCommunication(() => {
+    setModalIsOpen(false);
+    queryClient.invalidateQueries({ queryKey: ["communication-requests"] });
+  });
+
+  const handleValidation = async (status: "ACCEPTED" | "REJECTED") => {
+    if (!communicationId) return;
+
+    mutateAsync({
+      communicationId: communicationId,
+      status: status,
+    }).then(() => {
+      setModalIsOpen(false);
+    });
+  };
+
   useEffect(() => {
     if (messages.length > 0) {
       scrollToBottom();
     }
   }, [messages]);
 
-  return (
-    <Container
-      variant="chat"
-      containerHeaderProps={{
-        title: "Chat",
-        backgroundColor: "backgroundGrayLight",
-        hideBackButton: isBackBlocked,
-        children: (
-          <IconButton
-            icon={<FontAwesome5 name="ellipsis-v" size={24} color="black" />}
-            onPress={() => setIsOpen(true)}
-          />
-        ),
-      }}
-    >
-      <MessageList
-        ref={listRef}
-        data={messages}
-        keyExtractor={(item: any) => item.id}
-        contentContainerStyle={styles.listContent}
-        renderItem={renderMessageItem}
-        keyboardDismissMode="interactive"
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      />
+  useEffect(() => {
+    console.log("🚀 ~ ChatScreen ~ modalIsOpen:", modalIsOpen);
+  }, [modalIsOpen]);
 
-      <MessageInput
-        onSend={handleSend}
-        editable={connectionStatus === "connected"}
-      />
-      <BottomSheet
-        isVisible={isOpen}
-        onClose={() => setIsOpen(false)}
-        height="80%"
+  return (
+    <>
+      <Container
+        variant="chat"
+        containerHeaderProps={{
+          title: visitorName || house?.name || "Chat",
+          backgroundColor: "backgroundGrayLight",
+          hideBackButton: isBackBlocked,
+          children: (
+            <IconButton
+              icon={<FontAwesome5 name="ellipsis-v" size={24} color="black" />}
+              onPress={() => setIsOpen(true)}
+            />
+          ),
+        }}
       >
-        <Text>Aqui você coloca qualquer conteúdo.</Text>
-      </BottomSheet>
-    </Container>
+        <MessageList
+          ref={listRef}
+          data={messages}
+          keyExtractor={(item: any) => item.id}
+          contentContainerStyle={styles.listContent}
+          renderItem={renderMessageItem}
+          keyboardDismissMode="interactive"
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        />
+
+        <MessageInput
+          onSend={handleSend}
+          editable={connectionStatus === "connected"}
+        />
+        <BottomSheet
+          isVisible={isOpen}
+          onClose={() => setIsOpen(false)}
+          height="80%"
+        >
+          <Text textAlign="center" variant="infoTitle">
+            Finalizar Conversa ?
+          </Text>
+          <Button
+            alignSelf="center"
+            marginTop="l"
+            variant="red"
+            text="Finalizar"
+            onPress={() => setModalIsOpen(true)}
+          />
+        </BottomSheet>
+      </Container>
+      <ActionModal
+        visible={modalIsOpen}
+        onClose={() => setModalIsOpen(false)}
+        loading={isPending}
+        title="Confirmação"
+        description="Deseja finalizar a conversa?"
+        confirmText="Confirmar"
+        rejectText="Rejeitar"
+        onConfirm={() => handleValidation("ACCEPTED")}
+        onReject={() => handleValidation("REJECTED")}
+      />
+    </>
   );
 }
 
@@ -110,9 +182,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 8,
-  },
-  keyboardView: {
-    // flex: 1,
   },
   contentContainer: {
     flexGrow: 1,

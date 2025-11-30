@@ -2,6 +2,12 @@ import { createTheme } from "@shopify/restyle";
 import pallete from "@repo/theme/pallete/index";
 
 const theme = createTheme({
+  breakpoints: {
+    smallPhone: 0,
+    phone: 400,
+    tablet: 768,
+    desktop: 1024,
+  },
   colors: pallete,
   spacing: {
     none: 0,
@@ -12,6 +18,25 @@ const theme = createTheme({
     xl: 40,
     xxl: 64,
     xxxl: 80,
+    xxxxl: 120,
+  },
+  imageVariants: {
+    default: {
+      width: 40,
+      height: 40,
+    },
+    defaults: {
+      width: 40,
+      height: 40,
+    },
+    init: {
+      width: 262,
+      height: 271,
+      marginTop: {
+        smallPhone: 0,
+        phone: "xxxxl",
+      },
+    },
   },
   containerVariants: {
     chip: {
@@ -86,6 +111,10 @@ const theme = createTheme({
     },
   },
   buttonVariants: {
+    red: {
+      backgroundColor: "finish",
+      color: "buttonTextLight",
+    },
     transparent: {
       backgroundColor: "transparent",
       color: "buttonTextLight",
@@ -166,18 +195,27 @@ const theme = createTheme({
     button: {
       fontFamily: "Mulish",
       fontWeight: 600,
-      fontSize: 18,
+      fontSize: {
+        smallPhone: 16,
+        phone: 18,
+      },
       color: "buttonTextLight",
     },
     header: {
       fontFamily: "Mulish",
       fontWeight: "bold",
-      fontSize: 30,
+      fontSize: {
+        smallPhone: 20,
+        phone: 30,
+      },
       textAlign: "center",
     },
     body: {
       fontFamily: "Mulish",
-      fontSize: 16,
+      fontSize: {
+        smallPhone: 14,
+        phone: 16,
+      },
       lineHeight: 24,
     },
     defaults: {},

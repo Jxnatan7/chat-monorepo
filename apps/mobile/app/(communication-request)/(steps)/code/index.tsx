@@ -1,6 +1,6 @@
-import { Text } from "@/components/restyle";
 import CodeInput from "@/components/theme/CodeInput";
 import { Container } from "@/components/theme/Container";
+import { StepHeader } from "@/components/theme/StepHeader";
 import ProviderService from "@/services/ProviderService";
 import { useCommunicationRequestStore } from "@/stores/communicationRequestStore";
 import { useRouter } from "expo-router";
@@ -22,12 +22,11 @@ export default function Code() {
 
   return (
     <Container variant="screen">
-      <Text variant="header" mt="xxxl">
-        Digite o código
-      </Text>
-      <Text variant="header2" mt="m" px="xl" mb="xxl">
-        Insira aqui o código do Condomínio ou da Residência
-      </Text>
+      <StepHeader
+        title="Insira o código"
+        subtitle="O código do condomínio ou da residência"
+      />
+
       <CodeInput
         length={10}
         keyboardType="name-phone-pad"

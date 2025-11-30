@@ -1,8 +1,8 @@
 import { Box, Text } from "@/components/restyle";
 import Button from "@/components/theme/Button";
 import { Container } from "@/components/theme/Container";
+import { Image } from "@/components/theme/Image";
 import { useAuthStore } from "@/stores/authStore";
-import { Image } from "expo-image";
 import { Redirect, useRouter } from "expo-router";
 
 export default function App() {
@@ -17,7 +17,7 @@ export default function App() {
     <Container variant="screen" hideHeader>
       <Image
         source={require("@/assets/images/init-image.svg")}
-        style={{ width: 262, height: 271, marginTop: 120 }}
+        variant="init"
         contentFit="cover"
         cachePolicy="memory"
       />
@@ -27,7 +27,10 @@ export default function App() {
         justifyContent="center"
         flexDirection="row"
         px="l"
-        mt="xl"
+        mt={{
+          smallPhone: "l",
+          phone: "xl",
+        }}
         mb="xl"
       >
         <Text variant="header" textAlign="center" flex={1} px="s">

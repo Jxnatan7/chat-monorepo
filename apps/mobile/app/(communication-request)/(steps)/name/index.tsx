@@ -1,6 +1,6 @@
-import { Text } from "@/components/restyle";
 import Button from "@/components/theme/Button";
 import { Container } from "@/components/theme/Container";
+import { StepHeader } from "@/components/theme/StepHeader";
 import { TextInput } from "@/components/theme/TextInput";
 import useCreateCommunicationRequest from "@/hooks/useCreateCommunicationRequest";
 import { useCommunicationRequestStore } from "@/stores/communicationRequestStore";
@@ -28,12 +28,11 @@ export default function Name() {
 
   return (
     <Container variant="screen">
-      <Text variant="header" px="xl" mb="m" mt="xxxl">
-        Insira o seu nome
-      </Text>
-      <Text variant="header2" px="xxxl" mb="xxl">
-        O seu nome é essencial para que o residente aceite a sua solicitação
-      </Text>
+      <StepHeader
+        title="Insira o seu nome"
+        subtitle="O seu nome é essencial para que o residente aceite a sua solicitação"
+      />
+
       <TextInput
         autoFocus
         placeholder="O seu nome..."

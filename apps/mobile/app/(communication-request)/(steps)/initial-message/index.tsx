@@ -1,7 +1,7 @@
-import { Text } from "@/components/restyle";
 import Button from "@/components/theme/Button";
 import { Container } from "@/components/theme/Container";
 import { MessageOptions } from "@/components/theme/MessageOptions";
+import { StepHeader } from "@/components/theme/StepHeader";
 import { TextInput } from "@/components/theme/TextInput";
 import { useCommunicationRequestStore } from "@/stores/communicationRequestStore";
 import { useRouter } from "expo-router";
@@ -19,12 +19,10 @@ export default function InitialMessage() {
 
   return (
     <Container variant="screen">
-      <Text variant="header" px="xl" mb="m" mt="xxxl">
-        Escreva a sua mensagem inicial
-      </Text>
-      <Text variant="header2" px="xl" mb="xxl">
-        Informe aqui o motivo do seu contato com o residente
-      </Text>
+      <StepHeader
+        title="Escreva a sua mensagem inicial"
+        subtitle="Informe aqui o motivo do seu contato com o residente"
+      />
       <MessageOptions
         messageSelected={messageSelected}
         setMessageSelected={setMessageSelected}

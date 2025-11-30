@@ -1,20 +1,13 @@
 import React, { useState } from "react";
-import {
-  Modal,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { useRouter } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { CommunicationRequestItem } from "@/components/theme/CommunicationRequestItem";
 import { CommunicationRequestList } from "@/components/theme/CommunicationRequestList";
 import { Container } from "@/components/theme/Container";
 import { SearchInput } from "@/components/theme/SearchInput";
-import { Text } from "@/components/restyle";
 import useValidateCommunication from "@/hooks/useValidateCommunication";
+import { ActionModal } from "@/components/theme/ActionModal";
 
 const { width } = Dimensions.get("window");
 
@@ -61,6 +54,8 @@ export default function Home() {
                     pathname: "/chat",
                     params: {
                       chatId: item.chatId,
+                      visitorName: item.visitorName,
+                      communicationRequestId: item._id,
                     },
                   })
             }
@@ -68,64 +63,17 @@ export default function Home() {
         )}
       />
 
-      <Modal
-        animationType="fade"
-        transparent={true}
+      <ActionModal
         visible={!!selectedRequestId}
-        onRequestClose={() => setSelectedRequestId(null)}
-      >
-        <View style={styles.overlay}>
-          <View style={styles.modalContainer}>
-            <Text
-              variant="containerHeader"
-              style={{ width: "100%", marginBottom: 12, textAlign: "center" }}
-            >
-              Responder Solicitação
-            </Text>
-
-            <Text
-              variant="body"
-              style={{ marginBottom: 24, textAlign: "center", color: "#666" }}
-            >
-              Deseja permitir ou rejeitar a conversa deste visitante?
-            </Text>
-
-            <View style={styles.actionRow}>
-              <TouchableOpacity
-                style={[styles.button, styles.rejectButton]}
-                onPress={() => handleValidation("REJECTED")}
-                disabled={isPending}
-              >
-                {isPending ? (
-                  <ActivityIndicator color="#FFF" size="small" />
-                ) : (
-                  <Text style={styles.buttonText}>Rejeitar</Text>
-                )}
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.button, styles.confirmButton]}
-                onPress={() => handleValidation("ACCEPTED")}
-                disabled={isPending}
-              >
-                {isPending ? (
-                  <ActivityIndicator color="#FFF" size="small" />
-                ) : (
-                  <Text style={styles.buttonText}>Confirmar</Text>
-                )}
-              </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity
-              style={styles.cancelButton}
-              onPress={() => setSelectedRequestId(null)}
-              disabled={isPending}
-            >
-              <Text style={styles.cancelButtonText}>Cancelar e fechar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+        onClose={() => setSelectedRequestId(null)}
+        loading={isPending}
+        title="Responder Solicitação"
+        description="Deseja permitir ou rejeitar a conversa deste visitante?"
+        confirmText="Confirmar"
+        rejectText="Rejeitar"
+        onConfirm={() => handleValidation("ACCEPTED")}
+        onReject={() => handleValidation("REJECTED")}
+      />
     </Container>
   );
 }

@@ -9,3 +9,4 @@ export { RestyleTextInput, RestyleTextInputProps } from "./TextInput";
 export { RestyleFlashList, RestyleFlashListProps } from "./FlashList";
 export { RestyleFlatList, RestyleFlatListProps } from "./FlatList";
 export { RestylePressable, RestylePressableProps } from "./Pressable";
+export { RestyleImage, RestyleImageProps } from "./Image";

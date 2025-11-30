@@ -10,7 +10,6 @@ export default function CommunicationRequestStepsLayout() {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="name/index" options={{ headerShown: false }} />
-      <Stack.Screen name="phone/index" options={{ headerShown: false }} />
     </Stack>
   );
 }

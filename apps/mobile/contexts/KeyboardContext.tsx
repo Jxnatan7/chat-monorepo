@@ -114,6 +114,19 @@ export function KeyboardProvider({
     [keyboardShown, keyboardHeight]
   );
 
+  const deviceWidth = Dimensions.get("window").width;
+
+  const bottomSpacing = useMemo(() => {
+    if (deviceWidth > 400) {
+      return keyboardHeight - 25;
+    }
+    if (deviceWidth < 400) {
+      return keyboardHeight + 5;
+    }
+
+    return keyboardHeight - 25;
+  }, [deviceWidth, keyboardHeight]);
+
   return (
     <KeyboardContext.Provider value={value}>
       <Animated.View
@@ -126,7 +139,7 @@ export function KeyboardProvider({
         {keyboardShown && !isChatMode && (
           <Animated.View
             pointerEvents="box-none"
-            style={[styles.accessoryWrapper, { bottom: keyboardHeight - 25 }]}
+            style={[styles.accessoryWrapper, { bottom: bottomSpacing }]}
           >
             <SafeAreaView pointerEvents="box-none">
               <View

@@ -22,7 +22,9 @@ export default function Button({
   const theme = useTheme<Theme>();
 
   const btnVariant =
+    // @ts-ignore
     theme.buttonVariants?.[variant] ?? theme.buttonVariants.default;
+
   const textColorToken = btnVariant?.color ?? "buttonTextLight";
 
   return (
@@ -30,7 +32,10 @@ export default function Button({
       activeOpacity={0.7}
       borderRadius={30}
       width="85%"
-      height={60}
+      height={{
+        smallPhone: 50,
+        phone: 60,
+      }}
       style={{
         display: "flex",
         alignItems: "center",

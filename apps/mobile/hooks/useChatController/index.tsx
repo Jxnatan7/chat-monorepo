@@ -10,6 +10,10 @@ export function useChatController(chatId: string) {
 
   const visitorToken = useCommunicationRequestStore((s) => s.visitorToken);
   const visitorId = useCommunicationRequestStore((s) => s.visitorId);
+  const house = useCommunicationRequestStore((s) => s.house);
+  const visitorCommunicationRequestId = useCommunicationRequestStore(
+    (s) => s.communicationRequestId
+  );
 
   const activeToken = userToken || visitorToken || "";
   const currentUserId = user?.id || visitorId;
@@ -35,5 +39,7 @@ export function useChatController(chatId: string) {
     connectionStatus: status,
     currentUserId,
     isLoading: oldMessagesQuery.isPending,
+    house,
+    communicationRequestId: visitorCommunicationRequestId,
   };
 }
