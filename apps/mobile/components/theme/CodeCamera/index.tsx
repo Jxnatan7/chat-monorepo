@@ -10,6 +10,7 @@ import Button, { ButtonProps } from "../Button";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { useCallback, useEffect, useState } from "react";
 import { useQRCodeScanner } from "@/hooks/useQrCodeScanner";
+import { useIsFocused } from "@react-navigation/native";
 
 export type CameraButtonProps = ButtonProps & {
   icon?: React.ReactNode;
@@ -43,14 +44,25 @@ export const CodeCamera = ({
   pathName,
   ...props
 }: CodeCameraProps) => {
+  const isFocused = useIsFocused();
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState<CameraType>("back");
   const [flash, setFlash] = useState(false);
 
-  const handleBarcodeScanned = useCallback((data: string) => {
-    Vibration.vibrate(100);
-    onCodeScanned(data);
-  }, []);
+  const handleBarcodeScanned = useCallback(
+    (data: string) => {
+      if (!isFocused) return;
+
+      Vibration.vibrate(100);
+      onCodeScanned(data);
+    },
+    [isFocused, onCodeScanned]
+  );
+
+  const { onBarCodeScanned, resetScanner } = useQRCodeScanner({
+    onRead: handleBarcodeScanned,
+    path: pathName,
+  });
 
   const toggleFacing = () => {
     setFacing((prev) => (prev === "back" ? "front" : "back"));
@@ -60,16 +72,18 @@ export const CodeCamera = ({
     setFlash((prev) => !prev);
   };
 
-  const { onBarCodeScanned, resetScanner } = useQRCodeScanner({
-    onRead: handleBarcodeScanned,
-    path: pathName,
-  });
-
   useEffect(() => {
+    if (!isFocused) {
+      resetScanner();
+    }
     return () => {
       resetScanner();
     };
-  }, []);
+  }, [isFocused]);
+
+  if (!isFocused) {
+    return <Box />;
+  }
 
   if (!permission) {
     return <ActivityIndicator />;
@@ -93,7 +107,11 @@ export const CodeCamera = ({
 
   return (
     <>
-      <Box style={styles.cameraContainer}>
+      <Box
+        width="100%"
+        maxHeight={{ smallPhone: 250, phone: 300 }}
+        alignItems="center"
+      >
         <RestyleCameraView
           facing={facing}
           enableTorch={flash}
@@ -132,11 +150,6 @@ const styles = StyleSheet.create({
   },
   linkText: {
     textDecorationLine: "underline",
-  },
-  cameraContainer: {
-    width: "100%",
-    maxHeight: 300,
-    alignItems: "center",
   },
   controlsContainer: {
     width: "100%",

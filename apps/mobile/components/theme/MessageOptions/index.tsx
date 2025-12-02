@@ -42,7 +42,7 @@ export const MessageOptions = ({
           />
         )}
         horizontal={true}
-        marginBottom="m"
+        marginBottom="s"
         {...props}
       />
     </>

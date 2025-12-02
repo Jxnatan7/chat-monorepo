@@ -31,8 +31,6 @@ export function useQRCodeScanner({
 
   const onBarCodeScanned = useCallback(
     ({ data: _data }: { data: string }) => {
-      console.log("🚀 ~ useQRCodeScanner ~ path:", path);
-
       const data = _data.trim();
       const now = Date.now();
 

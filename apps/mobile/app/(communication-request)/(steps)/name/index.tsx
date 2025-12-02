@@ -11,7 +11,6 @@ import { Platform } from "react-native";
 export default function Name() {
   const { push } = useRouter();
   const [name, setName] = useState<string>();
-  console.log("🚀 ~ Name ~ name:", name);
   const { mutateAsync } = useCreateCommunicationRequest();
 
   const handleSubmit = () => {

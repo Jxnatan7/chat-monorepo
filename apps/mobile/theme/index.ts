@@ -131,14 +131,15 @@ const theme = createTheme({
       color: "buttonTextLight",
     },
     chip: {
-      maxWidth: 400,
+      width: 350,
+      height: 40,
       alignItems: "center",
       justifyContent: "center",
-      p: "s",
+      p: "xs",
       borderRadius: 4,
       backgroundColor: "backgroundGrayLight",
-      mr: "s",
       color: "buttonTextLight",
+      mr: "s",
     },
     icon: {
       backgroundColor: "transparent",
@@ -181,8 +182,14 @@ const theme = createTheme({
       color: "buttonTextDark",
     },
     cameraOption: {
-      width: 50,
-      height: 50,
+      width: {
+        smallPhone: 40,
+        phone: 50,
+      },
+      height: {
+        smallPhone: 40,
+        phone: 50,
+      },
       borderRadius: 10,
       backgroundColor: "transparent",
       color: "buttonTextGray",
@@ -334,7 +341,7 @@ const theme = createTheme({
     messageOptions: {
       width: "100%",
       backgroundColor: "backgroundLight",
-      maxHeight: 80,
+      height: 40,
     },
   },
   cameraVariants: {
@@ -347,8 +354,14 @@ const theme = createTheme({
       height: 40,
     },
     code: {
-      width: 262,
-      height: 262,
+      width: {
+        smallPhone: 200,
+        phone: 262,
+      },
+      height: {
+        smallPhone: 200,
+        phone: 262,
+      },
       borderRadius: 10,
       overflow: "hidden",
     },

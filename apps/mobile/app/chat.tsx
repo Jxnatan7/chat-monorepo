@@ -107,10 +107,6 @@ export default function ChatScreen() {
     }
   }, [messages]);
 
-  useEffect(() => {
-    console.log("🚀 ~ ChatScreen ~ modalIsOpen:", modalIsOpen);
-  }, [modalIsOpen]);
-
   return (
     <>
       <Container
