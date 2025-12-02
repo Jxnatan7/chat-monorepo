@@ -1,40 +1,37 @@
 import Button from "@/components/theme/Button";
-import { CodeCamera, CodeCameraHandle } from "@/components/theme/CodeCamera";
+import { CodeCamera } from "@/components/theme/CodeCamera";
 import CodeInput from "@/components/theme/CodeInput";
 import { Container } from "@/components/theme/Container";
 import { StepHeader } from "@/components/theme/StepHeader";
 import ProviderService from "@/services/ProviderService";
 import { useCommunicationRequestStore } from "@/stores/communicationRequestStore";
-import { useRouter } from "expo-router";
-import { useRef, useState } from "react";
+import { usePathname, useRouter } from "expo-router";
+import { useState } from "react";
 
 export default function Code() {
   const { push } = useRouter();
   const [codeInput, setCodeInput] = useState("CAMERA");
-  const cameraRef = useRef<CodeCameraHandle>(null);
+  const pathName = usePathname();
 
-  const onFullfill = async (code: string) => {
-    try {
-      const provider = await ProviderService.findByCode(code.toUpperCase());
+  const onFullfill = (code: string) => {
+    ProviderService.findByCode(code.toUpperCase())
+      .then((provider) => {
+        if (!provider) {
+          alert("Código inválido ou não encontrado.");
+          const id = setTimeout(() => {}, 500);
+          return () => clearTimeout(id);
+        }
 
-      if (!provider) {
-        alert("Código inválido ou não encontrado.");
-        const id = setTimeout(() => {
-          cameraRef.current?.reset();
-        }, 500);
-        return () => clearTimeout(id);
-      }
+        useCommunicationRequestStore.setState({
+          provider: provider as any,
+          code,
+        });
 
-      useCommunicationRequestStore.setState({
-        provider: provider as any,
-        code,
+        push("/(communication-request)/(steps)/residence");
+      })
+      .catch(() => {
+        alert("Erro ao validar código");
       });
-
-      push("/(communication-request)/(steps)/residence");
-    } catch (error) {
-      alert("Erro ao validar código");
-      cameraRef.current?.reset();
-    }
   };
 
   return (
@@ -45,7 +42,7 @@ export default function Code() {
       />
 
       {codeInput === "CAMERA" && (
-        <CodeCamera ref={cameraRef} onCodeScanned={onFullfill} />
+        <CodeCamera onCodeScanned={onFullfill} pathName={pathName} />
       )}
 
       {codeInput === "TEXT" && (

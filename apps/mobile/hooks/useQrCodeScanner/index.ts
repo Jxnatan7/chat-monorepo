@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from "react";
 type UseQRCodeScannerOptions = {
   onRead?: (code: string) => void;
   duplicateDelay?: number;
+  path?: string;
 };
 
 type UseQRCodeScannerType = {
@@ -14,8 +15,13 @@ type UseQRCodeScannerType = {
 export function useQRCodeScanner({
   onRead,
   duplicateDelay = 2000,
+  path,
 }: UseQRCodeScannerOptions): UseQRCodeScannerType {
   const scannedSetRef = useRef<Set<string>>(new Set());
+  const pathRef = useRef<{ path: string; timestamp: number }>({
+    path: "",
+    timestamp: 0,
+  });
 
   const lastScannedRef = useRef<{ data: string; timestamp: number } | null>(
     null
@@ -25,13 +31,17 @@ export function useQRCodeScanner({
 
   const onBarCodeScanned = useCallback(
     ({ data: _data }: { data: string }) => {
+      console.log("🚀 ~ useQRCodeScanner ~ path:", path);
+
       const data = _data.trim();
       const now = Date.now();
 
       if (
         lastScannedRef.current &&
         lastScannedRef.current.data === data &&
-        now - lastScannedRef.current.timestamp < duplicateDelay
+        now - lastScannedRef.current.timestamp < duplicateDelay &&
+        pathRef.current.path === path &&
+        now - pathRef.current.timestamp < duplicateDelay
       ) {
         return;
       }
@@ -43,17 +53,19 @@ export function useQRCodeScanner({
       }
 
       scannedSetRef.current.add(data);
+      4;
+      pathRef.current = { path: path ?? "", timestamp: now };
       setScannedList((old) => [...old, data]);
       onRead && onRead(data);
     },
-    [duplicateDelay, onRead]
+    [duplicateDelay, onRead, path]
   );
 
-  const resetScanner = () => {
+  const resetScanner = useCallback(() => {
     scannedSetRef.current.clear();
     setScannedList([]);
     lastScannedRef.current = null;
-  };
+  }, []);
 
   return {
     onBarCodeScanned,

@@ -8,7 +8,7 @@ import { CameraType, useCameraPermissions } from "expo-camera";
 import { ActivityIndicator, StyleSheet, Vibration } from "react-native";
 import Button, { ButtonProps } from "../Button";
 import { Entypo, Ionicons } from "@expo/vector-icons";
-import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useQRCodeScanner } from "@/hooks/useQrCodeScanner";
 
 export type CameraButtonProps = ButtonProps & {
@@ -19,6 +19,7 @@ export type CameraButtonProps = ButtonProps & {
 
 type CodeCameraProps = RestyleCameraViewProps & {
   onCodeScanned: (code: string) => void;
+  pathName?: string;
 };
 
 export type CodeCameraHandle = {
@@ -37,90 +38,90 @@ export const CameraButton = ({
   </Button>
 );
 
-export const CodeCamera = forwardRef<CodeCameraHandle, CodeCameraProps>(
-  ({ onCodeScanned, ...props }, ref) => {
-    const [permission, requestPermission] = useCameraPermissions();
-    const [facing, setFacing] = useState<CameraType>("back");
-    const [flash, setFlash] = useState(false);
-    const [scanned, setScanned] = useState(false);
+export const CodeCamera = ({
+  onCodeScanned,
+  pathName,
+  ...props
+}: CodeCameraProps) => {
+  const [permission, requestPermission] = useCameraPermissions();
+  const [facing, setFacing] = useState<CameraType>("back");
+  const [flash, setFlash] = useState(false);
 
-    const handleBarcodeScanned = useCallback((data: string) => {
-      setScanned(true);
-      Vibration.vibrate(100);
-      onCodeScanned(data);
-    }, []);
+  const handleBarcodeScanned = useCallback((data: string) => {
+    Vibration.vibrate(100);
+    onCodeScanned(data);
+  }, []);
 
-    const { onBarCodeScanned, resetScanner } = useQRCodeScanner({
-      onRead: handleBarcodeScanned,
-    });
+  const toggleFacing = () => {
+    setFacing((prev) => (prev === "back" ? "front" : "back"));
+  };
 
-    useImperativeHandle(ref, () => ({
-      reset: () => {
-        setScanned(false);
-        resetScanner();
-      },
-    }));
+  const toggleFlash = () => {
+    setFlash((prev) => !prev);
+  };
 
-    if (!permission) {
-      return <ActivityIndicator />;
-    }
+  const { onBarCodeScanned, resetScanner } = useQRCodeScanner({
+    onRead: handleBarcodeScanned,
+    path: pathName,
+  });
 
-    if (!permission.granted) {
-      return (
-        <Box style={styles.permissionContainer}>
-          <Text>Você precisa permitir o uso da camera para ler o código</Text>
-          <Button
-            variant="transparent"
-            onPress={requestPermission}
-            text="Permitir acesso"
-            textProps={{
-              style: styles.linkText,
-            }}
-          />
-        </Box>
-      );
-    }
-
-    const toggleFacing = () => {
-      setFacing((prev) => (prev === "back" ? "front" : "back"));
+  useEffect(() => {
+    return () => {
+      resetScanner();
     };
+  }, []);
 
-    const toggleFlash = () => {
-      setFlash((prev) => !prev);
-    };
+  if (!permission) {
+    return <ActivityIndicator />;
+  }
 
+  if (!permission.granted) {
     return (
-      <>
-        <Box style={styles.cameraContainer}>
-          <RestyleCameraView
-            facing={facing}
-            enableTorch={flash}
-            variant="code"
-            onBarcodeScanned={scanned ? undefined : onBarCodeScanned}
-            barcodeScannerSettings={{
-              barcodeTypes: ["qr"],
-            }}
-            {...props}
-          />
-        </Box>
-        <Box style={styles.controlsContainer} paddingTop="s" paddingRight="xxl">
-          <CameraButton
-            onPress={toggleFlash}
-            isOff={flash}
-            icon={<Ionicons name="flash" size={24} color="black" />}
-            offIcon={
-              <Ionicons name="flash-off-outline" size={24} color="black" />
-            }
-          />
-          <CameraButton
-            onPress={toggleFacing}
-            icon={<Entypo name="cycle" size={24} color="black" />}
-          />
-        </Box>
-      </>
+      <Box style={styles.permissionContainer}>
+        <Text>Você precisa permitir o uso da camera para ler o código</Text>
+        <Button
+          variant="transparent"
+          onPress={requestPermission}
+          text="Permitir acesso"
+          textProps={{
+            style: styles.linkText,
+          }}
+        />
+      </Box>
     );
   }
-);
+
+  return (
+    <>
+      <Box style={styles.cameraContainer}>
+        <RestyleCameraView
+          facing={facing}
+          enableTorch={flash}
+          variant="code"
+          onBarcodeScanned={onBarCodeScanned}
+          barcodeScannerSettings={{
+            barcodeTypes: ["qr"],
+          }}
+          {...props}
+        />
+      </Box>
+      <Box style={styles.controlsContainer} paddingTop="s" paddingRight="xxl">
+        <CameraButton
+          onPress={toggleFlash}
+          isOff={flash}
+          icon={<Ionicons name="flash" size={24} color="black" />}
+          offIcon={
+            <Ionicons name="flash-off-outline" size={24} color="black" />
+          }
+        />
+        <CameraButton
+          onPress={toggleFacing}
+          icon={<Entypo name="cycle" size={24} color="black" />}
+        />
+      </Box>
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   permissionContainer: {
