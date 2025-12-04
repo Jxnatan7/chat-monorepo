@@ -77,7 +77,7 @@ const theme = createTheme({
   },
   pressableVariants: {
     input: {
-      fontFamily: "Mulish",
+      fontFamily: "MulishFont",
       backgroundColor: "inputBackgroundLight",
       color: "inputTextLight",
       flex: 1,
@@ -156,6 +156,7 @@ const theme = createTheme({
       justifyContent: "center",
       borderRadius: 30,
       width: "85%",
+      maxWidth: 450,
       height: {
         smallPhone: 50,
         phone: 60,
@@ -168,6 +169,7 @@ const theme = createTheme({
       justifyContent: "center",
       borderRadius: 30,
       width: "85%",
+      maxWidth: 450,
       height: {
         smallPhone: 50,
         phone: 60,
@@ -200,37 +202,35 @@ const theme = createTheme({
   textVariants: {
     "label-error": {
       width: "100%",
-      fontFamily: "Mulish",
+      fontFamily: "MulishFont",
       fontSize: 14,
       color: "error",
     },
     label: {
-      fontFamily: "Mulish",
+      fontFamily: "MulishFontMedium",
       fontSize: 14,
     },
     header2: {
-      fontFamily: "Mulish",
+      fontFamily: "MulishFontMedium",
       fontSize: 16,
       lineHeight: 24,
       textAlign: "center",
     },
     messageTime: {
-      fontFamily: "Mulish",
+      fontFamily: "MulishFont",
       fontSize: 12,
     },
     message: {
-      fontFamily: "Mulish",
+      fontFamily: "MulishFont",
       fontSize: 16,
       lineHeight: 24,
     },
     containerHeader: {
-      fontFamily: "Mulish",
-      fontWeight: "bold",
+      fontFamily: "MulishFontBold",
       fontSize: 24,
     },
     button: {
-      fontFamily: "Mulish",
-      fontWeight: 600,
+      fontFamily: "MulishFontMedium",
       fontSize: {
         smallPhone: 16,
         phone: 18,
@@ -238,8 +238,7 @@ const theme = createTheme({
       color: "buttonTextLight",
     },
     header: {
-      fontFamily: "Mulish",
-      fontWeight: "bold",
+      fontFamily: "MulishFontBold",
       fontSize: {
         smallPhone: 20,
         phone: 30,
@@ -247,7 +246,7 @@ const theme = createTheme({
       textAlign: "center",
     },
     body: {
-      fontFamily: "Mulish",
+      fontFamily: "MulishFont",
       fontSize: {
         smallPhone: 14,
         phone: 16,
@@ -256,19 +255,18 @@ const theme = createTheme({
     },
     defaults: {},
     infoTitle: {
-      fontFamily: "Mulish",
-      fontWeight: "bold",
+      fontFamily: "MulishFontBold",
       fontSize: 16,
     },
     infoSubtitle: {
-      fontFamily: "Mulish",
+      fontFamily: "MulishFont",
       fontSize: 14,
       color: "textGray",
     },
   },
   textInputVariants: {
     iconRigth: {
-      fontFamily: "Mulish",
+      fontFamily: "MulishFont",
       backgroundColor: "inputBackgroundLight",
       color: "inputTextLight",
       flex: 1,
@@ -278,14 +276,16 @@ const theme = createTheme({
       borderBottomRightRadius: 0,
       borderTopRightRadius: 0,
       p: "s",
+      maxWidth: 450,
       fontSize: 16,
     },
     iconLeft: {
-      fontFamily: "Mulish",
+      fontFamily: "MulishFont",
       backgroundColor: "inputBackgroundLight",
       color: "inputTextLight",
       flex: 1,
       height: 40,
+      maxWidth: 450,
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 6,
@@ -294,37 +294,45 @@ const theme = createTheme({
       fontSize: 16,
     },
     default: {
-      fontFamily: "Mulish",
+      fontFamily: "MulishFont",
       backgroundColor: "inputBackgroundLight",
       color: "inputTextLight",
       flex: 1,
+      maxWidth: 450,
       height: 40,
       borderRadius: 6,
       p: "s",
       fontSize: 16,
     },
     primary: {
-      fontFamily: "Mulish",
+      fontFamily: "MulishFont",
 
       backgroundColor: "inputBackgroundLight",
       color: "inputTextLight",
     },
     secondary: {
-      fontFamily: "Mulish",
+      fontFamily: "MulishFont",
 
       backgroundColor: "inputBackgroundDark",
       color: "inputTextDark",
     },
     code: {
-      fontFamily: "Mulish",
+      fontFamily: "MulishFontBold",
       backgroundColor: "inputBackgroundLight",
       color: "inputTextLight",
-      width: 30,
-      height: 30,
+      width: {
+        smallPhone: 30,
+        phone: 35,
+        desktop: 40,
+      },
+      height: {
+        smallPhone: 30,
+        phone: 35,
+        desktop: 40,
+      },
       borderRadius: "50%",
       textAlign: "center",
       fontSize: 40,
-      fontWeight: "700",
     },
   },
   flashListVariants: {
@@ -345,25 +353,14 @@ const theme = createTheme({
     },
   },
   cameraVariants: {
-    default: {
-      width: 40,
-      height: 40,
-    },
     defaults: {
       width: 40,
       height: 40,
     },
     code: {
-      width: {
-        smallPhone: 200,
-        phone: 262,
-      },
-      height: {
-        smallPhone: 200,
-        phone: 262,
-      },
-      borderRadius: 10,
-      overflow: "hidden",
+      flex: 1,
+      width: "100%",
+      height: "100%",
     },
   },
 });

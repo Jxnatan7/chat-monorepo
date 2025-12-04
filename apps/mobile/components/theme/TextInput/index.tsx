@@ -30,7 +30,7 @@ export const TextInput = ({
   const isRight = iconDirection === "right";
 
   return (
-    <Box width="100%" {...containerProps}>
+    <Box width="100%" maxWidth={450} {...containerProps}>
       {label && (
         <Text width="100%" mb="s" variant="label">
           {label}

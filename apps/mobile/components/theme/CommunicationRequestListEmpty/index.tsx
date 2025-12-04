@@ -16,8 +16,19 @@ export const CommunicationRequestListEmpty = ({
   return (
     <EmptyList text={text}>
       {showRedirect && (
-        <RestylePressable onPress={() => push("/(tabs)/user")}>
-          <Text textAlign="center">Criar uma residência</Text>
+        <RestylePressable
+          onPress={() => push("/(tabs)/house")}
+          variant="transparent"
+          marginTop="l"
+        >
+          <Text
+            textAlign="center"
+            variant="infoTitle"
+            textDecorationStyle="solid"
+            textDecorationLine="underline"
+          >
+            Criar uma residência
+          </Text>
         </RestylePressable>
       )}
     </EmptyList>

@@ -60,7 +60,13 @@ export const PressableCopyPaste = ({
   };
 
   return (
-    <Box width="100%" height="auto" flexDirection="column" {...containerProps}>
+    <Box
+      width="100%"
+      maxWidth={450}
+      height="auto"
+      flexDirection="column"
+      {...containerProps}
+    >
       {label && (
         <Text width="100%" mb="s" variant="label">
           {label}

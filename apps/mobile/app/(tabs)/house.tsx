@@ -17,7 +17,14 @@ const SectionTitle = ({
   children: string;
   mt?: "l" | "xl";
 }) => (
-  <Text width="100%" textAlign="left" variant="infoTitle" mt={mt} mb="l">
+  <Text
+    width="100%"
+    maxWidth={450}
+    textAlign="left"
+    variant="infoTitle"
+    mt={mt}
+    mb="l"
+  >
     {children}
   </Text>
 );

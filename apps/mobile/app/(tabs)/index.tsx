@@ -24,12 +24,14 @@ export default function Home() {
     queryClient.invalidateQueries({ queryKey: ["communication-requests"] });
   });
 
-  const handleValidation = async (status: "ACCEPTED" | "REJECTED") => {
+  const handleValidation = (status: "ACCEPTED" | "REJECTED") => {
     if (!selectedRequestId) return;
 
-    await mutateAsync({
+    mutateAsync({
       communicationId: selectedRequestId,
       status: status,
+    }).then(() => {
+      setSelectedRequestId(null);
     });
   };
 

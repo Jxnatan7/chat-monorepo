@@ -32,19 +32,21 @@ export default function Login() {
         initialValues={{ email: "", password: "" }}
         validate={loginFormValidation}
         onSubmit={onSubmit}
+        containerProps={{ marginTop: "xxl" }}
       >
         <FormTextInput
           name="email"
-          marginTop="xl"
-          placeholder="E-mail"
+          label="E-mail"
+          placeholder="seu-melhor@emai.com"
           keyboardType="email-address"
           autoFocus
         />
         <FormTextInput
           name="password"
-          marginTop="m"
-          placeholder="Senha"
+          placeholder="*********"
+          label="Senha"
           secureTextEntry
+          containerProps={{ marginTop: "m" }}
         />
         <FormButton text="Continuar" marginTop="xxxl" />
       </Form>

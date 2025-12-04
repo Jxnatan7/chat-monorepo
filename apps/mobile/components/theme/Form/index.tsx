@@ -1,18 +1,28 @@
 import React from "react";
 import { Formik, FormikConfig, FormikValues, useFormikContext } from "formik";
-import { Text } from "@/components/restyle";
+import { Box, BoxProps, Text } from "@/components/restyle";
 import { TextInput } from "@/components/theme/TextInput";
 import Button from "@/components/theme/Button";
 
 type FormProps<T extends FormikValues> = FormikConfig<T> & {
   children: React.ReactNode;
+  containerProps?: BoxProps;
 };
 
 export function Form<T extends FormikValues>({
   children,
+  containerProps,
   ...props
 }: FormProps<T>) {
-  return <Formik {...props}>{() => <>{children}</>}</Formik>;
+  return (
+    <Formik {...props}>
+      {() => (
+        <Box width="100%" alignItems="center" {...containerProps}>
+          {children}
+        </Box>
+      )}
+    </Formik>
+  );
 }
 
 type FormInputProps = React.ComponentProps<typeof TextInput> & {
@@ -36,7 +46,7 @@ export function FormTextInput({ name, ...rest }: FormInputProps) {
         {...rest}
       />
       {errorMessage && (
-        <Text mt="s" variant="label-error" color="error">
+        <Text maxWidth={450} mt="s" variant="label-error" color="error">
           {errorMessage}
         </Text>
       )}

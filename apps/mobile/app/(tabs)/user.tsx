@@ -37,7 +37,13 @@ export default function User() {
         children: <LogoutButton />,
       }}
     >
-      <Text width="100%" textAlign="left" variant="infoTitle" my="l">
+      <Text
+        width="100%"
+        maxWidth={450}
+        textAlign="left"
+        variant="infoTitle"
+        my="l"
+      >
         Usuário
       </Text>
       <Form

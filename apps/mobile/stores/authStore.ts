@@ -9,6 +9,8 @@ export type User = {
   name: string;
   email: string;
   phone: string;
+  token: string;
+  houseId: string | null;
 };
 
 export type AuthState = {
@@ -69,12 +71,13 @@ export const useAuthStore = create<AuthState>()(
       register: async ({ name, email, password }) => {
         set({ isLoading: true, error: null });
         try {
-          const data = await AuthService.register(name, email, password);
-          set({
-            token: data.token,
-            user: data.user,
-            isAuthenticated: true,
-            isLoading: false,
+          AuthService.register(name, email, password).then(({ user: data }) => {
+            set({
+              token: data.token,
+              user: data,
+              isAuthenticated: true,
+              isLoading: false,
+            });
           });
         } catch (error: any) {
           set({

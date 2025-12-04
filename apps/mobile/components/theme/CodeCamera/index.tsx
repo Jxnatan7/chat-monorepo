@@ -111,17 +111,25 @@ export const CodeCamera = ({
         width="100%"
         maxHeight={{ smallPhone: 250, phone: 300 }}
         alignItems="center"
+        overflow="hidden"
       >
-        <RestyleCameraView
-          facing={facing}
-          enableTorch={flash}
-          variant="code"
-          onBarcodeScanned={onBarCodeScanned}
-          barcodeScannerSettings={{
-            barcodeTypes: ["qr"],
-          }}
-          {...props}
-        />
+        <Box
+          width={{ smallPhone: 200, phone: 262 }}
+          height={{ smallPhone: 200, phone: 262 }}
+          overflow="hidden"
+          borderRadius={10}
+        >
+          <RestyleCameraView
+            facing={facing}
+            enableTorch={flash}
+            variant="code"
+            onBarcodeScanned={onBarCodeScanned}
+            barcodeScannerSettings={{
+              barcodeTypes: ["qr"],
+            }}
+            {...props}
+          />
+        </Box>
       </Box>
       <Box style={styles.controlsContainer} paddingTop="s" paddingRight="xxl">
         <CameraButton
@@ -153,8 +161,10 @@ const styles = StyleSheet.create({
   },
   controlsContainer: {
     width: "100%",
+    maxWidth: 400,
     flexDirection: "row",
     justifyContent: "flex-end",
-    gap: 20,
+    alignSelf: "center",
+    gap: 10,
   },
 });

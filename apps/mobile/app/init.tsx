@@ -33,7 +33,13 @@ export default function App() {
         }}
         mb="xl"
       >
-        <Text variant="header" textAlign="center" flex={1} px="s">
+        <Text
+          variant="header"
+          textAlign="center"
+          flex={1}
+          px="s"
+          maxWidth={600}
+        >
           Conecte-se de forma simples e rápida com qualquer pessoa.
         </Text>
       </Box>
