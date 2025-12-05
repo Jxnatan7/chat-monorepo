@@ -2,16 +2,35 @@ import { Box, Text } from "@/components/restyle";
 import Button from "@/components/theme/Button";
 import { Container } from "@/components/theme/Container";
 import { Image } from "@/components/theme/Image";
+import { useAppStore } from "@/stores/appStore";
 import { useAuthStore } from "@/stores/authStore";
+import { useCommunicationRequestStore } from "@/stores/communicationRequestStore";
 import { Redirect, useRouter } from "expo-router";
 
 export default function App() {
-  const { push } = useRouter();
   const token = useAuthStore((s) => s.token);
+  const chatId = useAppStore((s) => s.chatId);
+  const visitorToken = useCommunicationRequestStore((s) => s.visitorToken);
 
   if (token) {
     return <Redirect href="/(tabs)/user" />;
   }
+
+  if (visitorToken && chatId) {
+    return (
+      <Redirect
+        href={{
+          pathname: "/chat",
+          params: {
+            chatId: chatId,
+            blockBack: "true",
+          },
+        }}
+      />
+    );
+  }
+
+  const { push } = useRouter();
 
   return (
     <Container variant="screen" hideHeader>
