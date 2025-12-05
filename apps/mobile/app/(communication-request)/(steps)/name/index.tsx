@@ -1,28 +1,49 @@
+import React, { useState } from "react";
+import { StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
+
 import Button from "@/components/theme/Button";
 import { Container } from "@/components/theme/Container";
 import { StepHeader } from "@/components/theme/StepHeader";
 import { TextInput } from "@/components/theme/TextInput";
+
 import useCreateCommunicationRequest from "@/hooks/useCreateCommunicationRequest";
 import { useCommunicationRequestStore } from "@/stores/communicationRequestStore";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Platform } from "react-native";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function Name() {
   const { push } = useRouter();
-  const [name, setName] = useState<string>();
-  const { mutateAsync } = useCreateCommunicationRequest();
+  const [name, setName] = useState<string>("");
 
-  const handleSubmit = () => {
-    if (!name) return;
-    useCommunicationRequestStore.getState().setVisitorName(name);
+  const { mutateAsync, isPending } = useCreateCommunicationRequest();
+  const store = useCommunicationRequestStore.getState();
 
-    const payload = useCommunicationRequestStore.getState().getPayload();
+  const { debouncedFn: handleNameChange, clear: clearDebounce } = useDebounce(
+    (text: string) => {
+      setName(text);
+    },
+    500
+  );
 
-    mutateAsync(payload).then((response) => {
-      useCommunicationRequestStore.getState().setResponse(response);
+  const handleSubmit = async () => {
+    if (!name.trim()) return;
+
+    try {
+      store.setVisitorName(name);
+      const payload = store.getPayload();
+
+      const response = await mutateAsync(payload);
+
+      store.setResponse(response);
       push("/awaiting-validation");
-    });
+    } catch (error) {
+      console.error("Erro ao criar solicitação", error);
+    }
+  };
+
+  const handleEndEditing = (text: string) => {
+    clearDebounce();
+    setName(text);
   };
 
   return (
@@ -35,20 +56,31 @@ export default function Name() {
       <TextInput
         autoFocus
         placeholder="O seu nome..."
-        onEndEditing={({ nativeEvent }) => setName(nativeEvent.text)}
-        onChangeText={(text) => Platform.OS === "web" && setName(text)}
+        returnKeyType="done"
+        onChangeText={handleNameChange}
+        onEndEditing={({ nativeEvent }) => handleEndEditing(nativeEvent.text)}
       />
+
       <Button
-        onPress={() => handleSubmit()}
-        text="Continuar"
+        onPress={handleSubmit}
+        text={isPending ? "Enviando..." : "Continuar"}
         marginTop="xxxl"
-        disabled={!name}
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          opacity: name ? 1 : 0.5,
-        }}
+        disabled={!name || isPending}
+        style={[
+          styles.buttonCenter,
+          (!name || isPending) && styles.buttonDisabled,
+        ]}
       />
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  buttonCenter: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonDisabled: {
+    opacity: 0.5,
+  },
+});
