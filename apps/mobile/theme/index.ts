@@ -120,7 +120,8 @@ const theme = createTheme({
       color: "buttonTextGray",
     },
     chipDisabled: {
-      maxWidth: 400,
+      width: 350,
+      height: 40,
       alignItems: "center",
       justifyContent: "center",
       p: "s",
@@ -217,11 +218,11 @@ const theme = createTheme({
       textAlign: "center",
     },
     messageTime: {
-      fontFamily: "MulishFont",
+      fontFamily: "MulishFontMedium",
       fontSize: 12,
     },
     message: {
-      fontFamily: "MulishFont",
+      fontFamily: "MulishFontMedium",
       fontSize: 16,
       lineHeight: 24,
     },
@@ -246,7 +247,7 @@ const theme = createTheme({
       textAlign: "center",
     },
     body: {
-      fontFamily: "MulishFont",
+      fontFamily: "MulishFontMedium",
       fontSize: {
         smallPhone: 14,
         phone: 16,
@@ -294,7 +295,7 @@ const theme = createTheme({
       fontSize: 16,
     },
     default: {
-      fontFamily: "MulishFont",
+      fontFamily: "MulishFontMedium",
       backgroundColor: "inputBackgroundLight",
       color: "inputTextLight",
       flex: 1,
@@ -344,6 +345,7 @@ const theme = createTheme({
     defaults: {
       backgroundColor: "backgroundLight",
       width: "100%",
+      maxWidth: 450,
       maxHeight: 800,
     },
     messageOptions: {

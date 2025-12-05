@@ -1,10 +1,12 @@
 import { AuthService } from "@/services/AuthService";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { storage } from "./store";
+import { secureStorage } from "./store";
 import { useAppStore } from "./appStore";
+import { useCommunicationRequestStore } from "./communicationRequestStore";
 
 export type User = {
+  _id: string;
   id: string;
   name: string;
   email: string;
@@ -34,6 +36,22 @@ export type AuthState = {
   logout: () => void;
   setHouseId: (houseId: string | null) => void;
   clearError: () => void;
+};
+
+const INITIAL_STATE: AuthState = {
+  user: null,
+  token: null,
+  houseId: null,
+  isAuthenticated: false,
+  isLoading: false,
+  error: null,
+  _hasHydrated: false,
+  setHasHydrated: () => {},
+  login: async () => {},
+  register: async () => {},
+  logout: () => {},
+  setHouseId: () => {},
+  clearError: () => {},
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -74,7 +92,10 @@ export const useAuthStore = create<AuthState>()(
           AuthService.register(name, email, password).then(({ user: data }) => {
             set({
               token: data.token,
-              user: data,
+              user: {
+                ...data,
+                id: data._id,
+              },
               isAuthenticated: true,
               isLoading: false,
             });
@@ -89,14 +110,9 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        set({
-          user: null,
-          token: null,
-          houseId: null,
-          isAuthenticated: false,
-          error: null,
-        });
+        set(INITIAL_STATE);
         useAppStore.getState().clearAppData();
+        useCommunicationRequestStore.getState().clearAppData();
       },
 
       setHouseId: (houseId) => set({ houseId }),
@@ -104,7 +120,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage",
-      storage: createJSONStorage(() => storage),
+      storage: createJSONStorage(() => secureStorage),
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);
       },

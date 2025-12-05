@@ -3,7 +3,7 @@ import axiosClient from "@/api/axiosClient";
 export default class HouseService {
   api = axiosClient;
 
-  static async findByProviderId(providerId: string) {
+  static async findByProviderId(providerId?: string) {
     return (await axiosClient.post(`/houses/provider/${providerId}`)).data;
   }
 

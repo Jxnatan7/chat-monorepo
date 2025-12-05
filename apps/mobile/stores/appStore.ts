@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import HouseService from "@/services/HouseService";
 import ProviderService from "@/services/ProviderService";
-import { storage } from "./store";
+import { generalStorage } from "./store";
 import UserService from "@/services/UserService";
 import { useAuthStore } from "./authStore";
 
@@ -38,6 +38,19 @@ type AppState = {
   setupResidence: (payload: SaveResidencePayload) => Promise<void>;
   setupUser: (payload: any) => Promise<void>;
   clearAppData: () => void;
+};
+
+const INITIAL_STATE: AppState = {
+  provider: null,
+  house: null,
+  chatId: null,
+  isLoading: false,
+  error: null,
+  setChatId: (id: string) => {},
+  fetchUserResidence: async () => {},
+  setupResidence: async () => {},
+  setupUser: async () => {},
+  clearAppData: () => {},
 };
 
 const upsertProvider = async (
@@ -170,11 +183,11 @@ export const useAppStore = create<AppState>()(
         }
       },
       setChatId: (id) => set({ chatId: id }),
-      clearAppData: () => set({ provider: null, house: null, error: null }),
+      clearAppData: () => set(INITIAL_STATE),
     }),
     {
       name: "app-storage",
-      storage: createJSONStorage(() => storage),
+      storage: createJSONStorage(() => generalStorage),
     }
   )
 );

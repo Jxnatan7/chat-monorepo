@@ -1,6 +1,6 @@
 import { createJSONStorage, persist } from "zustand/middleware";
 import { create } from "zustand";
-import { storage } from "./store";
+import { generalStorage } from "./store";
 import { House, Provider } from "./appStore";
 
 export type CommunicationRequestState = {
@@ -27,6 +27,32 @@ export type CommunicationRequestState = {
   setHouse: (house: House) => void;
   setInitialMessage: (message: string) => void;
   clearAppData: () => void;
+};
+
+const INITIAL_STATE: CommunicationRequestState = {
+  code: null,
+  provider: null,
+  house: null,
+  communicationRequestId: null,
+  initialMessage: null,
+  visitorId: null,
+  visitorName: null,
+  visitorToken: null,
+  isLoading: false,
+  error: null,
+  getPayload: () => ({
+    providerId: "",
+    houseId: "",
+    initialMessage: "",
+    visitorName: "",
+  }),
+  setResponse: (response: any) => {},
+  setCode: (code: string) => {},
+  setProvider: (provider: Provider) => {},
+  setHouse: (house: House) => {},
+  setInitialMessage: (message: string) => {},
+  setVisitorName: (name: string) => {},
+  clearAppData: () => {},
 };
 
 export const useCommunicationRequestStore = create<CommunicationRequestState>()(
@@ -60,12 +86,11 @@ export const useCommunicationRequestStore = create<CommunicationRequestState>()(
       setHouse: (house: House) => set({ house }),
       setInitialMessage: (message: string) => set({ initialMessage: message }),
       setVisitorName: (name: string) => set({ visitorName: name }),
-      clearAppData: () =>
-        set({ code: null, provider: null, error: null, isLoading: false }),
+      clearAppData: () => set(INITIAL_STATE),
     }),
     {
-      name: "app-storage",
-      storage: createJSONStorage(() => storage),
+      name: "communication-request-storage",
+      storage: createJSONStorage(() => generalStorage),
     }
   )
 );
