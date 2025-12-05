@@ -42,7 +42,7 @@ export const Message = ({
         color={isMyMessage ? "myMessageColor" : "otherMessageColor"}
         alignSelf={isMyMessage ? "flex-end" : "flex-start"}
       >
-        {new Date(timestamp).toLocaleTimeString()}
+        {new Date(timestamp).toLocaleTimeString().slice(0, 5)}
       </Text>
     </Box>
   );

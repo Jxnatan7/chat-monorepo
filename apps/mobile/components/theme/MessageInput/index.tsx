@@ -25,10 +25,8 @@ import Animated, {
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 export type MessageInputProps = RestyleTextInputProps & {
-  onSend: (content: string) => void;
+  onSend: (content: string) => Promise<void>;
 };
-
-const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 export const MessageInput = ({ onSend, ...props }: MessageInputProps) => {
   const [value, setValue] = useState("");
@@ -47,8 +45,9 @@ export const MessageInput = ({ onSend, ...props }: MessageInputProps) => {
     const text = value.trim();
     if (!text) return;
     try {
-      await Promise.resolve(onSend(text));
-      setValue("");
+      onSend(text).then(() => {
+        setValue("");
+      });
     } catch (err) {
       console.error("send failed", err);
     }
@@ -101,11 +100,17 @@ export const MessageInput = ({ onSend, ...props }: MessageInputProps) => {
             py="s"
           >
             <TextInput
+              blurOnSubmit={false}
               value={value}
               onChange={(e) => setValue(e.nativeEvent.text)}
               placeholder="Digite uma mensagem..."
               height={40}
               style={{ flex: 1 }}
+              onKeyPress={(e) => {
+                if (e.nativeEvent.key === "Enter") {
+                  handleSend();
+                }
+              }}
               {...props}
             />
             <RestyleTouchableOpacity
