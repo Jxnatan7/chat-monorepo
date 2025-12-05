@@ -8,12 +8,11 @@ export type ResidenceListProps = Omit<RestyleFlashListProps, "data">;
 
 export const ResidenceList = ({ ...props }: ResidenceListProps) => {
   const provider = useCommunicationRequestStore((state) => state.provider);
+  const residences = useHousesByProvider(provider?.id);
 
   if (!provider) {
     return <EmptyList text="Nenhuma residência encontrada." />;
   }
-
-  const residences = useHousesByProvider(provider.id);
 
   if (!residences.data || residences.data?.length === 0) {
     return <EmptyList text="Nenhuma residência encontrada." />;

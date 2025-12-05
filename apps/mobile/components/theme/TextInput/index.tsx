@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { ViewStyle } from "react-native";
 import {
   Box,
@@ -19,47 +19,56 @@ export type TextInputProps = RestyleTextInputProps & {
   label?: string;
 };
 
-export const TextInput = ({
-  icon,
-  iconDirection = "left",
-  iconContainerStyle,
-  containerProps,
-  label,
-  ...props
-}: TextInputProps) => {
-  const isRight = iconDirection === "right";
+export const TextInput = forwardRef<any, TextInputProps>(
+  (
+    {
+      icon,
+      iconDirection = "left",
+      iconContainerStyle,
+      containerProps,
+      label,
+      ...props
+    }: TextInputProps,
+    ref: any
+  ) => {
+    const isRight = iconDirection === "right";
 
-  return (
-    <Box width="100%" maxWidth={450} {...containerProps}>
-      {label && (
-        <Text width="100%" mb="s" variant="label">
-          {label}
-        </Text>
-      )}
-      <Box flexDirection={isRight ? "row-reverse" : "row"} alignItems="center">
-        {icon && (
-          <Box
-            backgroundColor="inputBackgroundLight"
-            height={40}
-            padding="s"
-            borderTopLeftRadius={isRight ? 0 : 6}
-            borderBottomLeftRadius={isRight ? 0 : 6}
-            borderBottomRightRadius={isRight ? 6 : 0}
-            borderTopRightRadius={isRight ? 6 : 0}
-            justifyContent="center"
-            alignItems="center"
-            style={iconContainerStyle}
-          >
-            {icon}
-          </Box>
+    return (
+      <Box width="100%" maxWidth={450} {...containerProps}>
+        {label && (
+          <Text width="100%" mb="s" variant="label">
+            {label}
+          </Text>
         )}
+        <Box
+          flexDirection={isRight ? "row-reverse" : "row"}
+          alignItems="center"
+        >
+          {icon && (
+            <Box
+              backgroundColor="inputBackgroundLight"
+              height={40}
+              padding="s"
+              borderTopLeftRadius={isRight ? 0 : 6}
+              borderBottomLeftRadius={isRight ? 0 : 6}
+              borderBottomRightRadius={isRight ? 6 : 0}
+              borderTopRightRadius={isRight ? 6 : 0}
+              justifyContent="center"
+              alignItems="center"
+              style={iconContainerStyle}
+            >
+              {icon}
+            </Box>
+          )}
 
-        <RestyleTextInput
-          variant={!icon ? "default" : isRight ? "iconRigth" : "iconLeft"}
-          placeholderTextColor={theme.colors.inputPlaceholderLight}
-          {...props}
-        />
+          <RestyleTextInput
+            ref={ref}
+            variant={!icon ? "default" : isRight ? "iconRigth" : "iconLeft"}
+            placeholderTextColor={theme.colors.inputPlaceholderLight}
+            {...props}
+          />
+        </Box>
       </Box>
-    </Box>
-  );
-};
+    );
+  }
+);
