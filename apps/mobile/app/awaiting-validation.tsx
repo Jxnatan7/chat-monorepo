@@ -6,6 +6,7 @@ import useCommunicationAccepted from "@/hooks/useCommunicationAccepted";
 import { useCommunicationRequestStore } from "@/stores/communicationRequestStore";
 import { useRouter } from "expo-router";
 import { useAppStore } from "@/stores/appStore";
+import { StyleSheet } from "react-native";
 
 const loadingAnimation = require("@/assets/animations/loading.json");
 const approveAnimation = require("@/assets/animations/approve.json");
@@ -23,7 +24,7 @@ export default function AwaitingValidation() {
       if (accepted) {
         animationRef.current.reset();
         animationRef.current.play();
-        wait(5000).then(() => {
+        wait(3300).then(() => {
           replace({
             pathname: "/chat",
             params: {
@@ -57,11 +58,7 @@ export default function AwaitingValidation() {
         loop={!accepted}
         autoPlay
         speed={0.5}
-        style={{
-          width: 200,
-          height: 200,
-          alignSelf: "center",
-        }}
+        style={styles.animationView}
         onAnimationFinish={(isCancelled) => {
           if (accepted && !isCancelled) {
           }
@@ -70,3 +67,11 @@ export default function AwaitingValidation() {
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  animationView: {
+    width: 200,
+    height: 200,
+    alignSelf: "center",
+  },
+});
