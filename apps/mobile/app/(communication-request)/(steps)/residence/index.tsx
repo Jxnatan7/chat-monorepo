@@ -10,10 +10,12 @@ export default function Residence() {
 
   const handleSelect = (house: any) => {
     if (!house) return;
+
     useCommunicationRequestStore.getState().setHouse({
       ...house,
       id: house._id,
     });
+
     push("/(communication-request)/(steps)/initial-message");
   };
 

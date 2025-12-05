@@ -44,6 +44,7 @@ export const ActionModal = ({
       >
         <Box
           width="100%"
+          maxWidth={450}
           backgroundColor="backgroundLight"
           borderRadius={8}
           p="l"
@@ -73,7 +74,7 @@ export const ActionModal = ({
                 disabled={loading}
                 style={[
                   styles.buttonBase,
-                  { backgroundColor: theme.colors.finish || "#FF4444" },
+                  { backgroundColor: theme.colors.finish },
                 ]}
               >
                 {loading ? (

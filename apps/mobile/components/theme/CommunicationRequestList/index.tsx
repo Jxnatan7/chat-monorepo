@@ -13,6 +13,7 @@ export const CommunicationRequestList = ({
   ...props
 }: CommunicationRequestListProps) => {
   const house = useAppStore((state) => state.house);
+
   const { mutateAsync } = useCommunicationRequests();
 
   const fetchRequests = useCallback(
