@@ -41,5 +41,6 @@ export function useChatController(chatId: string) {
     isLoading: oldMessagesQuery.isPending,
     house,
     communicationRequestId: visitorCommunicationRequestId,
+    isVisitor: currentUserId === visitorId,
   };
 }
