@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { StyleSheet } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import { Container } from "@/components/theme/Container";
@@ -24,10 +24,9 @@ import Button from "@/components/theme/Button";
 import { ActionModal } from "@/components/theme/ActionModal";
 import useValidateCommunication from "@/hooks/useValidateCommunication";
 import { useQueryClient } from "@tanstack/react-query";
+import { useLogout } from "@/hooks/useLogout";
 
 export default function ChatScreen() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
   const {
     chatId,
     blockBack,
@@ -39,10 +38,27 @@ export default function ChatScreen() {
     visitorName: string;
     communicationRequestId: string;
   }>();
+
+  const { push, replace, canDismiss, dismissAll } = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
   const isBackBlocked = blockBack === "true";
   const queryClient = useQueryClient();
+  const logout = useLogout();
 
   usePreventGoBack(isBackBlocked);
+
+  const chatController = useChatController(chatId);
+
+  const communicationId = useMemo(
+    () => selectedRequestId ?? chatController.communicationRequestId,
+    [selectedRequestId, chatController.communicationRequestId]
+  );
+
+  if (!chatId) {
+    return <Redirect href="/init" />;
+  }
 
   const {
     messages,
@@ -51,12 +67,8 @@ export default function ChatScreen() {
     currentUserId,
     house,
     communicationRequestId,
-  } = useChatController(chatId);
-
-  const communicationId = useMemo(
-    () => selectedRequestId ?? communicationRequestId,
-    [selectedRequestId, communicationRequestId]
-  );
+    isVisitor,
+  } = chatController;
 
   const renderMessageItem = useCallback(
     ({ item }: { item: any }) => (
@@ -79,7 +91,7 @@ export default function ChatScreen() {
     return () => clearTimeout(id);
   };
 
-  const handleSend = (content: string) => {
+  const handleSend = async (content: string) => {
     sendMessage({ chatId, content }).then(() => {
       scrollToBottom();
     });
@@ -90,15 +102,28 @@ export default function ChatScreen() {
     queryClient.invalidateQueries({ queryKey: ["communication-requests"] });
   });
 
-  const handleValidation = async (status: "ACCEPTED" | "REJECTED") => {
+  const handleRedirect = () => {
+    setModalIsOpen(false);
+
+    if (isVisitor) {
+      logout();
+
+      if (canDismiss()) {
+        dismissAll();
+      }
+      replace("/init");
+      return;
+    }
+    push("/(tabs)");
+  };
+
+  const handleValidation = async (status: "FINALIZED") => {
     if (!communicationId) return;
 
     mutateAsync({
       communicationId: communicationId,
       status: status,
-    }).then(() => {
-      setModalIsOpen(false);
-    });
+    }).then(handleRedirect);
   };
 
   useEffect(() => {
@@ -151,7 +176,10 @@ export default function ChatScreen() {
             marginTop="l"
             variant="red"
             text="Finalizar"
-            onPress={() => setModalIsOpen(true)}
+            onPress={() => {
+              setIsOpen(false);
+              setModalIsOpen(true);
+            }}
           />
         </BottomSheet>
       </Container>
@@ -163,8 +191,8 @@ export default function ChatScreen() {
         description="Deseja finalizar a conversa?"
         confirmText="Confirmar"
         rejectText="Rejeitar"
-        onConfirm={() => handleValidation("ACCEPTED")}
-        onReject={() => handleValidation("REJECTED")}
+        onConfirm={() => handleValidation("FINALIZED")}
+        onReject={() => setModalIsOpen(false)}
       />
     </>
   );
