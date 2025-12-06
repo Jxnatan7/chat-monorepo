@@ -63,7 +63,7 @@ export default function Name() {
 
       <Button
         onPress={handleSubmit}
-        text={isPending ? "Enviando..." : "Continuar"}
+        text="Continuar"
         marginTop="xxxl"
         disabled={!name || isPending}
         style={[
