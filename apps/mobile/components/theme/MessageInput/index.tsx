@@ -89,27 +89,29 @@ export const MessageInput = ({ onSend, ...props }: MessageInputProps) => {
         <Animated.View style={rStyle}>
           <Box
             width="100%"
-            minHeight={80}
+            minHeight={90}
             flexDirection="row"
-            alignItems="center"
+            alignItems="flex-start"
             justifyContent="center"
             backgroundColor="backgroundLight"
             borderTopColor="borderGray"
             borderTopWidth={1}
             px="xl"
-            py="s"
+            py="m"
           >
             <TextInput
+              multiline={true}
+              textAlignVertical="top"
               blurOnSubmit={false}
               value={value}
               onChange={(e) => setValue(e.nativeEvent.text)}
               placeholder="Digite uma mensagem..."
-              height={40}
-              style={{ flex: 1 }}
-              onKeyPress={(e) => {
-                if (e.nativeEvent.key === "Enter") {
-                  handleSend();
-                }
+              minHeight={40}
+              maxHeight={120}
+              style={{
+                flex: 1,
+                paddingTop: 10,
+                paddingBottom: 10,
               }}
               {...props}
             />
@@ -120,6 +122,7 @@ export const MessageInput = ({ onSend, ...props }: MessageInputProps) => {
               justifyContent="center"
               alignItems="center"
               marginLeft="s"
+              marginBottom="xs"
               activeOpacity={0.7}
               disabled={!props.editable}
               onPress={handleSend}
