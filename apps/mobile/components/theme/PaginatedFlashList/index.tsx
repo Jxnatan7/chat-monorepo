@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { RestyleFlashListProps } from "@/components/restyle";
@@ -9,8 +9,10 @@ export type PaginatedResult<T> = {
   totalPages: number;
 };
 
-interface PaginatedFlashListProps<T>
-  extends Omit<RestyleFlashListProps, "data" | "extraData"> {
+interface PaginatedFlashListProps<T> extends Omit<
+  RestyleFlashListProps,
+  "data" | "extraData"
+> {
   fetchData: (
     page: number,
     pageSize: number
@@ -34,6 +36,12 @@ export function PaginatedFlashList<T>({
 
   const isLoadingRef = useRef(false);
 
+  const fetchDataRef = useRef(fetchData);
+
+  useEffect(() => {
+    fetchDataRef.current = fetchData;
+  }, [fetchData]);
+
   const loadData = useCallback(
     async (pageToFetch: number, shouldRefresh = false) => {
       if (isLoadingRef.current && !shouldRefresh) return;
@@ -42,7 +50,7 @@ export function PaginatedFlashList<T>({
       setIsLoading(true);
 
       try {
-        const result = await fetchData(pageToFetch, pageSize);
+        const result = await fetchDataRef.current(pageToFetch, pageSize);
 
         if (result && result.items) {
           if (shouldRefresh) {
@@ -63,7 +71,7 @@ export function PaginatedFlashList<T>({
         setIsFirstLoad(false);
       }
     },
-    [fetchData, pageSize]
+    [pageSize]
   );
 
   useFocusEffect(
@@ -92,10 +100,6 @@ export function PaginatedFlashList<T>({
     );
   };
 
-  if (!isLoading && !isFirstLoad && data.length === 0 && ListEmptyComponent) {
-    return ListEmptyComponent;
-  }
-
   return (
     <FlashList
       {...props}
@@ -105,6 +109,11 @@ export function PaginatedFlashList<T>({
       ListFooterComponent={renderFooter}
       onRefresh={handleRefresh}
       refreshing={isRefreshing}
+      ListEmptyComponent={
+        !isLoading && !isFirstLoad && data.length === 0
+          ? ListEmptyComponent
+          : null
+      }
     />
   );
 }

@@ -352,6 +352,7 @@ const theme = createTheme({
       width: "100%",
       backgroundColor: "backgroundLight",
       height: 40,
+      maxHeight: 40,
     },
   },
   cameraVariants: {

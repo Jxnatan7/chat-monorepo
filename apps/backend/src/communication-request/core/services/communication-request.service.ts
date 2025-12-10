@@ -22,6 +22,8 @@ import {
   PaginatedResult,
 } from "src/@core/services/mongo-query.service";
 import { Message } from "src/message/core/schemas/message.schema";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { CommunicationRequestCreatedEvent } from "../events/communication-request-created.event";
 
 @Injectable()
 export class CommunicationRequestService {
@@ -33,8 +35,8 @@ export class CommunicationRequestService {
     @InjectModel(Message.name) private readonly messageModel: Model<Message>,
 
     readonly chatService: ChatService,
-    // @Inject(forwardRef(() => ChatGateway))
-    private readonly chatGateway: ChatGateway, // injeta gateway para emitir
+    private readonly chatGateway: ChatGateway,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async create(
@@ -156,7 +158,26 @@ export class CommunicationRequestService {
     const communicationRequest = new this.communicationRequestModel(
       requestData,
     );
-    return communicationRequest.save();
+
+    const house = await this.houseModel.findById(communicationRequest.houseId);
+
+    if (!house) {
+      throw new NotFoundException("House not found");
+    }
+
+    const communicationCreated: CommunicationRequest =
+      await communicationRequest.save();
+
+    if (communicationCreated.id) {
+      const residentIds = house.residents.map((r) => r.toString());
+
+      this.eventEmitter.emit(
+        "communication.created",
+        new CommunicationRequestCreatedEvent(communicationCreated, residentIds),
+      );
+    }
+
+    return communicationCreated;
   }
 
   private async attachRequestToUser(

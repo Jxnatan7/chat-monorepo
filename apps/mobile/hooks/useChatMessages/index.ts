@@ -5,6 +5,7 @@ const useChatMessages = function (chatId: string) {
   const { isPending, error, data } = useQuery({
     queryKey: ["chat-messages", chatId],
     queryFn: () => ChatService.getMessages(chatId),
+    enabled: !!chatId,
   });
 
   return { isPending, error, data };

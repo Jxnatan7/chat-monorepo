@@ -40,17 +40,12 @@ type AppState = {
   clearAppData: () => void;
 };
 
-const INITIAL_STATE: AppState = {
+const INITIAL_STATE: Partial<AppState> = {
   provider: null,
   house: null,
   chatId: null,
   isLoading: false,
   error: null,
-  setChatId: (id: string) => {},
-  fetchUserResidence: async () => {},
-  setupResidence: async () => {},
-  setupUser: async () => {},
-  clearAppData: () => {},
 };
 
 const upsertProvider = async (

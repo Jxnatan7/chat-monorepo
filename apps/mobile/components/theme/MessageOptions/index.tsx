@@ -28,7 +28,7 @@ export const MessageOptions = ({
 }: MessageOptionsProps) => {
   return (
     <>
-      <Text width="100%" textAlign="left" variant="label" mb="s">
+      <Text maxWidth={450} width="100%" textAlign="left" variant="label" mb="s">
         Sugestões:
       </Text>
       <FlashList
@@ -42,6 +42,7 @@ export const MessageOptions = ({
           />
         )}
         horizontal={true}
+        showsHorizontalScrollIndicator={false}
         marginBottom="s"
         {...props}
       />

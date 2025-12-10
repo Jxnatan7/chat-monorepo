@@ -8,9 +8,11 @@ import { CommunicationRequestModule } from "./communication-request/communicatio
 import { ChatModule } from "./chat/chat.module";
 import { ProviderModule } from "./provider/provider.module";
 import { MessageModule } from "./message/message.module";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.DB_URL ?? ""),
     AuthModule,

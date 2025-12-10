@@ -16,6 +16,7 @@ import { User } from "src/user/core/schemas/user.schema";
 import { Model, Types } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Message } from "src/message/core/schemas/message.schema";
+import { CommunicationRequest } from "src/communication-request/core/schemas/communication-request.schema";
 
 type JwtPayload = { sub: string; role?: string; email?: string };
 
@@ -89,6 +90,19 @@ export class ChatGateway
     } catch (err) {
       this.logger.error("emitToUser failed", err);
     }
+  }
+
+  notifyNewCommunicationRequest(
+    targetUserId: string,
+    requestData: CommunicationRequest,
+  ) {
+    const room = `user:${targetUserId}`;
+    if (!this.server) {
+      this.logger.warn("Server not ready to emit notification");
+      return;
+    }
+    this.server.to(room).emit("new_communication_request", requestData);
+    this.logger.log(`Notification sent to ${room}`);
   }
 
   private extractToken(client: Socket) {

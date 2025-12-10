@@ -38,7 +38,7 @@ export type AuthState = {
   clearError: () => void;
 };
 
-const INITIAL_STATE: AuthState = {
+const INITIAL_STATE: Partial<AuthState> = {
   user: null,
   token: null,
   houseId: null,
@@ -46,12 +46,6 @@ const INITIAL_STATE: AuthState = {
   isLoading: false,
   error: null,
   _hasHydrated: false,
-  setHasHydrated: () => {},
-  login: async () => {},
-  register: async () => {},
-  logout: () => {},
-  setHouseId: () => {},
-  clearError: () => {},
 };
 
 export const useAuthStore = create<AuthState>()(
