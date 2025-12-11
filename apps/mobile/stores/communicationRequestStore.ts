@@ -86,7 +86,7 @@ export const useCommunicationRequestStore = create<CommunicationRequestState>()(
       setHouse: (house: House) => set({ house }),
       setInitialMessage: (message: string) => set({ initialMessage: message }),
       setVisitorName: (name: string) => set({ visitorName: name }),
-      clearAppData: () => set(INITIAL_STATE),
+      clearAppData: () => set({ ...get(), ...INITIAL_STATE }),
     }),
     {
       name: "communication-request-storage",

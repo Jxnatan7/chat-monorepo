@@ -178,7 +178,7 @@ export const useAppStore = create<AppState>()(
         }
       },
       setChatId: (id) => set({ chatId: id }),
-      clearAppData: () => set(INITIAL_STATE),
+      clearAppData: () => set({ ...get(), ...INITIAL_STATE }),
     }),
     {
       name: "app-storage",

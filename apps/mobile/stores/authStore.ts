@@ -50,7 +50,7 @@ const INITIAL_STATE: Partial<AuthState> = {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       token: null,
       houseId: null,
@@ -104,7 +104,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        set(INITIAL_STATE);
+        set({ ...get(), ...INITIAL_STATE });
         useAppStore.getState().clearAppData();
         useCommunicationRequestStore.getState().clearAppData();
       },
