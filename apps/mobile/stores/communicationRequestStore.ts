@@ -29,7 +29,7 @@ export type CommunicationRequestState = {
   clearAppData: () => void;
 };
 
-const INITIAL_STATE: CommunicationRequestState = {
+const INITIAL_STATE: Partial<CommunicationRequestState> = {
   code: null,
   provider: null,
   house: null,
@@ -40,19 +40,6 @@ const INITIAL_STATE: CommunicationRequestState = {
   visitorToken: null,
   isLoading: false,
   error: null,
-  getPayload: () => ({
-    providerId: "",
-    houseId: "",
-    initialMessage: "",
-    visitorName: "",
-  }),
-  setResponse: (response: any) => {},
-  setCode: (code: string) => {},
-  setProvider: (provider: Provider) => {},
-  setHouse: (house: House) => {},
-  setInitialMessage: (message: string) => {},
-  setVisitorName: (name: string) => {},
-  clearAppData: () => {},
 };
 
 export const useCommunicationRequestStore = create<CommunicationRequestState>()(

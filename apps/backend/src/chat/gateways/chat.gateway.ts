@@ -105,6 +105,19 @@ export class ChatGateway
     this.logger.log(`Notification sent to ${room}`);
   }
 
+  notifyUpdateCommunicationRequest(
+    targetUserId: string,
+    requestData: CommunicationRequest,
+  ) {
+    const room = `user:${targetUserId}`;
+    if (!this.server) {
+      this.logger.warn("Server not ready to emit notification");
+      return;
+    }
+    this.server.to(room).emit("update_communication_request", requestData);
+    this.logger.log(`Notification sent to ${room}`);
+  }
+
   private extractToken(client: Socket) {
     const qsToken = client.handshake.query?.token;
     if (typeof qsToken === "string") return qsToken;

@@ -45,6 +45,7 @@ export default function Home() {
       <CommunicationRequestList
         renderItem={({ item }: any) => (
           <CommunicationRequestItem
+            key={item._id}
             title={item.visitorName}
             subtitle={item.initialMessage}
             status={item.status}

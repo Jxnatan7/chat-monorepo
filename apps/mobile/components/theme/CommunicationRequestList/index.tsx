@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { View } from "react-native";
 import { RestyleFlashListProps } from "@/components/restyle";
 import { CommunicationRequestListEmpty } from "../CommunicationRequestListEmpty";
@@ -21,21 +21,27 @@ export const CommunicationRequestList = ({
   const { house, fetchRequests, newRequests } =
     useCommunicationRequestController();
 
+  const remove = useCallback(
+    (list: RequestItem[]) => {
+      const newRequestsIds = newRequests.map((item) => item._id);
+      return list.filter((item) => !newRequestsIds.includes(item._id));
+    },
+    [newRequests]
+  );
+
   const renderNewRequestsHeader = () => {
     if (newRequests.length === 0) return null;
 
     return (
       <View>
-        {newRequests.map((item, index) => (
-          <View key={`new-${item.id || index}`}>
-            {renderItem({
-              item,
-              index,
-              target: "Cell",
-              extraData: props.extraData,
-            })}
-          </View>
-        ))}
+        {newRequests.map((item, index) =>
+          renderItem({
+            item,
+            index,
+            target: "Cell",
+            extraData: props.extraData,
+          })
+        )}
       </View>
     );
   };

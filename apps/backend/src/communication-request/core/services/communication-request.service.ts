@@ -23,7 +23,7 @@ import {
 } from "src/@core/services/mongo-query.service";
 import { Message } from "src/message/core/schemas/message.schema";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { CommunicationRequestCreatedEvent } from "../events/communication-request-created.event";
+import { CommunicationRequestEvent } from "../events/communication-request.event";
 
 @Injectable()
 export class CommunicationRequestService {
@@ -86,15 +86,6 @@ export class CommunicationRequestService {
       throw new NotFoundException("Communication request not found");
     }
 
-    if (communicationRequest.status !== CommunicationStatus.ACCEPTED) {
-      return CommunicationRequestDto.create(communicationRequest);
-    }
-
-    if (communicationRequest.chatId) {
-      const existing = await this.communicationRequestModel.findById(id).exec();
-      return CommunicationRequestDto.create(existing as CommunicationRequest);
-    }
-
     const house = await this.houseModel.findById(communicationRequest.houseId);
 
     if (!house) {
@@ -103,6 +94,23 @@ export class CommunicationRequestService {
 
     if (!house.residents || house.residents.length === 0) {
       throw new BadRequestException("House has no residents");
+    }
+
+    if (communicationRequest.status !== CommunicationStatus.ACCEPTED) {
+      this.eventEmitter.emit(
+        "communication.updated",
+        new CommunicationRequestEvent(
+          communicationRequest,
+          house.residents.map((r) => r.toString()),
+        ),
+      );
+
+      return CommunicationRequestDto.create(communicationRequest);
+    }
+
+    if (communicationRequest.chatId) {
+      const existing = await this.communicationRequestModel.findById(id).exec();
+      return CommunicationRequestDto.create(existing as CommunicationRequest);
     }
 
     const residentUserId = house.residents[0].toString();
@@ -148,8 +156,7 @@ export class CommunicationRequestService {
       });
     } catch (err) {}
 
-    const updated = await this.communicationRequestModel.findById(id).exec();
-    return CommunicationRequestDto.create(updated as CommunicationRequest);
+    return CommunicationRequestDto.create(communicationRequest);
   }
 
   private async saveCommunicationRequest(
@@ -173,7 +180,7 @@ export class CommunicationRequestService {
 
       this.eventEmitter.emit(
         "communication.created",
-        new CommunicationRequestCreatedEvent(communicationCreated, residentIds),
+        new CommunicationRequestEvent(communicationCreated, residentIds),
       );
     }
 

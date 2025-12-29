@@ -13,6 +13,7 @@ import {
   Message,
   MessageSchema,
 } from "src/message/core/schemas/message.schema";
+import { CommunicationEventListener } from "./core/listeners/communication.listener";
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import {
     forwardRef(() => ChatModule),
   ],
   controllers: [CommunicationRequestController],
-  providers: [CommunicationRequestService],
+  providers: [CommunicationRequestService, CommunicationEventListener],
   exports: [CommunicationRequestService],
 })
 export class CommunicationRequestModule {}

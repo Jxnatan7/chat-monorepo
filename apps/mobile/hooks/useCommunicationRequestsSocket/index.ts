@@ -69,7 +69,11 @@ export default function useCommunicationRequestsSocket({
 
     const handleNewRequest = (request: CommunicationRequest) => {
       if (!mountedRef.current) return;
-      console.log("Nova request recebida via socket:", request);
+      setNewRequests((prev) => [request, ...prev]);
+    };
+
+    const handleUpdatedRequest = (request: CommunicationRequest) => {
+      if (!mountedRef.current) return;
       setNewRequests((prev) => [request, ...prev]);
     };
 
@@ -85,6 +89,7 @@ export default function useCommunicationRequestsSocket({
 
     socket.on("connect", handleConnect);
     socket.on("new_communication_request", handleNewRequest);
+    socket.on("update_communication_request", handleUpdatedRequest);
     socket.on("connect_error", handleConnectError);
     socket.on("disconnect", handleDisconnect);
 
@@ -92,6 +97,7 @@ export default function useCommunicationRequestsSocket({
       if (socket) {
         socket.off("connect", handleConnect);
         socket.off("new_communication_request", handleNewRequest);
+        socket.off("update_communication_request", handleUpdatedRequest);
         socket.off("connect_error", handleConnectError);
         socket.off("disconnect", handleDisconnect);
         socket.disconnect();

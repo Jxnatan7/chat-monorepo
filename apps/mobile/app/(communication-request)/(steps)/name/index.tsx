@@ -17,7 +17,6 @@ export default function Name() {
 
   const { mutateAsync, isPending } = useCreateCommunicationRequest();
   const store = useCommunicationRequestStore.getState();
-  console.log("🚀 ~ Name ~ store:", store);
 
   const { debouncedFn: handleNameChange, clear: clearDebounce } = useDebounce(
     (text: string) => {
