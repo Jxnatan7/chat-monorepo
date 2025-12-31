@@ -1,0 +1,76 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import { HouseService } from "src/house/core/services/house.service";
+import { CreateHouseDto } from "../dto/create-house.dto";
+import { UpdateHouseDto } from "../dto/update-house.dto";
+import { SimpleHouse } from "../dto/simple-house.dto";
+import { ManagerOrAdminGuard } from "src/auth/guards/manager-or-admin.guard";
+import { FilterRequest } from "src/@core/services/mongo-query.service";
+import { User, UserJwt } from "src/helpers/user.decorator";
+
+@Controller("api/houses")
+export class HouseController {
+  constructor(private readonly houseService: HouseService) {}
+
+  @Get()
+  @UseGuards(AuthGuard("jwt"))
+  async findAll() {
+    const houses = await this.houseService.findAll();
+    return houses.map((house) => new SimpleHouse(house));
+  }
+
+  @Get(":id")
+  @UseGuards(AuthGuard("jwt"))
+  async findById(@Param("id") id: string) {
+    const house = await this.houseService.findById(id);
+    return new SimpleHouse(house);
+  }
+
+  @Post("/me")
+  @UseGuards(AuthGuard("jwt"))
+  async findByUser(@User() user: UserJwt) {
+    const id = user.id;
+    return this.houseService.findByUser(id);
+  }
+
+  @Post("/provider/:providerId")
+  async findByProviderId(
+    @Param("providerId") providerId: string,
+    @Body() filterRequest: FilterRequest,
+  ) {
+    return await this.houseService.findByProviderId(providerId, filterRequest);
+  }
+
+  @Post()
+  @UseGuards(AuthGuard("jwt"))
+  async create(@Body() createHouseDto: CreateHouseDto, @User() user) {
+    const house = await this.houseService.create(createHouseDto, user);
+    return new SimpleHouse(house);
+  }
+
+  @Put(":id")
+  @UseGuards(AuthGuard("jwt"))
+  async update(
+    @Param("id") id: string,
+    @Body() updateHouseDto: UpdateHouseDto,
+  ) {
+    const house = await this.houseService.update(id, updateHouseDto);
+    return new SimpleHouse(house);
+  }
+
+  @Delete(":id")
+  @UseGuards(AuthGuard("jwt"), ManagerOrAdminGuard)
+  async delete(@Param("id") id: string) {
+    await this.houseService.delete(id);
+    return { message: "House deleted successfully" };
+  }
+}

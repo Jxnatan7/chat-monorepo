@@ -1,0 +1,188 @@
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import HouseService from "@/services/HouseService";
+import ProviderService from "@/services/ProviderService";
+import { generalStorage } from "./store";
+import UserService from "@/services/UserService";
+import { useAuthStore } from "./authStore";
+
+export type Provider = {
+  id: string;
+  name: string;
+  code: string;
+  description: string;
+};
+
+export type House = {
+  id: string;
+  providerId: string;
+  name: string;
+  address: string;
+  description: string;
+};
+
+export type SaveResidencePayload = {
+  provider: Omit<Provider, "id">;
+  house: Omit<House, "id" | "providerId">;
+};
+
+type AppState = {
+  provider: Provider | null;
+  house: House | null;
+  chatId: string | null;
+  isLoading: boolean;
+  error: string | null;
+
+  setChatId: (id: string) => void;
+  fetchUserResidence: () => Promise<void>;
+  setupResidence: (payload: SaveResidencePayload) => Promise<void>;
+  setupUser: (payload: any) => Promise<void>;
+  clearAppData: () => void;
+};
+
+const INITIAL_STATE: Partial<AppState> = {
+  provider: null,
+  house: null,
+  chatId: null,
+  isLoading: false,
+  error: null,
+};
+
+const upsertProvider = async (
+  current: Provider | null,
+  data: SaveResidencePayload["provider"]
+) => {
+  return current?.id
+    ? ProviderService.update(current.id, data)
+    : ProviderService.create(data);
+};
+
+const upsertHouse = async (
+  current: House | null,
+  providerId: string,
+  data: SaveResidencePayload["house"]
+) => {
+  const payload = { ...data, providerId };
+  return current?.id
+    ? HouseService.update(current.id, payload)
+    : HouseService.create(payload);
+};
+
+export const useAppStore = create<AppState>()(
+  persist(
+    (set, get) => ({
+      provider: null,
+      house: null,
+      chatId: null,
+      isLoading: false,
+      error: null,
+
+      setupResidence: async (payload) => {
+        set({ isLoading: true, error: null });
+        const { provider: currentProvider, house: currentHouse } = get();
+
+        try {
+          const providerResponse = await upsertProvider(
+            currentProvider,
+            payload.provider
+          );
+
+          if (!providerResponse?.id)
+            throw new Error("ID do Gerenciador inválido.");
+
+          const houseResponse = await upsertHouse(
+            currentHouse,
+            providerResponse.id,
+            payload.house
+          );
+
+          set({
+            provider: providerResponse,
+            house: houseResponse,
+            isLoading: false,
+          });
+        } catch (error: any) {
+          set({
+            error: error.message || "Falha ao salvar dados.",
+            isLoading: false,
+          });
+          throw error;
+        }
+      },
+      setupUser: async (payload) => {
+        set({ isLoading: true, error: null });
+        const { user } = useAuthStore.getState();
+
+        if (!user) {
+          throw new Error("Usuário não encontrado.");
+        }
+
+        try {
+          const data = await UserService.update(user.id, payload);
+
+          if (!data) {
+            set({
+              isLoading: false,
+            });
+            return;
+          }
+
+          useAuthStore.setState({
+            user: data,
+          });
+
+          set({
+            isLoading: false,
+          });
+        } catch (error: any) {
+          set({
+            error: error.response?.data?.message || "Falha no cadastro",
+            isLoading: false,
+          });
+          throw error;
+        }
+      },
+      fetchUserResidence: async () => {
+        const { house, provider } = get();
+
+        if (house?.id && provider?.id) {
+          return;
+        }
+
+        set({ isLoading: true });
+
+        try {
+          const data = await HouseService.findByUser();
+
+          if (data) {
+            set({
+              house: {
+                ...data.house,
+                id: data.house._id,
+              },
+              provider: {
+                ...data.provider,
+                id: data.provider._id,
+              },
+              isLoading: false,
+            });
+
+            if (data.house?.id) {
+              useAuthStore.getState().setHouseId(data.house.id);
+            }
+          } else {
+            set({ isLoading: false });
+          }
+        } catch (error) {
+          set({ isLoading: false });
+        }
+      },
+      setChatId: (id) => set({ chatId: id }),
+      clearAppData: () => set({ ...get(), ...INITIAL_STATE }),
+    }),
+    {
+      name: "app-storage",
+      storage: createJSONStorage(() => generalStorage),
+    }
+  )
+);
